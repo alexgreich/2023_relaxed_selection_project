@@ -199,7 +199,7 @@ GSI_results <- data.frame(name = c("pink 2020", "pink 2021", "coho"),
                           df = c(p1.GSI.t.test$parameter, p2.GSI.t.test$parameter, coho.GSI.t.test$parameter),
                           p = c(p1.GSI.t.test$p.value, p2.GSI.t.test$p.value, coho.GSI.t.test$p.value),
                           hatchery_mean =c( p1.GSI.t.test$estimate[1], p2.GSI.t.test$estimate[1], hatchery_mean_value_GSI_fullcohodataset),
-                          hatch_sd = c( sd_p1_h, sd_h_p2 ,sd_h_c)
+                          hatch_sd = c( sd_p1_h, sd_h_p2 ,sd_h_c),
                           wild_mean = c(p1.GSI.t.test$estimate[2], p2.GSI.t.test$estimate[2], wild_mean_value_GSI_fullcohodataset),
                           wild_sd = c( sd_p1_w, sd_w_p2 ,sd_w_c)
                           )
