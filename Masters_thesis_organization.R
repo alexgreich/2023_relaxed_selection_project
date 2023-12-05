@@ -208,14 +208,377 @@ GSI_results <- data.frame(name = c("pink 2020", "pink 2021", "coho"),
 
 #length results summary
 
-#####################################
+
+###########################################################3
+############################################################
 #egg diameter
-######################################
-
+###################################################################
+###################################################################
 #pink 2020
+p1.all.eggs <- read.csv("Data/P1.egg.diameters.csv")
+names(p1.all.eggs)
+head(p1.all.eggs)
 
+#the other pink even data
+p1.other.data<- read.csv("Data/FemalePinkGSIotodataadd1_without_gaps copy.csv")
+p1.other.data$Fish.ID <- p1.other.data$ID
+
+#extract the oto result...or Join by the ID!!!!
+p1.df <- full_join(p1.all.eggs, p1.other.data, by="Fish.ID")
+p1.df.no.unknown <-p1.df %>% filter(Otolith.results != "unknown") #hmm no weird column might have to adjust, make sure WEIRD fish are out.
+p1.df.clean <- p1.df.no.unknown %>% filter(Weird =="n")
+
+
+#conceptual model
+fit.lm.p1 <- lm(Diameter..mm. ~ Length..mm. + Otolith.results + Length..mm.:Otolith.results, data=na.omit(p1.df.clean))
+
+# use REML to find the best random structure
+fit.p1.B <- lmer(Diameter..mm. ~ Length..mm. + Otolith.results +
+                   Length..mm.:Otolith.results +
+                   (1|ID), data=na.omit(p1.df.clean), REML=T)
+
+AIC(fit.p1.B, fit.lm.p1) #random intercept wins, by a lot
+
+#use ML to find best fitted structure
+fit.p1.B1 <- lmer(Diameter..mm. ~ Length..mm. + Otolith.results +
+                    Length..mm.:Otolith.results +
+                    (1|ID), data=na.omit(p1.df.clean), REML=F)
+fit.p1.C <- lmer(Diameter..mm. ~ Length..mm. + Otolith.results +(1|ID), data=na.omit(p1.df.clean), REML=F)
+fit.p1.C1 <- lmer(Diameter..mm. ~ Otolith.results +(1|ID), data=na.omit(p1.df.clean), REML=F)
+fit.p1.C2 <- lmer(Diameter..mm. ~ 1 + (1|ID), data=na.omit(p1.df.clean), REML=F)
+AIC(fit.p1.B1,fit.p1.C, fit.p1.C1, fit.p1.C2) #simplest one wins
+
+#best model for p1: fit.p1.D
+fit.p1.D <- lmer(Diameter..mm. ~ 1 + (1|ID), data=na.omit(p1.df.clean), REML=T)
+fit.p1.C1.REML <- lmer(Diameter..mm. ~ Otolith.results +(1|ID), data=na.omit(p1.df.clean), REML=T)
+fit.p1.lme <-  lme(fixed = Diameter..mm. ~ 1, random = ~1|ID, data=p1.df.clean, method="REML")
+summary(fit.p1.D)
+summary(fit.p1.C1.REML) 
+
+#t-test sig
+##yeilds 0.162
+(0.162)/2
+#t=1.424 on 44 df, p= 0.081
+
+
+#get those parameter estimates...
+fit.p1.lme.param.noint <-  lme(fixed = Diameter..mm. ~ Otolith.results -1 , random = ~1|ID, data=p1.df.clean, method="REML")
+fixef(fit.p1.lme.param.noint)
+summary(fit.p1.lme.param.noint)
+
+fit.p1.lme.param.yesint <-  lme(fixed = Diameter..mm. ~ Otolith.results , random = ~1|ID, data=p1.df.clean, method="REML")
+summary(fit.p1.lme.param.yesint)
+
+
+#wait but which way is that t-test?
+0.162/2
+1-0.162/2
+
+
+#a graph
+p1.df.clean$fitted <- fitted(fit.p1.D) 
+(p1.goodplot <- ggplot(p1.df.clean) + aes() + geom_jitter(aes(y=Diameter..mm., x=Otolith.results)) + 
+    geom_boxplot(aes(y=fitted, x=Otolith.results), alpha=0.7))
+
+summary(fit.p1.D)
+
+
+
+
+#####################################################################################
 #pink 2021
+#load in them datas
+p2.GSI <- read.csv("Data/Female.p2.Rdata.3.csv")
+names(p2.GSI)
 
+library(dplyr)
+GSI.data <- p2.GSI %>%
+  mutate(GSI.2 = (GSI.measure.2.g./Fish.weight.g.)*100, 
+         GSI.1 = (GSI.measure.1.g./Fish.weight.g.)*100)
+
+## y=GSI, x= length, color and shape= otolith resuls
+GSI.data.2 <- GSI.data %>%
+  mutate(Oto.reading.2 = ifelse(Oto.reading!="Overground", Oto.reading, "none"),)
+GSI.data.3 <- GSI.data.2 %>%
+  mutate(Oto.reading.3 = ifelse(Oto.reading.2!="No Oto", Oto.reading.2, "none"),)
+GSI.data.4 <- GSI.data.3 %>%
+  mutate(Oto.reading.4 = ifelse(is.na(Oto.reading.3), "none", Oto.reading.3),)
+
+GSI.nogreen <- GSI.data.4 %>% filter(Weird == "n")
+
+#ok , that was just GSI, don't actually need the above...
+#EGG TIME!
+
+
+#pink odd (p2)###########################
+p2.all.eggs <- read.csv("Data/Results.p2.ImageJ.eggs.csv")
+library(tidyverse)
+df.hold <- data.frame(unique(p2.all.eggs$Label))
+#I manually added in the photo ID's. They are under "Label" in both of the dataframes
+length(na.omit(GSI.data.4$Label)) #and then QC'ed.because they didnt line up. Now they line up
+length(unique(p2.all.eggs$Label))
+
+order(unique(p2.all.eggs$Label))
+
+##MERGE TIME
+p2.df <-  full_join(p2.all.eggs, GSI.data.4, by="Label")
+head(p2.df) 
+names(p2.df)
+p2.df.2 <- p2.df %>%   #get the diameter from the area
+  mutate(Diameter = 2*sqrt(Area/pi))
+head(p2.df.2)
+names(p2.df.2)
+
+#let's remove the unknowns
+p2.df.no.unknown <- p2.df.2 %>% filter(Oto.reading.4 != "none")
+#and remove weird (the green or spawned fish)
+p2.df.clean <- p2.df.no.unknown %>% filter(Weird == "n")
+#View(p2.df.clean)
+
+##IN THE MIDDLE OF THIS NOW. TO FULLY INCLUDE DATE IN CONSIDERATION? I THINK YES....
+##addition 05/24/22: test julian date
+#View(p2.df.clean)
+class(p2.df.clean$Date)
+library(lubridate)
+?lubridate #let's make the dates Julian dates, a numeric
+Date_adj <- mdy(p2.df.clean$Date)
+class(Date_adj) #seemed to work. Tranformed to date
+Julian <- julian(Date_adj, origin = as.Date("2021-01-01"))
+class(Julian) #neat! I did it!
+p2.df.clean$Julian <- Julian
+
+##ZURR steps
+#1 select a full model that includes "important" fixed effects
+fit.p2.A <- lm(Diameter ~ Length.mm. + Oto.reading.4 + Julian +  Length.mm.:Oto.reading.4, data=p2.df.clean)
+summary(fit.p2.A)
+
+
+#2 select/search for optimal random effect structure using REML
+library(lme4)
+fit.p2.B <- lmer(Diameter ~ Oto.reading.4 + Length.mm. + Julian + Oto.reading.4:Length.mm. + (1|ID), data=p2.df.clean, REML=T)
+summary(fit.p2.B)
+
+AIC(fit.p2.A, fit.p2.B) #B wins (with random effects) 
+
+#3 Using optimal random-effect structure. select fixed components for best model using ML #COMPARE USING ML #QCING HERE CURRENTLY
+fit.p2.B.ml <- lmer(Diameter ~ Oto.reading.4 + Length.mm. + Julian + Oto.reading.4:Length.mm. +(1|ID), data=p2.df.clean, REML=F)
+fit.p2.Julian <- lmer(Diameter ~ Oto.reading.4 + Length.mm.+ Julian +(1|ID), data=p2.df.clean, REML=F)
+fit.p2.Julian2 <- lmer(Diameter ~ Oto.reading.4 + Julian +(1|ID), data=p2.df.clean, REML=F)
+fit.p2.B3.ml <- lmer(Diameter ~ Oto.reading.4 + Length.mm. +(1|ID), data=p2.df.clean, REML=F)
+fit.p2.alpha <- lmer(Diameter ~ Oto.reading.4 + Length.mm. + Date + (1|ID), data=p2.df.clean, REML=F)
+fit.p2.B4.ml <-lmer(Diameter ~ Oto.reading.4 + (1|ID), data=p2.df.clean, REML=F) #this one
+fit.p2.B5.ml <-lmer(Diameter ~ 1 + (1|ID), data=p2.df.clean, REML=F) 
+
+AIC(fit.p2.B.ml, fit.p2.B3.ml, fit.p2.B4.ml, fit.p2.alpha, fit.p2.B5.ml, fit.p2.Julian, fit.p2.Julian2) #fit.p2.B4.ml wins
+#update 05/24/22. Fuck, Julian2 date is my best mod. Wait... nno it's not. B4 is better, actually, because it's simpler and within 1 AIC point. So no Julian date needed in this analysis. #NO JULIAN DATE NEEDED. JULIAN DATE DISPROVED. Seemed to have a small effect, but not below the signficance threshhold AND AIC didnt identify it as importatn. WOOO.
+BIC(fit.p2.B.ml, fit.p2.B3.ml, fit.p2.B4.ml, fit.p2.alpha, fit.p2.B5.ml, fit.p2.Julian)
+
+
+##TANGENT - DISPROVED ABOVE!
+#summary(fit.p2.alpha)
+#anova(fit.p2.alpha, fit.p2.B3.ml) #fuck, the date model is sig. vua the loglik but NOT via AIC... #for simplicity, I'll stick with NO DATE for now...
+##TANGENT
+
+#use the REML verstion of the best model to get param estimates
+p2.relevant <- na.omit(p2.df.clean[c(14, 34, 35)])
+
+fit.p2.B4.reml <-lmer(Diameter ~ Oto.reading.4 + (1|ID), data=p2.relevant, REML=T) #this one
+summary(fit.p2.B4.reml) #attach lmerTest for one thing, detatch lmerTest for other #with lmerTest, gives t-value but no df or p-value. Wihtout lmer test, yes p-val
+#what was the thing about REML not relevant for comparison... REML for parameter estimates, ML for model selection?
+compare <- lmer(Diameter ~ (1|ID), data=p2.relevant, REML=T) #this one
+anova(fit.p2.B4.reml, compare )
+#Anova(fit.p2.B4.reml, compare )
+
+fit.p2.lme <- lme(fixed = Diameter ~ Oto.reading.4, random = ~1|ID, data= p2.relevant, method="REML")
+fit.p2.lme.noint <- lme(fixed = Diameter ~ Oto.reading.4-1, random = ~1|ID, data= p2.relevant, method="REML")
+
+summary(fit.p2.B4.reml)
+fixef(fit.p2.lme.noint)
+summary(fit.p2.lme)
+summary(fit.p2.lme.noint)
+
+#p-val: 0.000252
+1-(0.000252/2)
+#(1-0.000252)/2
+
+
+
+############################################################################################
 #coho
+#prepping data. And get rid of them NA's!
+#setwd("/Users/alexandrareich/Desktop/THESIS TIME!/Compilation of GITHUB project code/Relaxed_selection_proj_reproducible_science/DATA") 
+###what the hell is this (above)? some relic code fro when working directories were a grand mystery? - 12/04/23
+c.all.eggs <- read.csv("Data/coho.egg.diameters.csv")
+c.all.other.stuff <- read.csv("Data/MASTERFemaleCohoQCwitheggs_copy.csv")
 
-#results summary
+names(c.all.eggs)
+names(c.all.other.stuff)
+
+
+c.df <- full_join(c.all.eggs, c.all.other.stuff, by="Fish.ID")
+head(c.df)
+#View(c.df)
+names(c.df)
+
+coho.clean <- c.df %>% filter(Weird == "n")
+#write.csv(coho.clean, file="coho_clean_for_641_project")
+
+#conceptual model (mixed model with interaction effects too)
+fit.c.A.INT <- lm(Diameter..mm. ~ Length..mm. + Wild.or.Hatch + Length..mm.:Wild.or.Hatch, data=coho.clean)
+
+#reml to select mixed effects
+fit.c.GLOBAL <- lmer(Diameter..mm. ~ Length..mm. + Wild.or.Hatch+Length..mm.:Wild.or.Hatch +(1|ID), data=coho.clean, REML=T)
+#fit.c.B.INT <- lmer(Diameter..mm. ~ Length..mm. + Wild.or.Hatch + Length..mm.:Wild.or.Hatch +(1|ID), data=coho.clean, REML=T)
+AIC(fit.c.GLOBAL, fit.c.A.INT) #mixed effect model wins!
+
+#ml to select fixed effects
+fit.c.GLOBAL.ml <- lmer(Diameter..mm. ~ Length..mm. + Wild.or.Hatch+Length..mm.:Wild.or.Hatch +(1|ID), data=coho.clean, REML=F)
+
+fit.c.C <- lmer(Diameter..mm. ~ Length..mm. + Wild.or.Hatch +(1|ID), data=coho.clean, REML = F)
+
+fit.c.C1 <- lmer(Diameter..mm. ~ Wild.or.Hatch +(1|ID), data=coho.clean, REML = F)
+fit.c.C2 <- lmer(Diameter..mm. ~ 1 + (1|ID), data=coho.clean, REML = F)
+fit.c.C3 <- lmer(Diameter..mm. ~ Length..mm. +(1|ID), data=coho.clean, REML = F)
+AIC(fit.c.C, fit.c.C1, fit.c.C2, fit.c.C3, fit.c.GLOBAL.ml) #C1 is winner.
+
+
+
+
+#model that was selected
+##(and fit to model without intercept for the standard errors)
+fit.c.C1.REML <- lmer(Diameter..mm. ~ Wild.or.Hatch +(1|ID), data=coho.clean, REML = T)
+summary(fit.c.C1.REML)
+
+fit.lme <- lme(fixed = Diameter..mm. ~ Wild.or.Hatch, random = ~1|ID, data=coho.clean, method="REML")
+summary(fit.lme)
+
+fit.lme.no.int <- lme(fixed = Diameter..mm. ~ Wild.or.Hatch-1, random = ~1|ID, data=coho.clean, method="REML")
+summary(fit.lme.no.int)
+
+
+#parameter estimates
+ranef(fit.lme.no.int)
+fixef(fit.lme.no.int)
+summary(fit.lme)
+summary(fit.lme.no.int)
+
+#graph that
+(coho.egg.graph <- ggplot(coho.clean) + aes(x=Length..mm., y=Diameter..mm., color=Wild.or.Hatch) +
+    geom_point(alpha=0.5) + scale_color_manual(values=c("blue", "orange"), name=element_blank(), labels=c("Wild origin", "Hatchery origin"), breaks=c("wild", "hatchery"))+
+    labs(y="Egg diameter (mm)", x="MEHP length (mm)")+
+    theme_cowplot() +
+    theme(legend.position = c(0.03, 0.94))+
+    coord_cartesian(ylim=c(5,8.5)) +
+    scale_y_continuous(breaks=c(5,6,7,8), expand=c(0,0)))
+
+(cf.fix <- fixef(fit.lme.no.int))
+# and the corresponding random effects:
+(cf.rand <- ranef(fit.lme.no.int))
+Intervals <- intervals(fit.lme.no.int)
+names(Intervals)
+Intervals$fixed[1,1]
+Intervals$fixed[1,3]
+
+
+coho.egg.graph + 
+  geom_ribbon(aes(ymin=Intervals$fixed[1,1], ymax=Intervals$fixed[1,3]), color="grey", alpha=0.3) + geom_ribbon(aes(ymin= Intervals$fixed[2,1], ymax=(Intervals$fixed[2,3])), color="grey", alpha=0.3)+
+  geom_hline(yintercept = cf.fix[1], color="orange", size=1.5) + geom_hline(yintercept = cf.fix[2], color="blue", size=1.5)+
+  coord_cartesian(ylim=c(5,8.3)) +
+  scale_y_continuous(breaks=c(5,6,7,8), expand=c(0,0)) 
+
+
+#QCing fixef values.
+##what am I deleting when I na.omit(coho.clean) ???
+names(coho.clean)
+coho.clean.relevant <- coho.clean[c(1, 4, 3, 5, 13)]
+names(coho.clean.relevant)
+
+
+fit.lme.no.int.testna <- lme(fixed = Diameter..mm. ~ Wild.or.Hatch-1, random = ~1|ID, data=coho.clean.relevant, method="REML")
+fixef(fit.lme.no.int.testna)
+
+fit.lme.no.int.testna2 <- lme(fixed = Diameter..mm. ~ Wild.or.Hatch-1, random = ~1|ID, data=na.omit(coho.clean.relevant), method="REML")
+fixef(fit.lme.no.int.testna2)
+
+fit.lme.no.int.testna3 <- lme(fixed = Diameter..mm. ~ Wild.or.Hatch-1, random = ~1|ID, data=na.omit(coho.clean), method="REML")
+fixef(fit.lme.no.int.testna3)
+#based on these tests, the original way of omiting all NA cut out things I didnt want to get rid of!
+unique(coho.clean$Weird)
+
+
+
+##AAAAND t-test that coho datas.
+t.test.wild <- coho.clean %>% filter(Wild.or.Hatch=="wild")
+t.test.hatch <- coho.clean %>% filter(Wild.or.Hatch=="hatchery")
+#(t.test.coho.eggs <-t.test(t.test.hatch$Diameter..mm.,t.test.wild$Diameter..mm., alternative="less", var.equal = T))
+
+summary(fit.lme) #this does not match
+summary(fit.lme)
+summary(fit.c.C1.REML)
+
+#p-val for fitted model
+fit.null.ML <- lme(fixed = Diameter..mm. ~ 1, random = ~1|ID, data=coho.clean, method="ML")
+fit.lme.ML <- lme(fixed = Diameter..mm. ~ Wild.or.Hatch, random = ~1|ID, data=coho.clean, method="ML")
+summary(fit.lme.ML)
+anova(fit.lme, test=T, type="marginal")
+anova(fit.lme.ML, fit.null.ML)
+
+
+####################
+#side function
+#confient is: mean +- 1.98*se
+sd_from_confint <- function(upper, lower){
+  u <- mean(c(upper, lower))
+  sd_calced <- (upper-u)/1.98 #ned to do this formula on paper. Ok I did. This looks right
+}
+
+###############################################################################################
+# Eggs results summary
+GSI_results #use for example
+
+#the summary results
+##p1
+summary(fit.p1.C1.REML)
+sum_reml_p1 <- summary(fit.p1.C1.REML)
+fixef(fit.p1.lme.param.noint)
+summary(fit.p1.lme.param.noint)
+p_egg_p1 <- sum_reml_p1$coefficients[2,5]/2 #divided by 2 becsue the hypothesis is one-sided
+
+##p2
+(sum_reml_p2<-summary(fit.p2.B4.reml))
+fixef(fit.p2.B4.reml)
+fixef(fit.p2.lme.noint)
+summary(fit.p2.lme)
+summary(fit.p2.lme.noint)
+names(summary(fit.p2.B4.reml))
+confint(fit.p2.B4.reml)#seemed to have worked??
+nlme::intervals(fit.p2.lme.noint)
+p_egg_p2 <- 1-(sum_reml_p2$coefficients[2,5]/2) #1- because opposite of hypothesized. /2 becasue hypothesis is
+
+##c
+ranef(fit.lme.no.int)
+fixef(fit.lme.no.int)
+summary(fit.lme.no.int)
+(sum_reml_c <- summary(fit.c.C1.REML))
+summary(fit.lme)
+anova(fit.lme, test=T, type="marginal")
+anova(fit.c.C1.REML, test=T, type="marginal")
+p_egg_c <- sum_reml_c$coefficients[2,5]/2
+
+
+#making a results table for export
+Egg_results <- data.frame(
+  name=c("pink 2020", "pink 2021", "coho"),
+  t=c(sum_reml_p1$coefficients[2,4], sum_reml_p1$coefficients[2,4], sum_reml_c$coefficients[2,4]),
+  p=c( p_egg_p1, p_egg_p2, p_egg_c),
+  df =c(),
+  hatchery_mean =c(),
+  hatch_sd(),
+  wild_mean=c(),
+  wild_sd()
+  
+  
+)
+
+
+
