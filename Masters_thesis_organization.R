@@ -194,7 +194,7 @@ p1.GSI.t.test #pink 2020
 p2.GSI.t.test #pink 2021
 coho.GSI.t.test #coho
 
-GSI_results <- data.frame(name = c("pink 2020", "pink 2021", "coho"), 
+GSI_results <- data.frame(#name = c("pink 2020", "pink 2021", "coho"), 
                           t = c(p1.GSI.t.test$statistic, p2.GSI.t.test$statistic, coho.GSI.t.test$statistic),
                           df = c(p1.GSI.t.test$parameter, p2.GSI.t.test$parameter, coho.GSI.t.test$parameter),
                           p = c(p1.GSI.t.test$p.value, p2.GSI.t.test$p.value, coho.GSI.t.test$p.value),
@@ -204,7 +204,7 @@ GSI_results <- data.frame(name = c("pink 2020", "pink 2021", "coho"),
                           wild_sd = c( sd_p1_w, sd_w_p2 ,sd_w_c)
                           )
 
-
+rownames(GSI_results) = c("pink 2020", "pink 2021", "coho")
 
 #length results summary
 
@@ -568,8 +568,8 @@ p_egg_c <- sum_reml_c$coefficients[2,5]/2
 
 #making a results table for export
 Egg_results <- data.frame(
-  name=c("pink 2020", "pink 2021", "coho"),
-  t=c(sum_reml_p1$coefficients[2,4], sum_reml_p1$coefficients[2,4], sum_reml_c$coefficients[2,4]),
+  #name=c("pink 2020", "pink 2021", "coho"),
+  t=c(sum_reml_p1$coefficients[2,4], sum_reml_p2$coefficients[2,4], sum_reml_c$coefficients[2,4]),
   p=c( p_egg_p1, p_egg_p2, p_egg_c),
   df = c(sum_reml_p1$coefficients[2,3], sum_reml_p2$coefficients[2,3],sum_reml_c$coefficients[2,3]),
   hatchery_mean =c(fixef(fit.p1.lme.param.noint)[2],fixef(fit.p2.lme.noint)[2],fixef(fit.lme.no.int)[1]),
@@ -581,5 +581,5 @@ Egg_results <- data.frame(
   #sample_size=c()
 )
 
-
+rownames(Egg_results) <- c("pink 2020", "pink 2021", "coho")
 
