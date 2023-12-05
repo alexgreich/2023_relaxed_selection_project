@@ -1,8 +1,5 @@
 #####################
-#alex sorts through all of the bullshit
-#that is her masters thesis
-#and organized results
-#in preparation for publication and all that
+#organizing GSI/egg results for publication
 
 #12/04/23 (yes, this has been ongoing for far too long)
 ###################
@@ -620,10 +617,10 @@ fixef.p1 <-sum.D$coefficients
 upper.p1 <- fixef.p1[1] + (1.96*fixef.p1[2])
 lower.p1 <- fixef.p1[1] - (1.96*fixef.p1[2])
 
-p1.eggs <- pink.egg.graph + geom_segment(y=fixef.p1[1], yend=fixef.p1[1], x= min(p1.clean$Length..mm.), xend=max(p1.clean$Length..mm.), color= "black", size=1.5)+
+p1.eggs <- pink.egg.graph + #geom_segment(y=fixef.p1[1], yend=fixef.p1[1], x= min(p1.clean$Length..mm.), xend=max(p1.clean$Length..mm.), color= "black", size=1.5)+
   #now I just need them error bars
-  geom_segment(y=upper.p1, yend=upper.p1, x= min(p1.clean$Length..mm.), xend=max(p1.clean$Length..mm.), color="black", linetype="dashed") + #upper
-  geom_segment(y=lower.p1, yend=lower.p1, x= min(p1.clean$Length..mm.), xend=max(p1.clean$Length..mm.), color="black", linetype= "dashed") + #lower
+  #geom_segment(y=upper.p1, yend=upper.p1, x= min(p1.clean$Length..mm.), xend=max(p1.clean$Length..mm.), color="black", linetype="dashed") + #upper
+  #geom_segment(y=lower.p1, yend=lower.p1, x= min(p1.clean$Length..mm.), xend=max(p1.clean$Length..mm.), color="black", linetype= "dashed") + #lower
   labs(y="Egg diameter (mm)" , x="Length (mm)") +
   coord_cartesian(xlim=c(395,480)) +scale_x_continuous (breaks=c(400,420,440,460,480), expand=c(0,0)) +
   theme(plot.margin = margin(t=7,r=12,l=5,b=5))
@@ -807,6 +804,12 @@ ggsave ("Plots/GSI_Eggs_combined1.jpg", width = dev.size()[1], height = dev.size
 
 
 
+###################################################################
+#####################################################################
+#female length test and graph
+
+##################################################################
+#################################################################
 
 
 #############################################################################
@@ -815,3 +818,76 @@ ggsave ("Plots/GSI_Eggs_combined1.jpg", width = dev.size()[1], height = dev.size
 ##(re-visit notes please)
 ################################################################################
 #################################################################################
+#sashin lovers comparison that justifies pooling
+
+#uknown fish are excluded from analysis
+
+##p1
+#GSI
+names(p1.clean) #GSI
+names(p1.df.clean) #eggs
+p1.clean$Location
+a <- ggplot(p1) + aes(y=GSI, x=Location, color=Otolith.results) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter() + scale_color_manual(values=c("blue", "orange", "springgreen"))+
+  theme_cowplot()+
+  ggtitle("Pink 2020, separated by oto mark")
+
+b <- ggplot(p1) + aes(y=GSI, x=Location) + #includes unknown
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter()+
+  theme_cowplot()+
+  ggtitle("Pink 2020")
+
+#Eggs #does not include unknown
+c <-ggplot(p1.df.clean) + aes(y=Diameter..mm., x=Location.x, color=Otolith.results) +
+  geom_boxplot() + scale_color_manual(values=c("blue", "orange"))+ #+geom_violin()
+  theme_cowplot()+
+  ggtitle("Pink 2020, separated by oto mark")
+d <- ggplot(p1.df.clean) + aes(y=Diameter..mm., x=Location.x) +
+  geom_boxplot()+
+  theme_cowplot()+
+  ggtitle("Pink 2020")
+#Length - includes uknown
+L1 <- ggplot(p1) + aes(y=Length..mm., x=Location, color=Otolith.results) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter() + scale_color_manual(values=c("blue", "orange", "springgreen"))+
+  theme_cowplot()+
+  ggtitle("Pink 2020, length separated by oto mark")
+
+L2 <- ggplot(p1) + aes(y=Length..mm., x=Location) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter() +
+  theme_cowplot()+
+  ggtitle("Pink 2020, length")
+
+##p2
+#GSI-good - change so it includes uknown, werid fish
+names(p2.GSI.clean)
+e <- ggplot(p2.GSI.clean) + aes(y=GSI.1, x=Location, color=Oto.reading) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter() + scale_color_manual(values=c("blue", "orange"))+
+  theme_cowplot()+
+  ggtitle("Pink 2021, separated by oto mark")
+f <- ggplot(p2.GSI.clean) + aes(y=GSI.1, x=Location) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter()+
+  theme_cowplot()+
+  ggtitle("Pink 2021")
+
+#eggs
+names(p2.df.clean) 
+g <- ggplot(p2.df.clean) +aes(y=Diameter, x=Location, color=Oto.reading) +
+  geom_boxplot() + scale_color_manual(values=c("blue", "orange"))+ #+geom_violin()
+  theme_cowplot()+
+  ggtitle("Pink 2021, separated by oto mark")
+h <- ggplot(p2.df.clean) +aes(y=Diameter, x=Location) +
+  geom_boxplot()+ #+geom_violin()
+  theme_cowplot()+
+  ggtitle("Pink 2021")
+
+#length
+
+
+#combine combine
+(a+e)/(b+f) #GSI sashin/lovers/armstrong comparison plot
+(c+g)/(d+h) #egg sashin/lovers/armstrong comparison plot
+
+
+#lovers cove, size diff between gear types??
+#CHECK WHY I HAVE MISSING VALUES IN P2!!!
+
