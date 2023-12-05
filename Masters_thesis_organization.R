@@ -174,6 +174,10 @@ c.GSI.hatch.t.test <- c.GSI.clean %>% filter(Wild.or.Hatch=="hatchery")
 #t = 1.4608, df = 51.395, p-value = 0.07507
 #t = 1.4608, df = 52, p-value = 0.07504
 
+#test if length is sig for GSI
+coho_mod <- lm(GSI ~ Length..mm. + Wild.or.Hatch, c.GSI.clean)
+summary(coho_mod) #hmmm. length is barely non sig. Larger fish should have a larger GSI, but smaller fish have a larger GSI, for both wild and hatch
+
 
 hatchery_mean_value_GSI_fullcohodataset <- coho.GSI.t.test$estimate[1]
 wild_mean_value_GSI_fullcohodataset <- coho.GSI.t.test$estimate[2]
@@ -576,10 +580,127 @@ Egg_results <- data.frame(
   hatch_sd=c (coef(sum_lme_noint_p1)[2,2], coef(sum_lme_noint_p2)[2,2],coef(sum_lme_noint_c)[1,2]),
   wild_mean=c(fixef(fit.p1.lme.param.noint)[1],fixef(fit.p2.lme.noint)[1],fixef(fit.lme.no.int)[2]),
   wild_sd=c(coef(sum_lme_noint_p1)[1,2], coef(sum_lme_noint_p2)[1,2], coef(sum_lme_noint_c)[2,2]),
-  sd_fixed=c(sum_reml_p1$sigma,sum_reml_p2$sigma, sum_reml_c$sigma), #within a fish
-  sd_random=c(0.233099,0.2411312,0.3157946)#, #among fish. Copy-pasted from the model summaries because it was taking too long to figure out how to input direct.
+  se_fixed=c(sum_reml_p1$sigma,sum_reml_p2$sigma, sum_reml_c$sigma), #within a fish
+  se_random=c(0.233099,0.2411312,0.3157946)#, #among fish. Copy-pasted from the model summaries because it was taking too long to figure out how to input direct.
   #sample_size=c()
 )
 
 rownames(Egg_results) <- c("pink 2020", "pink 2021", "coho")
 
+
+
+#######################################################################
+#########################################################################
+#final graphs
+############################################################################
+#########################################################################
+
+#calc confidence intervals if we need to
+
+##plot egg final might be my GSI graph... the combined one is what I want tho
+
+
+
+###break
+
+
+
+
+
+#############################
+#get plot GSI final
+##########################
+
+###GSI. Copied from Russia graphs and now edited. I'll remove the labels. And... how to panel these? Three across? All stacked on top of each other?
+#coho  #c.GSI.clean - get those datsets
+#coho gsi
+ggGSI_coho <- ggplot(c.GSI.clean) + aes(x=Length..mm., y=GSI, color=Wild.or.Hatch) + geom_point(size=3) +
+  #geom_smooth(method="lm") + #ADD THIS BACK IN if we decide to put length in the model
+  scale_color_manual(values =c("orange", "blue"))+
+  theme_cowplot()+
+  guides(color="none") +
+  labs(x="Length (mm)") +
+  coord_cartesian(ylim=c(13,30), xlim=c(473,650)) +scale_x_continuous (breaks=c(500,550,600,650), expand=c(0,0))+
+  scale_y_continuous(breaks=c(15, 20, 25, 30), expand=c(0,0)) #+
+#theme(plot.margin = margin(t=7,r=12,l=5,b=5))
+
+#pink2020  #p1.clean
+range(p1.clean$Length..mm.) # 397 476
+range(p1.clean$GSI) #14.43570 24.45902
+
+ggGSI_p20 <-ggplot(p1.clean) + geom_point(aes(x=Length..mm., y=GSI, color=Otolith.results), size=3)+
+  #geom_smooth(aes(x=Length..mm., y=GSI), method = "lm", color="black") +
+  scale_color_manual(values=c("orange", "blue"), name=element_blank(), labels = c("Hatchery", "Wild"), limits=c("PORT ARMSTRONG", "no mark")) +
+  theme_cowplot() +
+  #guides(color="none") +
+  labs(x="Length (mm)") +
+  coord_cartesian(ylim=c(13.9,25.0), xlim=c(395,480))+ scale_x_continuous(breaks=c(400,420,440,460,480), expand=c(0,0))+
+  scale_y_continuous(breaks=c(15, 20, 25), expand=c(0,0)) + #for legend.poition, can ise x=0.85 istead of 0.05
+  theme(legend.position = c(0.02, 0.90), plot.margin= margin(t=7,r=12,l=5,b=5))  +
+  theme(
+    legend.title=element_blank(),
+    legend.box.background = element_rect(),
+    legend.box.margin = margin(-5, 3, 2, 2) #yes, finally I made a box.
+  ) #this is looking ok. Note the negative number. This is where I'm adjusting the LEGEND POSITION. needs to adjust a tad down
+
+
+#pink 2021
+max(p2.GSI.clean$GSI.1) #26.7
+min(p2.GSI.clean$GSI.1) #11.8
+max(p2.GSI.clean$Length.mm.) #462
+min(p2.GSI.clean$Length.mm.) #344
+ggGSI_pODD<-ggplot(p2.GSI.clean) + geom_point(aes(x=Length.mm., y=GSI.1, color=Oto.reading), size=3)+
+  #geom_smooth(aes(x=Length.mm., y=GSI.1), method = "lm", color="black") +
+  scale_color_manual(values=c("blue", "orange")) + #bc gatch is listed first here
+  theme_cowplot() + 
+  guides(color="none") + #ooh. How to move a legend into the frame
+  labs(y="GSI", x="Length (mm)")+
+  coord_cartesian(ylim=c(11.0,28.0), xlim=c(340,475))+  #might try max of 465 instead
+  scale_x_continuous(breaks=c(350,375,400,425,450,475), expand=c(0,0)) +  
+  scale_y_continuous(breaks = c(12, 20, 28), expand=c(0,0))
+
+##
+ggGSI_p20_2 <- ggGSI_p20 + labs(x=element_blank(), y=element_blank())
+ggGSI_p21_2 <- ggGSI_pODD + labs(x=element_blank(), y=element_blank())
+ggGSI_c2 <- ggGSI_coho + labs(x=element_blank(), y=element_blank())
+
+ggGSI_grid <- plot_grid(ggGSI_p20_2, ggGSI_p21_2, ggGSI_c2, scale=0.95, nrow=3) 
+
+temp_ggGSI <- plot_grid(NULL, ggGSI_grid, ncol = 2, rel_widths =c(1,6))
+ggGSI_base <- plot_grid(ggGSI_grid, NULL, ncol = 1, rel_heights = c(9,1)) 
+
+xlab_GSI <- ggGSI_coho$labels$x
+ylab_GSI <- ggGSI_coho$labels$y
+
+plot_GSI_final <- ggdraw(ggGSI_base) + draw_label(xlab_GSI, x = 0.55, y = 0.11, size = 15) + 
+  draw_label ((ylab_GSI), angle= 90, x = 0.02, y = 0.6, size = 15) +
+  draw_label ("Even-year pink", x = 0.85, y = 0.98, fontfamily = "Arial", fontface="bold", size = 13) + draw_label ("Odd-year pink", x = 0.85, y = 0.67, fontfamily = "Arial", fontface="bold", size = 13) + draw_label ("Coho", fontfamily = "Arial", fontface="bold", size = 13, x = 0.85, y = 0.37) 
+
+plot_GSI_final
+
+
+#plot_GSI_final + plot_egg_final
+#combine plot_egg_final and plot_GSI_final
+library(patchwork)
+design2 <- "
+111111#22222222
+111111#22222222
+111111#22222222
+"
+
+plot_GSI_final + plot_egg_final + plot_layout(design=design2)
+#8 by 10 works decent with design 2 spacing
+
+#dev.new (width = 10, height = 8, unit = "in", noRStudioGD = T); last_plot() #perfect
+#ggsave ("GSI_Eggs_combined1.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+
+
+
+
+
+#############################################################################
+##############################################################################
+#the lovers vs sashin test that charlie and sam wanted
+##(re-visit notes please)
+################################################################################
+#################################################################################
