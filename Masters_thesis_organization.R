@@ -802,8 +802,8 @@ design2 <- "
 plot_GSI_final + plot_egg_final + plot_layout(design=design2)
 #8 by 10 works decent with design 2 spacing
 
-#dev.new (width = 10, height = 8, unit = "in", noRStudioGD = T); last_plot() #perfect
-#ggsave ("GSI_Eggs_combined1.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+dev.new (width = 10, height = 8, unit = "in", noRStudioGD = T); last_plot() #perfect
+ggsave ("Plots/GSI_Eggs_combined1.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 
 
 
