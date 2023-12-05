@@ -595,15 +595,124 @@ rownames(Egg_results) <- c("pink 2020", "pink 2021", "coho")
 ############################################################################
 #########################################################################
 
-#calc confidence intervals if we need to
 
-##plot egg final might be my GSI graph... the combined one is what I want tho
+##########################
+#how we get to plot_egg_final
+#########################
+##how we get these: p1.eggs/p2.eggs/coho.eggs
+#p1
+pink.egg.graph <- ggplot(p1.df.clean) + aes(x=Length..mm., y=Diameter..mm., color=Otolith.results) +
+  geom_point(alpha=0.5) + scale_color_manual(values=c("blue", "orange"))+
+  theme_cowplot() + 
+  guides(color="none")
+#theme(legend.position = c(0.03, 0.94))+
+#coord_cartesian(ylim=c(5,8.5)) +
+#scale_y_continuous(breaks=c(5,6,7,8), expand=c(0,0)))
 
+sum.D <- summary(fit.p1.D)
+summary(fit.p1.C1.REML)
 
+fixef.p1 <-sum.D$coefficients
 
-###break
+#p1.clean.wild <- p1.clean %>% filter(Otolith.results == "no mark")
+#p1.clean.hatch <- p1.clean %>% filter(Otolith.results == "PORT ARMSTRONG")
 
+upper.p1 <- fixef.p1[1] + (1.96*fixef.p1[2])
+lower.p1 <- fixef.p1[1] - (1.96*fixef.p1[2])
 
+p1.eggs <- pink.egg.graph + geom_segment(y=fixef.p1[1], yend=fixef.p1[1], x= min(p1.clean$Length..mm.), xend=max(p1.clean$Length..mm.), color= "black", size=1.5)+
+  #now I just need them error bars
+  geom_segment(y=upper.p1, yend=upper.p1, x= min(p1.clean$Length..mm.), xend=max(p1.clean$Length..mm.), color="black", linetype="dashed") + #upper
+  geom_segment(y=lower.p1, yend=lower.p1, x= min(p1.clean$Length..mm.), xend=max(p1.clean$Length..mm.), color="black", linetype= "dashed") + #lower
+  labs(y="Egg diameter (mm)" , x="Length (mm)") +
+  coord_cartesian(xlim=c(395,480)) +scale_x_continuous (breaks=c(400,420,440,460,480), expand=c(0,0)) +
+  theme(plot.margin = margin(t=7,r=12,l=5,b=5))
+
+#p2
+names(p2.df.clean)
+
+p2.egg.graph <- ggplot(p2.df.clean) + aes(x=Length.mm., y=Diameter, color=Oto.reading) +
+  geom_point(alpha=0.5) + scale_color_manual(values=c("blue", "orange"))+
+  theme_cowplot() + 
+  guides(color="none")
+
+wild.p2 <- fixef(fit.p2.lme.noint)[1]
+hatch.p2 <- fixef(fit.p2.lme.noint)[2]
+
+wild.subset.p2 <- p2.df.clean %>% filter(Oto.reading=="No Mark")
+hatch.subset.p2 <- p2.df.clean %>% filter(Oto.reading=="PORT ARMSTRONG")
+
+Intervals.p2 <- intervals(fit.p2.lme.noint)
+hatchlow<- Intervals.p2$fixed[2,1]
+hatchhigh <- Intervals.p2$fixed[2,3]
+wildlow <- Intervals.p2$fixed[1,1]
+wildhigh <- Intervals.p2$fixed[1,3]
+
+p2.eggs <-p2.egg.graph + geom_segment(y=wild.p2, yend=wild.p2, x= min(wild.subset.p2$Length.mm.), xend=max(hatch.subset.p2$Length.mm.), color= "blue", size=1.5) +  #wild+
+  geom_segment(y=hatch.p2, yend=hatch.p2, x= min(hatch.subset.p2$Length.mm.), xend=max(hatch.subset.p2$Length.mm.), color= "orange", size=1.5)+ #hatch
+  #now just need to add error bars
+  geom_segment(y= wildhigh,  yend=(wildhigh), x=  min(wild.subset.p2$Length.mm.), xend= max(wild.subset.p2$Length.mm.), color="black", linetype="dashed")+
+  geom_segment(y= wildlow,  yend=(wildlow), x=  min(wild.subset.p2$Length.mm.), xend= max(wild.subset.p2$Length.mm.), color="black", linetype="dashed") +
+  geom_segment(y= hatchlow,  yend=(hatchlow), x=  min(hatch.subset.p2$Length.mm.), xend= max(hatch.subset.p2$Length.mm.), color="black", linetype="dashed") +
+  geom_segment(y= hatchhigh,  yend=(hatchhigh), x=  min(hatch.subset.p2$Length.mm.), xend= max(hatch.subset.p2$Length.mm.), color="black", linetype="dashed") + 
+  labs(y= "Egg diameter (mm)",x="Length (mm)") +
+  coord_cartesian(xlim=c(342,475), ylim=c(5,8)) +scale_x_continuous (breaks=c(350, 375,400,425,450, 475), expand=c(0,0)) +
+  scale_y_continuous(breaks=c(5,6,7,8), expand = c(0,0))+
+  theme(plot.margin = margin(t=7,r=12,l=5,b=5))
+
+#coho
+(coho.egg.graph <- ggplot(coho.clean) + aes(x=Length..mm., y=Diameter..mm., color=Wild.or.Hatch) +
+    geom_point(alpha=0.5) + scale_color_manual(values=c("blue", "orange"), name=element_blank(), labels=c("Wild origin", "Hatchery origin"), breaks=c("wild", "hatchery"))+
+    labs(y="Egg diameter (mm)", x="MEHP length (mm)")+
+    theme_cowplot() +
+    theme(legend.position = c(0.03, 0.94))+
+    coord_cartesian(ylim=c(5,8.5)) +
+    scale_y_continuous(breaks=c(5,6,7,8), expand=c(0,0)))
+
+hatch.temp <- coho.clean %>% filter(Wild.or.Hatch=="hatchery")
+wild.temp <- coho.clean %>% filter(Wild.or.Hatch=="wild")
+
+hmin.length <- min(hatch.temp$Length..mm.)
+hmax.length <- max(hatch.temp$Length..mm.)
+wmin.length <- min(wild.temp$Length..mm.)
+wmax.length <- max(wild.temp$Length..mm.)
+
+coho.eggs <- coho.egg.graph + 
+  geom_segment(y=Intervals$fixed[1,1], yend=Intervals$fixed[1,1], color="black", x=hmin.length, xend=hmax.length, linetype="dashed") +
+  geom_segment(y=Intervals$fixed[1,3], yend=Intervals$fixed[1,3], color="black", x=hmin.length, xend=hmax.length, linetype="dashed") +
+  #hatch
+  geom_segment(y= Intervals$fixed[2,1],  yend=(Intervals$fixed[2,1]), x= wmin.length, xend=wmax.length, color="black", linetype="dashed")+ 
+  geom_segment(y= Intervals$fixed[2,3],  yend=(Intervals$fixed[2,3]), x= wmin.length, xend=wmax.length, color="black", linetype="dashed")+ 
+  #wild
+  geom_segment(y = cf.fix[1], yend = cf.fix[1], color="orange", size=1.5, x= hmin.length, xend = hmax.length ) + geom_segment(y = cf.fix[2], yend= cf.fix[2], color="blue", size=1.5, x= wmin.length, xend = wmax.length )+
+  coord_cartesian(ylim=c(5,8.3), xlim=c(473,650)) +
+  scale_y_continuous(breaks=c(5,6,7,8), expand=c(0,0))+
+  scale_x_continuous (breaks=c(500,550,600,650), expand=c(0,0))+
+  guides(color="none") +
+  labs(x="Length (mm)") +
+  theme(plot.margin = margin(t=7,r=12,l=5,b=5))
+
+##
+xlab <-coho.eggs$labels$x
+ylab <- coho.eggs$labels$y
+
+coho.eggs_nolabs <- coho.eggs + labs(x=element_blank(), y=element_blank())
+p1.eggs_nolabs <- p1.eggs + labs(x=element_blank(), y=element_blank())
+p2.eggs_nolabs <- p2.eggs + labs(x=element_blank(), y=element_blank())
+
+#nice. Now combine them?
+eggs_combined_draft <- plot_grid(p1.eggs_nolabs,p2.eggs_nolabs,coho.eggs_nolabs, scale=0.95, nrow=3) #ok, that looks good. Good job
+
+#now add axes labels
+##set it up first
+temp_egg <- plot_grid (NULL, eggs_combined_draft, ncol = 2, rel_widths =c(1,6))
+egg_base <- plot_grid(eggs_combined_draft, NULL, ncol = 1, rel_heights = c(9,1)) #might need to make this smaller a lil bit
+#and tehn actually add them labels
+plot_egg_final <- ggdraw(egg_base) + draw_label(xlab, x = 0.55, y = 0.11, size = 15) + 
+  draw_label ((ylab), angle= 90, x = 0.02, y = 0.6, size = 15) +
+  draw_label ("Even-year pink", x = 0.85, y = 0.98, fontfamily = "Arial", fontface="bold", size = 13) + draw_label ("Odd-year pink", x = 0.85, y = 0.67, fontfamily = "Arial", fontface="bold", size = 13) + draw_label ("Coho", fontfamily = "Arial", fontface="bold", size = 13, x = 0.85, y = 0.37) 
+
+plot_egg_final
 
 
 
@@ -678,15 +787,17 @@ plot_GSI_final <- ggdraw(ggGSI_base) + draw_label(xlab_GSI, x = 0.55, y = 0.11, 
 
 plot_GSI_final
 
-
+#############################################
 #plot_GSI_final + plot_egg_final
 #combine plot_egg_final and plot_GSI_final
+#############################################
 library(patchwork)
 design2 <- "
 111111#22222222
 111111#22222222
 111111#22222222
 "
+
 
 plot_GSI_final + plot_egg_final + plot_layout(design=design2)
 #8 by 10 works decent with design 2 spacing
