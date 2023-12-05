@@ -541,7 +541,7 @@ GSI_results #use for example
 summary(fit.p1.C1.REML)
 sum_reml_p1 <- summary(fit.p1.C1.REML)
 fixef(fit.p1.lme.param.noint)
-summary(fit.p1.lme.param.noint)
+(sum_lme_noint_p1<-summary(fit.p1.lme.param.noint))
 p_egg_p1 <- sum_reml_p1$coefficients[2,5]/2 #divided by 2 becsue the hypothesis is one-sided
 
 ##p2
@@ -549,7 +549,7 @@ p_egg_p1 <- sum_reml_p1$coefficients[2,5]/2 #divided by 2 becsue the hypothesis 
 fixef(fit.p2.B4.reml)
 fixef(fit.p2.lme.noint)
 summary(fit.p2.lme)
-summary(fit.p2.lme.noint)
+(sum_lme_noint_p2<-summary(fit.p2.lme.noint))
 names(summary(fit.p2.B4.reml))
 confint(fit.p2.B4.reml)#seemed to have worked??
 nlme::intervals(fit.p2.lme.noint)
@@ -558,7 +558,7 @@ p_egg_p2 <- 1-(sum_reml_p2$coefficients[2,5]/2) #1- because opposite of hypothes
 ##c
 ranef(fit.lme.no.int)
 fixef(fit.lme.no.int)
-summary(fit.lme.no.int)
+(sum_lme_noint_c<-summary(fit.lme.no.int))
 (sum_reml_c <- summary(fit.c.C1.REML))
 summary(fit.lme)
 anova(fit.lme, test=T, type="marginal")
@@ -571,14 +571,14 @@ Egg_results <- data.frame(
   name=c("pink 2020", "pink 2021", "coho"),
   t=c(sum_reml_p1$coefficients[2,4], sum_reml_p1$coefficients[2,4], sum_reml_c$coefficients[2,4]),
   p=c( p_egg_p1, p_egg_p2, p_egg_c),
-  df =c(),
-  hatchery_mean =c(),
-  hatch_sd=c(),
-  wild_mean=c(),
-  wild_sd=c(),
-  sd_fixed=c(), #within a fish
-  sd_random=c(), #among fish
-  sample_size=c()
+  df = c(sum_reml_p1$coefficients[2,3], sum_reml_p2$coefficients[2,3],sum_reml_c$coefficients[2,3]),
+  hatchery_mean =c(fixef(fit.p1.lme.param.noint)[2],fixef(fit.p2.lme.noint)[2],fixef(fit.lme.no.int)[1]),
+  hatch_sd=c (coef(sum_lme_noint_p1)[2,2], coef(sum_lme_noint_p2)[2,2],coef(sum_lme_noint_c)[1,2]),
+  wild_mean=c(fixef(fit.p1.lme.param.noint)[1],fixef(fit.p2.lme.noint)[1],fixef(fit.lme.no.int)[2]),
+  wild_sd=c(coef(sum_lme_noint_p1)[1,2], coef(sum_lme_noint_p2)[1,2], coef(sum_lme_noint_c)[2,2]),
+  sd_fixed=c(sum_reml_p1$sigma,sum_reml_p2$sigma, sum_reml_c$sigma), #within a fish
+  sd_random=c(0.233099,0.2411312,0.3157946)#, #among fish. Copy-pasted from the model summaries because it was taking too long to figure out how to input direct.
+  #sample_size=c()
 )
 
 
