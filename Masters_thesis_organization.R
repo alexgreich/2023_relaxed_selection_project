@@ -573,11 +573,12 @@ Egg_results <- data.frame(
   p=c( p_egg_p1, p_egg_p2, p_egg_c),
   df =c(),
   hatchery_mean =c(),
-  hatch_sd(),
+  hatch_sd=c(),
   wild_mean=c(),
-  wild_sd()
-  
-  
+  wild_sd=c(),
+  sd_fixed=c(), #within a fish
+  sd_random=c(), #among fish
+  sample_size=c()
 )
 
 
