@@ -871,7 +871,7 @@ snag_f + snag_m
 #################################################################################
 #sashin lovers comparison that justifies pooling
 
-#uknown fish are excluded from analysis
+#uknown fish are excluded from analysis, but included in these graphs
 
 
 
@@ -905,24 +905,39 @@ L1 <- ggplot(p1) + aes(y=Length..mm., x=Location, color=Otolith.results) +
   theme_cowplot()+
   ggtitle("Pink 2020, length separated by oto mark")
 
+L11 <- ggplot(p1.clean) + aes(y=Length..mm., x=Location, color=Otolith.results) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter() + scale_color_manual(values=c("blue", "orange"))+
+  theme_cowplot()+
+  ggtitle("Pink 2020, length separated by oto mark")
+
 L2 <- ggplot(p1) + aes(y=Length..mm., x=Location) +
   geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter() +
   theme_cowplot()+
-  ggtitle("Pink 2020, length")
+  ggtitle("Pink 2020")
+
+L22 <- ggplot(p1.clean) + aes(y=Length..mm., x=Location) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter() +
+  theme_cowplot()+
+  ggtitle("Pink 2020")
 
 ##p2
+#quick wrangle
+p2.GSI.with.unknown <- p2.GSI %>%
+  mutate(Oto.reading = ifelse(Oto.reading %in% c("Overground", "No Oto"), "unknown", Oto.reading),
+         GSI.1 = GSI.measure.1.g./Fish.weight.g.)
+
 #GSI-good - change so it includes uknown, werid fish
-names(p2.GSI.clean)
-e <- ggplot(p2.GSI.clean) + aes(y=GSI.1, x=Location, color=Oto.reading) +
-  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter() + scale_color_manual(values=c("blue", "orange"))+
+names(p2.GSI.with.unknown)
+e <- ggplot(p2.GSI.with.unknown) + aes(y=GSI.1, x=Location, color=Oto.reading) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter() + scale_color_manual(values=c("blue", "orange", "springgreen"))+
   theme_cowplot()+
-  ggtitle("Pink 2021, separated by oto mark")
-f <- ggplot(p2.GSI.clean) + aes(y=GSI.1, x=Location) +
+  ggtitle("Pink 2021, separated by oto mark") #does not work now becasu I 
+f <- ggplot(p2.GSI.with.unknown) + aes(y=GSI.1, x=Location) +
   geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter()+
   theme_cowplot()+
   ggtitle("Pink 2021")
 
-#eggs
+#eggs #meh, I dont really want to do this graph
 names(p2.df.clean) 
 g <- ggplot(p2.df.clean) +aes(y=Diameter, x=Location, color=Oto.reading) +
   geom_boxplot() + scale_color_manual(values=c("blue", "orange"))+ #+geom_violin()
@@ -934,6 +949,32 @@ h <- ggplot(p2.df.clean) +aes(y=Diameter, x=Location) +
   ggtitle("Pink 2021")
 
 #length
+L3 <- ggplot(p2.GSI.with.unknown) + aes(x=Location, y=Length.mm., color=Oto.reading) +
+  geom_boxplot() + geom_jitter() + scale_color_manual(values=c("blue", "orange", "springgreen"))+
+  theme_cowplot()+
+  ggtitle("Pink 2021, length separated by oto mark")
+
+L33 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm., color=Oto.reading) +
+  geom_boxplot() + geom_jitter() + scale_color_manual(values=c("blue", "orange", "springgreen"))+
+  theme_cowplot()+
+  ggtitle("Pink 2021, length separated by oto mark")
+
+L4 <- ggplot(p2.GSI.with.unknown) + aes(x=Location, y=Length.mm.) +
+  geom_boxplot() + geom_jitter() +# scale_color_manual(values=c("blue", "orange", "springgreen"))+
+  theme_cowplot()+
+  ggtitle("Pink 2021")
+
+L44 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm.) +
+  geom_boxplot() + geom_jitter() +# scale_color_manual(values=c("blue", "orange", "springgreen"))+
+  theme_cowplot()+
+  ggtitle("Pink 2021")
+
+#length graphs for sharing
+##NOTE: unknown and werid fish are incldued in these graphs, but not in analysis
+(L1+L3)/(L2+L4) #with unknowns and weirds
+(L11+L33)/(L22+L44) #without unknowns and werids. I think use this one
+
+#ok re-do length but without unknown
 
 
 #combine combine
@@ -941,6 +982,8 @@ h <- ggplot(p2.df.clean) +aes(y=Diameter, x=Location) +
 (c+g)/(d+h) #egg sashin/lovers/armstrong comparison plot
 
 
-#lovers cove, size diff between gear types??
+#################################################################
+#post-hoc power analysis for females
+##############################################################
 
 
