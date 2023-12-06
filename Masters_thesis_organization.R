@@ -67,6 +67,10 @@ plot(aov.p1.GSI) #says outlier is not sig
 sd_p1_w <- sd(p1.wild.GSI.ttest$GSI)
 sd_p1_h <- sd(p1.hatch.GSI.ttest$GSI) #excellent. Now do the GSI graphs
 
+#sample sizes
+ss_p1_h <- length(p1.hatch.GSI.ttest$GSI)
+ss_p1_w <- length(p1.wild.GSI.ttest$GSI)
+
 #length test 07/25/22 (dont use)
 mod_p1_length <- lm(GSI~Otolith.results + Length..mm., p1.clean)
 summary(mod_p1_length) #not sig diff lengths.
@@ -88,6 +92,10 @@ GSI.for.ttest.wild <- na.omit(p2.GSI.clean.relevant) %>% filter(Oto.reading == "
 GSI.for.ttest.hatch <- na.omit(p2.GSI.clean.relevant) %>% filter(Oto.reading == "PORT ARMSTRONG")
 
 (p2.GSI.t.test <- t.test(GSI.for.ttest.hatch$GSI.1,GSI.for.ttest.wild$GSI.1, alternative="greater", var.equal=T))
+
+#sample sizes
+ss_p2_h <- length(GSI.for.ttest.hatch$GSI.1)
+ss_p2_w <- length(GSI.for.ttest.wild$GSI.1)
 
 #test resids
 aov.p2.GSI <- aov(GSI.1 ~ Oto.reading, p2.GSI.clean.relevant)
@@ -585,6 +593,12 @@ Egg_results <- data.frame(
 
 rownames(Egg_results) <- c("pink 2020", "pink 2021", "coho")
 
+
+#results summary so far:
+GSI_results
+Egg_results
+
+#sigh. what are my sample sizes?
 
 
 #######################################################################
