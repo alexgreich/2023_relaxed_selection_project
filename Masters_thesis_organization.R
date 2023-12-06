@@ -25,6 +25,7 @@ library(nlme)
 library(visreg)
 
 library(lmerTest)
+library(patchwork)
 
 #######################################
 #####################################
@@ -831,7 +832,10 @@ t.test(p2_female_lovers_snag$Length.mm., p2_female_lovers_seine$Length.mm.) #not
 
 seine_v_snag_f <- rbind(p2_female_lovers_snag, p2_female_lovers_seine) #just the lovers cove seine and snag data
 
-ggplot(seine_v_snag_f) + aes(x=Catch.method, y=Length.mm.) + geom_boxplot() + geom_jitter() + theme_cowplot()
+snag_f <-ggplot(seine_v_snag_f) + aes(x=Catch.method, y=Length.mm.) + geom_boxplot() + geom_jitter() + theme_cowplot()+
+  ggtitle("Lovers Cove - females")+
+  labs(x="Catch method", y="Length")
+
 #most of them were snagged. that's what this plot tells us
 
 
@@ -848,6 +852,15 @@ p2_male_lovers_seine <- p2_catch_data_m %>%
          Catch.method == "seine")
 
 t.test(p2_male_lovers_snag$Length.mm., p2_male_lovers_seine$Length.mm.) #not sig diff
+
+seine_v_snag_m <- rbind(p2_male_lovers_snag, p2_male_lovers_seine)
+
+snag_m <- ggplot(seine_v_snag_m) + aes(x=Catch.method, y=Length.mm.) + geom_boxplot() + geom_jitter() + theme_cowplot()+
+  ggtitle("Lovers Cove - males")+
+  labs(x="Catch method", y="Length")
+
+#plot of catch type comparison for lovers cove
+snag_f + snag_m
 
 
 #############################################################################
