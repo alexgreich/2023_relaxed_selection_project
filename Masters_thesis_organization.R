@@ -812,6 +812,44 @@ ggsave ("Plots/GSI_Eggs_combined1.jpg", width = dev.size()[1], height = dev.size
 #################################################################
 
 
+
+#############################3
+#lovers snag vs. seine size test, for Sam
+###########################
+#females caught from lovers
+#weird fish included
+p2_catch_data_f <- read.csv("Data/Snag/p2_female_snag.csv")
+
+p2_female_lovers_snag <- p2_catch_data_f %>%
+  filter(Location == "Lovers",
+         Catch.method == "snag")
+p2_female_lovers_seine <- p2_catch_data_f %>%
+  filter(Location == "Lovers",
+         Catch.method == "seine")
+
+t.test(p2_female_lovers_snag$Length.mm., p2_female_lovers_seine$Length.mm.) #not sig different
+
+seine_v_snag_f <- rbind(p2_female_lovers_snag, p2_female_lovers_seine) #just the lovers cove seine and snag data
+
+ggplot(seine_v_snag_f) + aes(x=Catch.method, y=Length.mm.) + geom_boxplot() + geom_jitter() + theme_cowplot()
+#most of them were snagged. that's what this plot tells us
+
+
+
+#males caught from lovers
+p2_catch_data_m <- read.csv("Data/Snag/p2_male_snag.csv")
+
+p2_male_lovers_snag <- p2_catch_data_m %>%
+  filter(Location == "Lovers",
+         Catch.method == "snag")
+
+p2_male_lovers_seine <- p2_catch_data_m %>%
+  filter(Location == "Lovers",
+         Catch.method == "seine")
+
+t.test(p2_male_lovers_snag$Length.mm., p2_male_lovers_seine$Length.mm.) #not sig diff
+
+
 #############################################################################
 ##############################################################################
 #the lovers vs sashin test that charlie and sam wanted
@@ -821,6 +859,8 @@ ggsave ("Plots/GSI_Eggs_combined1.jpg", width = dev.size()[1], height = dev.size
 #sashin lovers comparison that justifies pooling
 
 #uknown fish are excluded from analysis
+
+
 
 ##p1
 #GSI
@@ -889,5 +929,5 @@ h <- ggplot(p2.df.clean) +aes(y=Diameter, x=Location) +
 
 
 #lovers cove, size diff between gear types??
-#CHECK WHY I HAVE MISSING VALUES IN P2!!!
+
 
