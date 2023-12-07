@@ -192,12 +192,12 @@ Bomb_with_covariates is my dataset right now. Let's check out them covariates!
 (and maybe normality assuption too on the energy and lipid data!!)
 Pause for now. 04/22/22. Above is what to do next.'
 
-05/02/22
+05/02/22  .... note 12/06/23- > ok... check my data wrangling, why are there NA's? These should be investigated, not ignored.
 ```{r}
 Bomb_with_covariates_notweird <- Bomb_with_covariates %>%
   filter(Weird=="n")
 Bomb_df <- Bomb_with_covariates_notweird
-Bomb_with_covariates_notweird_noNA <- na.omit(Bomb_with_covariates_notweird)
+Bomb_with_covariates_notweird_noNA <- na.omit(Bomb_with_covariates_notweird) #12/06/23.. what NA's were these? I should check and make sure nothing weird is going on.
 
 
 #let's use Bomb_with_covariates_notweird in place of Bomb.Ed.
