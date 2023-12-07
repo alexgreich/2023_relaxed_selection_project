@@ -253,11 +253,11 @@ t.test(Hatch_egg_energy, Wild_egg_energy, alternative="less", var.equal = F)
 #lipid
 Wild_lipid_energy <- Bomb_df %>% 
   filter(Wild_or_hatch == "W") %>%
-  select(X..lipid)
+  dplyr::select(X..lipid)
     
 Hatch_lipid_energy <- Bomb_df %>% 
   filter(Wild_or_hatch == "H") %>%
-  select(X..lipid)
+  dplyr::select(X..lipid)
 
 (T_test_lipid <- t.test(Hatch_lipid_energy, Wild_lipid_energy, alternative="less", var.equal = T))
 
