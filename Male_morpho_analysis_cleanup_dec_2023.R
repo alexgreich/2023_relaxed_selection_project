@@ -282,11 +282,138 @@ CVA.pink <- CVA(vari, groups=facto)
 #############################               COHO               #######################################
 #####################################################################################################3
 ######################################################################################################
-#corresponds to line 332 in Morpho_yr1_pinkcoho.Rmd code
+#corresponds to line 322 in Morpho_yr1_pinkcoho.Rmd code
 
 
 ####################################################################################################
 #load in coho data
+
+#coho_lands <- readland.tps("/Users/alexandrareich/Desktop/THESIS TIME!/Compilation of GITHUB project code/Relaxed_selection_proj_reproducible_science/DATA/Coho091021_rand_fixed062221.tps", readcurves=TRUE)
+coho_lands <- readland.tps("Data/Coho091021_rand_fixed062221.tps", readcurves=TRUE)
+
+coho_lands<-coho_lands[c(-5,-6),,]
+#the photo names should tell you the ID, probably need to go make a vector of the coho ID's tho
+
+#need to reorder my length vector to match the coho ID
+#or reorder my coho ID to match the length vector....
+the_order <- c(45,43,41, 49, 3, 16, 44, 13, 54, 47, 17, 55, 18, 21, 34, 57, 39, 2, 4, 53, 24, 28, 22, 31, 35, 15, 60,
+               52, 56, 37, 33, 51, 20, 19, 29, 42, 27, 48, 30, 7, 26, 40, 59, 25, 11, 12, 14, 8, 38, 36, 32, 46, 5, 50,
+               23, 9, 58, 1, 6, 10)
+#WHAT IS length_c....
+#######3
+#Coho length/depth stuff
+#coho.dat <- read.csv("/Users/alexandrareich/Desktop/THESIS TIME!/Compilation of GITHUB project code/Relaxed_selection_proj_reproducible_science/DATA/MASTERMaleCohoQC copy.csv")
+coho.dat <- read.csv("Data/MASTERMaleCohoQC copy.csv")
+names(coho.dat)
+length_c <- coho.dat$Length..mm.
+
+########3
+
+
+length_ordered <- c(602,583,length_c[41], length_c[49], length_c[3], length_c[16], length_c[44], length_c[13], length_c[54], length_c[47], length_c[17], length_c[55], length_c[18], length_c[21], length_c[34], length_c[57], length_c[39], length_c[2], length_c[4], length_c[53], length_c[24], length_c[28], length_c[22], length_c[31], length_c[35], length_c[15], length_c[60],
+                    length_c[52], length_c[56], length_c[37], length_c[33], length_c[51], length_c[20], length_c[19], length_c[29], length_c[42], length_c[27], length_c[48], length_c[30], length_c[7], length_c[26], length_c[40], length_c[59], length_c[25], length_c[11], length_c[12], length_c[14], length_c[8], length_c[38], length_c[36], length_c[32], length_c[46], length_c[5], length_c[50],
+                    length_c[23], length_c[9], length_c[58], length_c[1], length_c[6], length_c[10])
+
+#l.c <- numeric()
+#i=1
+#for (i in 1:length(length_ordered)){
+ # if (length_ordered[i] > 525){
+  #  l.c <- c(l.c,i)
+  #}
+#}
+
+Wild.or.hatch.d <- c("H","H", "H", "H", "W", "W", "H", "W", "H", "H", #47
+                     "W", "H", "W", "W", "H", "H", "H", "W", "W", "H",#53
+                     "W", "W", "W", "H", "H", "W", "H", "H", "H", "H", #37
+                     "H", "H", "W", "W", "W", "H", "W", "H", "W", "W", "W", #26
+                     "H", "H", "W", "W", "W", "W", "W", "H", "H", "H", #32
+                     "H", "W", "H", "W", "W", "H", "W", "W", "W")
 #######################################################################################################
 
 
+###########################################################################################################
+#Plot all speciments. hashtagging out long specimens, vecause we are not subsetting in this version
+
+#Wild.or.hatch.long<- Wild.or.hatch.d[l.c]
+#coho_lands_long <- coho_lands[,,l.c]
+plotAllSpecimens(coho_lands)
+#plotAllSpecimens(coho_lands_long)
+###############################################################################################################
+
+
+###############################################################################################################3
+#Add in the SEMILANDMARKS (special to this iteration of data)
+#should be the same as the otehr matrix, so not adding anything new here - line 389
+################################################################################################################
+
+
+#################################################################################################################
+#procrustes shape space transformation #line 393
+
+gpa_coho <- gpagen(coho_lands, curves=pinkcurves) #should be the same matrix as pinkcurves, nothing special here. but be careful
+#plotAllSpecimens(coho_lands)
+plot(gpa_coho)
+
+#gpa_coho_long <- gpagen(coho_lands_long, curves=pinkcurves) #pink sliders same as coho for id purposes, so OK to use here.
+#plotAllSpecimens(coho_lands_long)
+#plot(gpa_coho_long)
+####################################################################################################################
+
+
+#####################################################################################################################
+#PCA/rel warps
+#run a PCA
+pca_coho <- gm.prcomp(gpa_coho$coords)
+plot(pca_coho)
+#summary(pca_coho)
+#names(pca_coho)
+
+
+#pca_coho_long <- gm.prcomp(gpa_coho_long$coords)
+#plot(pca_coho_long)
+#summary(pca_coho_long)
+#names(pca_coho_long)
+
+#can you also plot the ID of the important PCs???
+#pvar_cl <- (pca_coho_long$sdev^2)/(sum(pca_coho_long$sdev^2))
+#names(pvar_cl) <- seq(1:length(pvar_cl))
+#barplot(pvar_cl, xlab= "Principal Components", ylab = "% Variance")
+
+######################################################################################################################
+
+
+######################################################################################################################
+#PCA ggplot
+
+df.coho <- as.data.frame(pca_coho$x[,1:3])
+df.coho$Wild.or.hatch <- Wild.or.hatch.d 
+
+ggplot(df.coho) + aes(x=Comp1, y=Comp2, color=Wild.or.hatch) + geom_point()+
+  scale_color_brewer(palette="Set2")+
+  stat_ellipse()
+
+
+#df.coho.long <- as.data.frame(pca_coho_long$x[,1:3])
+#df.coho.long$Wild.or.hatch <- Wild.or.hatch.long
+
+#ggplot(df.coho.long) + aes(x=Comp1, y=Comp2, color=Wild.or.hatch) + geom_point()+
+ # scale_color_brewer(palette="Set2")+
+#  stat_ellipse()
+
+#ggplot(df.coho.long) + aes(x=Comp1, y=Comp3, color=Wild.or.hatch) + geom_point()+
+ # scale_color_brewer(palette="Set2")+
+#  stat_ellipse()
+
+######################################################################
+#need to do a RW1 vs RW 3 graph 10/12/21 for coho and coho long #SHIT #delete??
+mycolors.coho=c("orange", "blue")
+#coho long
+#ggplot(df.coho.long) + aes(x=Comp3, y=Comp1, color=Wild.or.hatch) + geom_point(size=2)+ scale_color_manual(values=mycolors.coho) + stat_ellipse() + labs(y= "RW 1 (snout, roughly)", x= "RW 3 (depth, roughly)") + theme_bw()  #RW1 is roughtly hump.RW3depth is 
+
+#COHO all
+ggplot(df.coho) + aes(x=Comp3, y=Comp1, color=Wild.or.hatch) + geom_point(size=2)+ scale_color_manual(values=mycolors.coho) + stat_ellipse() + labs(y= "RW 1 (snout and hump, roughly)", x= "RW 3 (depth, roughly)") + theme_bw() 
+
+
+
+
+##########################################################################################################################
