@@ -7,6 +7,7 @@
 #year one (pink 2020, coho) is copy-pasted from "Morpho_yr1_pinkcoho.Rmd" 
 #and year two (pink 2021) is copy-pasted from "Morpho_yr2_Rmd"
 ##so if any issues, look there
+#I may also add on the simply graphing.R file at the end, if it makes sense
 
 
 #################################################3
@@ -95,7 +96,7 @@ plot(gpa_withoutlier)
 ##############################################################
 
 
-####################################################################### #line 95
+####################################################################### #line 95 of Morpho_yr1_pinkcoho
 #Now run a PCA/RWA (principal component analysis aka Relative Warp Analysis)
 
 ###########################################################################
