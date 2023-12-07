@@ -598,7 +598,9 @@ rownames(Egg_results) <- c("pink 2020", "pink 2021", "coho")
 GSI_results
 Egg_results
 
-#sigh. what are my sample sizes?
+#spit out my final results in a csv
+write.csv(GSI_results, "Results/GSI_results.csv")
+write.csv(Egg_results, "Results/Egg_results.csv")
 
 
 #######################################################################
