@@ -288,7 +288,7 @@ lipid_results_cohosub2 <- rbind(NamesLipids,ResultsLipids)
 
 Bomb_results_to_export <- cbind(energy_results_cohosub2, lipid_results_cohosub2)
 
-write.csv(Bomb_results_to_export, "Bomb_results_cohosub_auto.csv")
+write.csv(Bomb_results_to_export, "Results/Bomb_results_coho_auto.csv")
 #Yay, clean-ish results!
 
         
