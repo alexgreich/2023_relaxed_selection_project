@@ -657,13 +657,18 @@ hatch_S.p <-  df.pink2 %>% filter(Wild.or.hatch=="H")
 #hatch_SL.p<- hatch_S.p$`snout_df.p[-56, ]`
 
 
-#pink 2020 sd
-sd(hatch_S.p$snout)
-sd(wild_S.p$snout)
+#pink 2020 sd and mean
+sd_s_hp1 <- sd(hatch_S.p$snout)*10
+sd_s_wp1 <- sd(wild_S.p$snout)*10
+mean_s_hp1 <- mean(hatch_S.p$snout)*10
+mean_s_wp1 <- mean(wild_S.p$snout)*10
 
 names(wild_S.p)
-sd(hatch_S.p$depth)
-sd(wild_S.p$depth)
+sd_d_hp1 <- sd(hatch_S.p$depth)
+sd_d_wp1 <-  sd(wild_S.p$depth)
+mean_d_hp1 <- mean(hatch_S.p$depth)
+mean_d_wp1 <-  mean(wild_S.p$depth)
+
 
 #find sample size:
 length(hatch_S.p$depth)
@@ -735,10 +740,12 @@ ggplot(df.pink2) + aes(x=depth) + geom_density()
 
 #actual analysis - no more logging
 p1_snout_mod <- lm(snout~ length + factor(Wild.or.hatch), data=df.pink2)
+sum_p_snout <- summary(p1_snout_mod)
 plot(p1_snout_mod)
 
 p1_depth_mod <- lm(depth~ length + factor(Wild.or.hatch), data=df.pink2)
-plot(p2_depth_mod)
+sum_p_depth <- summary(p1_depth_mod)
+plot(p1_depth_mod)
 
 #interaction effects?
 mod.p.d.l.int <- aov(depth ~ length + Wild.or.hatch + length*Wild.or.hatch, df.pink2)
@@ -748,12 +755,19 @@ mod.p.s.l.int <- aov(snout ~ Wild.or.hatch+length + length*Wild.or.hatch, df.pin
 summary.lm(mod.p.s.l.int) #no int effects
 
 #results
-
+#df_coho_snout_results
+df_pink_snout_results <- data.frame(t=sum_p_snout$coefficients[3,3], df= sum_p_snout$df[2], p_one_sided=1-sum_p_snout$coefficients[3,4]/2,
+                                    length_t = sum_p_snout$coefficients[2,3], length_p_two_Sided = sum_p_snout$coefficients[2,4], 
+                                    hatchery_mean= mean_s_hp1, hatchery_sd = sd_s_hp1,
+                                    wild_mean=mean_s_wp1, wild_sd=sd_s_wp1)
+  
+df_pink_depth_results <- data.frame(t=sum_p_depth$coefficients[3,3], df= sum_p_depth$df[2], p_one_sided=1-sum_p_depth$coefficients[3,4]/2,
+                                    length_t = sum_p_depth$coefficients[2,3], length_p_two_Sided = sum_p_depth$coefficients[2,4], 
+                                    hatchery_mean= mean_d_hp1, hatchery_sd = sd_d_hp1,
+                                    wild_mean=mean_d_wp1, wild_sd=sd_d_wp1)
 
 ###########################################
 
 #line 1495- formal length tests, hatch vs wild, both for coho and pink 2020
 
 
-#problem: the snout analysis above looks incomplete. I also need the: depth analysis. Where is that? Is it on a different R file, that I didn't copy over
-##something is fishy here, and not in a good way...
