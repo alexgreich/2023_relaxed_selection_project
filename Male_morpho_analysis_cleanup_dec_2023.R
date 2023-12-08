@@ -11,19 +11,11 @@
 
 
 #################################################3
-#load packages- do I need ALL of these?
+#load packages
 library(ggplot2)
 library(geomorph)
-#library(shapes)
-#library(MASS)
-#library(ape)
-#library(vegan)
-#library(rgl)
-#library(scatterplot3d)
 library(ggfortify)
 library(dplyr)
-#library(reshape2)
-#library(reshape)
 library(tidyr)
 library(ggforce)
 library(Morpho)
@@ -815,3 +807,50 @@ write.csv(df.coho, "df.coho.csv")
 ###################################################Morpho yr 2 pinks aka. pink2 aka pink odd##########################################
 #####################################################################################################################################
 #######################################################################################################################################
+#corresponds to R file Morpho_yr2_pinks.Rmd
+##I tried digital unbending (both cubic and quadratic) in the above file. I'm just using basic here. Not unbending was fine.
+
+
+###################################################################################################################################3
+#load tps file line 35
+
+p2.lands <- readland.tps("Data/pink2021_landmarks.fixed73.deleteextras.appendhere_010522.tps", readcurves=T, specID= "imageID")
+
+
+#plotall
+plotAllSpecimens(p2.lands)
+
+
+#on semilandmarks: all the pink semilandmark curve references are the same, so I'll use the same file (curveslide in the MORPHO IN ACTION folder for the pinks). line 116
+pinkcurves <- as.matrix(read.csv("Data/curveslide.csv", header=T))
+
+
+#transform into procrustes shape space
+gpa.p2.orig <- gpagen(p2.lands, curves = pinkcurves)
+plot(gpa.p2.orig)
+
+#run a PCA #line 144
+pca.p2.orig <- gm.prcomp(gpa.p2.orig$coords)
+plot(pca.p2.orig)
+
+#add the wild/hatchery factor
+wild.or.hatch <- read.csv("Data/pink2021.wildorhatch.andorder.csv")
+
+#convert to data frame
+df.pink2021.orig <- as.data.frame(pca.p2.orig$x[,1:3])
+
+df.pink2021.orig$origin <- wild.or.hatch$Oto
+df.pink2021.orig$ID <- wild.or.hatch$Fish.ID
+
+#plot PCA/RWA (Principal component analysis/ relative warp analysis. They are the same thing here.)
+##line 190
+wildhatch <- c("orange", "blue")
+
+ggplot(data=df.pink2021.orig)+aes(x=Comp3, y=Comp1, color=origin)+geom_point()+scale_color_manual(values=wildhatch) + stat_ellipse() + theme_bw() + labs(x= "RW 3", y= "RW 1")
+
+ggplot(data=df.pink2021.orig)+aes(x=Comp2, y=Comp1, color=origin)+geom_point()+scale_color_manual(values=wildhatch) + stat_ellipse() + theme_bw() + labs(x= "RW 2", y= "RW 1")
+
+
+#
+#####################################################################################################################################
+
