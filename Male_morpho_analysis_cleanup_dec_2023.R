@@ -413,7 +413,109 @@ mycolors.coho=c("orange", "blue")
 #COHO all
 ggplot(df.coho) + aes(x=Comp3, y=Comp1, color=Wild.or.hatch) + geom_point(size=2)+ scale_color_manual(values=mycolors.coho) + stat_ellipse() + labs(y= "RW 1 (snout and hump, roughly)", x= "RW 3 (depth, roughly)") + theme_bw() 
 
-
-
-
 ##########################################################################################################################
+
+
+##################################################################################################
+#coho models mancova 461
+
+Y.gpa.c <- gpa_coho
+gdf.c <- geomorph.data.frame(Y.gpa.c, origin = Wild.or.hatch.d)
+
+fit.c <- procD.lm(coords ~ log(Csize) + origin, data = gdf.c,  #all coords taken into account
+                  iter = 9999, print.progress = FALSE, RRPP=TRUE)
+summary(fit.c)
+#sig, yes
+
+#INT EFFECTS CHECK!!
+fit.c.int <- procD.lm(coords ~ log(Csize) + origin + log(Csize)*origin, data = gdf.c,  #all coords taken into account
+                      iter = 9999, print.progress = FALSE, RRPP=TRUE)
+summary(fit.c.int) #ooh, some interaction effects. That's expected though
+
+#12/07/23
+#ok, here's my main results
+sum_c <- summary(fit.c)
+write.csv(sum_c$table, "Results/morpho_c_table.csv")
+#note that this model can be swapped for the one with interaction effects
+
+AIC(fit.c, fit.c.int) #takes forever
+
+
+
+
+
+###############################################################################################
+
+
+#################################################################################################
+#more plots for coho (the shapey fish plots) line 494
+
+#plotReftoTarget
+#pinks are in Y.gpa
+ref <- mshape(Y.gpa.c$coords)
+w.c <- numeric()
+h.c <- numeric()
+i=1
+
+for (i in 1:length(Wild.or.hatch.d)){
+  if(Wild.or.hatch.d[i]=="W"){
+    w.c <- c(w.c, i)
+  }else{
+    h.c <- c(h.c, i)
+  }
+}
+
+ref.w.c <-mshape(Y.gpa.c$coords[,,w.c]) #wild mean
+ref.h.c <-mshape(Y.gpa.c$coords[,,h.c]) #hatchery mean
+
+plotRefToTarget(ref.w.c, ref.h.c, method="vector", mag=5) #wild dots to hatchery arrows
+
+#?mshape()
+#plotRefToTarget()
+
+#pca plot ref to target
+
+plotRefToTarget(pca_coho$shapes$shapes.comp1$min, ref, method="TPS")
+plotRefToTarget(pca_coho$shapes$shapes.comp1$max, ref, method="TPS")
+
+plotRefToTarget(pca_coho$shapes$shapes.comp2$min, ref, method="TPS")
+plotRefToTarget(pca_coho$shapes$shapes.comp2$max, ref, method="TPS")
+
+
+plotRefToTarget(pca_coho$shapes$shapes.comp1$min, ref, method="vector")
+plotRefToTarget(pca_coho$shapes$shapes.comp1$max, ref, method="vector")
+
+plotRefToTarget(pca_coho$shapes$shapes.comp2$min, ref, method="vector")
+plotRefToTarget(pca_coho$shapes$shapes.comp2$max, ref, method="vector")
+
+plotRefToTarget(pca_coho$shapes$shapes.comp3$min, ref, method="vector")
+plotRefToTarget(pca_coho$shapes$shapes.comp3$max, ref, method="vector") 
+#THIS IS IT! COMP 3 is the hump!!!
+
+plotRefToTarget(pca_coho$shapes$shapes.comp4$min, ref, method="vector")
+plotRefToTarget(pca_coho$shapes$shapes.comp4$max, ref, method="vector") 
+#LOOKS LIKE THE DORSAL.....
+
+#can you also plot the ID of the important PCs???
+pvar <- (pca_coho$sdev^2)/(sum(pca_coho$sdev^2))
+names(pvar) <- seq(1:length(pvar))
+barplot(pvar, xlab= "Principal Components", ylab = "% Variance")
+
+#also plot the CVA, please
+vari <- gpa_coho$coords
+facto <- Wild.or.hatch.d
+
+CVA.pink <- CVA(vari, groups=facto)
+
+#10/12/21
+#RW1 vs. RW3 PCA graph
+##################################################################################################
+
+
+
+################################################################################################################################
+###############################################################################################################################
+############################################     Yr1 linear morph analysis (p1, coho; males) line 743     ###############################
+##################################################################################################################################
+#####################################################################################################################################
+
