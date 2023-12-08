@@ -563,7 +563,7 @@ df.coho$depth <- depth_coho_ord
 
 #1-0.002575/2
 
-coho_all_snout_05 <- lm(snoutL ~ length + Wild.or.hatch, df.coho)
+coho_all_snout_05 <- lm(snoutL ~ length + factor(Wild.or.hatch), df.coho)
 sum_c_5<-summary(coho_all_snout_05)
 
 #get values for table, mean, sd, ect. ADD THIS TO RESUTLS TABLE
@@ -598,10 +598,13 @@ H.depth.all.coho <- df.coho %>% filter (Wild.or.hatch=="H")
 #t.depth.c <- t.test(x=H.depth.all.coho$depth, y=W.depth.all.coho$depth, alternative= "less", var.equal = T)
 #t.depth.c
 
-#get sd values for my tables
+#get sd and mean values for my tables
 sd_d_hc <- sd(H.depth.all.coho$depth) #colo all depth sd
 sd_d_wc <- sd(W.depth.all.coho$depth) #coho all depth sd
 names(W.depth.all.coho)
+
+mean_d_hc <- mean(H.depth.all.coho$depth)
+mean_d_wc <- mean(W.depth.all.coho$depth)
 
 
 #see line 1007 in Morpho_yr1_pinkcoho.Rmd code for possible alternative: depth^3
@@ -610,10 +613,22 @@ names(W.depth.all.coho)
 #revisit 05/04/22 : to make ANVOVAS where needed to incorporate length (and..other stuff too?)
 ##lets do an ANCOVA test, one -way t test
 
-aov.depth.c <- lm(depth ~ Wild.or.hatch + length, df.coho)
-summary(aov.depth.c)
+aov.depth.c <- lm(depth ~ length + factor(Wild.or.hatch), df.coho)
+sum_c_depth <- summary(aov.depth.c)
 plot(aov.depth.c) #looks fine ish
+
+
+#prepare the table
+df_coho_depth_results <- data.frame(t=sum_c_depth$coefficients[3,3], df= sum_c_depth$df[2], p_one_sided=1-sum_c_depth$coefficients[3,4]/2,
+                                    length_t = sum_c_depth$coefficients[2,3], length_p_two_Sided = sum_c_depth$coefficients[2,4], 
+                                    hatchery_mean= mean_d_hc, hatchery_sd = sd_d_hc,
+                                    wild_mean=mean_d_wc, wild_sd=sd_d_wc)
 ################################
+
+
+
+
+
 #line 1020 goes into pink snouts
 
 
