@@ -851,6 +851,173 @@ ggplot(data=df.pink2021.orig)+aes(x=Comp3, y=Comp1, color=origin)+geom_point()+s
 ggplot(data=df.pink2021.orig)+aes(x=Comp2, y=Comp1, color=origin)+geom_point()+scale_color_manual(values=wildhatch) + stat_ellipse() + theme_bw() + labs(x= "RW 2", y= "RW 1")
 
 
-#
+#What do these RW's mean???
+##Comp 1: hump, and a little bit of snout
+##Comp 2: bendy fish
+##comp 3: overall fish largeness, some depth involved
+##Comp4: snout, strech of hump linearly
+#pca plot ref to target
+ref <- mshape(gpa.p2.orig$coords) 
+ref_p2 <- mshape(gpa.p2.orig$coords) 
+#comp1
+plotRefToTarget(pca.p2.orig$shapes$shapes.comp1$min, ref, method="vector")
+plotRefToTarget(pca.p2.orig$shapes$shapes.comp1$max, ref, method="vector")
+#comp2
+plotRefToTarget(pca.p2.orig$shapes$shapes.comp2$min, ref, method="vector")
+plotRefToTarget(pca.p2.orig$shapes$shapes.comp2$max, ref, method="vector")
+#comp3
+plotRefToTarget(pca.p2.orig$shapes$shapes.comp3$min, ref, method="vector")
+plotRefToTarget(pca.p2.orig$shapes$shapes.comp3$max, ref, method="vector")
+#comp4
+plotRefToTarget(pca.p2.orig$shapes$shapes.comp4$min, ref, method="vector")
+plotRefToTarget(pca.p2.orig$shapes$shapes.comp4$max, ref, method="vector")
+
+
+#plot wild to hatch comparison #line 289
+#pinks are in Y.gpa ??
+Y.gpa <- gpa.p2.orig
+ref4 <- mshape(gpa.p2.orig$coords)
+w.p <- numeric()
+h.p <- numeric()
+i=1
+
+for (i in 1:length(df.pink2021.orig$origin)){
+  if(df.pink2021.orig$origin[i]=="W"){
+    w.p <- c(w.p, i)
+  }else{
+    h.p <- c(h.p, i)
+  }
+}
+
+ref.w.p2 <-mshape(Y.gpa$coords[,,w.p]) #wild mean
+ref.h.p2 <-mshape(Y.gpa$coords[,,h.p]) #hatchery mean
+
+#wild to hatch, hatch to wild examine
+plotRefToTarget(ref.w.p2, ref.h.p2, method="vector", mag=5) #what is happening here? is wild plotted to hatch or hatch plotted to wild?
+plotRefToTarget(ref.h.p2, ref.w.p2, method="vector", mag=5) #hatchery dots, wild arrows
+#HYPOTHESIS SUPPORTED! DAMN!
+
+
+plotRefToTarget(ref.w.p2, ref.h.p2, method="vector", mag=5) #wild dot, hatchery arrows
+plotRefToTarget(ref.w.p2, ref4, method="vector", mag=5) #wild to mean fish
+plotRefToTarget(ref.h.p2, ref4, method="vector", mag=5) #hatchery to mean fish
+
+
+#PCA/RWA influence plots
+#can you also plot the ID of the important PCs???
+pvar2 <- (pca.p2.orig$sdev^2)/(sum(pca.p2.orig$sdev^2)) #sooo...does this work?
+names(pvar2) <- seq(1:length(pvar2))
+barplot(pvar2, xlab= "Principal Components", ylab = "% Variance")
+
+#also plot the CVA, please
+vari <- gpa.p2.orig$coords
+facto <- df.pink2021.orig$origin
+
+CVA.pink <- CVA(vari, groups=facto)
+
+
+#significance tests: MANCOVA
+Y.gpa <- gpa.p2.orig
+gdf <- geomorph.data.frame(Y.gpa, origin = df.pink2021.orig$origin)
+
+fit.p <- procD.lm(coords ~ log(Csize) + origin, data = gdf,  #all coords taken into account
+                  iter = 9999, print.progress = FALSE, RRPP=TRUE)
+summary(fit.p)  #says YES, significant difference between wild and hatch
+
+#are interaction effects a thing?
+fit.p.int <- procD.lm(coords ~ log(Csize) + origin + log(Csize)*origin, data = gdf,  #all coords taken into account
+                      iter = 9999, print.progress = FALSE, RRPP=TRUE)
+summary(fit.p.int)
+
+
+#we test for date below
+
+#RESULTS TABLE CREATION (from fit.p)
+sum_p2 <- summary(fit.p)
+names(sum_p2)
+sum_p2$table
+
+write.csv(sum_p2$table, "Results/morpho_p2_table.csv")
+
+
 #####################################################################################################################################
 
+
+
+###################################################################################################################
+#testing for date: an exploration (but no results to take away from this block, I believe)
+#what dataframe is needed for this combination??
+p_2_old <- read.csv("Data/Male.p2.Rdata.2_alt_ID.csv") #not working...why?
+names(p_2_old)
+p_2_old$ID
+df.pink2021.orig$ID
+##sigh. They're not identical. I'll need to data wrangle - 05/03/22
+df_pink2021_orig_05 <- left_join(df.pink2021.orig, p_2_old, by="ID")
+names(df_pink2021_orig_05)
+df_pink2021_orig_05$Date
+
+
+#05/27/22: I'll make a Jdate adjustment, it will make things work betteer
+library(lubridate)
+names(df_pink2021_orig_05)
+Dates_toJ <- mdy(df_pink2021_orig_05$Date)
+Julian_morph <- julian(Dates_toJ, origin=as.Date("2021-01-01"))
+class(Julian_morph)
+str(Julian_morph)
+df_pink2021_orig_05$Julian <- as.vector(Julian_morph)
+
+
+Y.gpa <- gpa.p2.orig
+gdf <- geomorph.data.frame(Y.gpa, origin = df_pink2021_orig_05$origin, date=df_pink2021_orig_05$Julian )
+gdf_Julian <- gdf
+df_p2_reversed_Julian <- as.data.frame(gdf$coords, gdf$origin, gdf$date, gdf$Csize)
+names(gdf)
+
+fit.p_04 <- procD.lm(coords ~ log(Csize) + origin, data = gdf,  #all coords taken into account
+                     iter = 9999, print.progress = FALSE, RRPP=TRUE)
+summary(fit.p_04) 
+
+fit.p_05 <- procD.lm(coords ~ log(Csize) + origin + date, data = gdf,  #all coords taken into account
+                     iter = 9999, print.progress = FALSE, RRPP=TRUE)
+
+fit.p_06 <- procD.lm(coords ~ log(Csize) + date + origin, data = gdf,  #all coords taken into account
+                     iter = 9999, print.progress = FALSE, RRPP=TRUE)
+
+fit.p_07 <- procD.lm(coords ~ log(Csize) +origin+ date, data = gdf,  #all coords taken into account
+                     iter = 9999, print.progress = FALSE, RRPP=TRUE)
+
+fit.p_08 <- procD.lm(coords ~ log(Csize) * date * origin, data = gdf,  #all coords taken into account
+                     iter = 9999, print.progress = FALSE, RRPP=TRUE) #no interactions
+
+#in the case of date not sig, we go back to original
+
+
+summary(fit.p_04)#this one if date is not sig 
+summary(fit.p_05)
+summary(fit.p_06) #this one? #I think this one... #with origin last...?
+summary(fit.p_07)
+summary(fit.p_08)
+
+#date is significant predictor of shape, until I tested J-date, now its not.
+
+
+#gotta graph to figure out date relationship on coords
+
+#AIC(fit.p_04)
+#AIC(fit.p_05)
+anova(fit.p_04, fit.p_05) #fit 5 is better than 4. Keep the mod with date. Graph shape vs. date? How?
+names(fit.p_05)
+fit.p_05$aov.table
+
+#AIC(fit.p_04, fit.p_05, fit.p_06, fit.p_07, fit.p_08) #argh I forgot this takes forever
+
+#date was not included in the model because turns out it is more driven by location than... by date
+
+
+#################################################################################################################################
+
+###############################################################################################################################
+#################################################################################################################################
+############################################p2 (pink odd, pink year 2, pink 2021) linear morpho analysis#########################
+########################################## AND the creation of linear morpho results dataframes##################################3
+###################################################################################################################################
