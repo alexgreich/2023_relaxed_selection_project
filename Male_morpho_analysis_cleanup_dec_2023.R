@@ -438,7 +438,7 @@ sum_c <- summary(fit.c)
 write.csv(sum_c$table, "Results/morpho_c_table.csv")
 #note that this model can be swapped for the one with interaction effects
 
-AIC(fit.c, fit.c.int) #takes forever
+#AIC(fit.c, fit.c.int) #takes forever
 
 
 
@@ -553,7 +553,6 @@ df.coho$depth <- depth_coho_ord
 #or, just use snout lenght and wild or hatch, one sided t-test
 
 
-
 #revisit 10/25/21
 #t.test(x=hatch_SL, y=wild_SL, alternative= "two.sided")
 
@@ -562,64 +561,59 @@ df.coho$depth <- depth_coho_ord
 
 #05/04/22
 
-1-0.002575/2
+#1-0.002575/2
 
 coho_all_snout_05 <- lm(snoutL ~ length + Wild.or.hatch, df.coho)
-summary(coho_all_snout_05)
+sum_c_5<-summary(coho_all_snout_05)
+
+#get values for table, mean, sd, ect. ADD THIS TO RESUTLS TABLE
+coho_h <- df.coho %>% filter(Wild.or.hatch=="H")
+coho_w <- df.coho %>% filter(Wild.or.hatch=="W")
+
+mean_s_h <- 10* mean(coho_h$snoutL) #that measurement is in cm I think, times 10 is mm
+mean_s_w <- 10*  mean(coho_w$snoutL)
+
+sd_s_h <- 10*sd(coho_h$snoutL)
+sd_s_w <- 10*sd #qc'ed, checks out.
+
+df_coho_snout_results <- data.frame(t=sum_c_5$coefficients[3,3], df= sum_c_5$df[2], p_one_sided=1-sum_c_5$coefficients[3,4]/2,
+                                    length_t = sum_c_5$coefficients[2,3], length_p_two_Sided = sum_c_5$coefficients[2,4], 
+                                    hatchery_mean= mean_s_h, hatchery_sd = sd_s_h,
+                                    wild_mean=mean_s_w, wild_sd=sd_s_w)
+
 
 ################################################
 
 
+###############################
+#DEPTH COHO #line 944
 
-##################################################################################################################################
-#line 827: coho all  #WHAT DID I SAY WAS THE ANALYSIS METHOD IN THE PAPER? DOES IT ALIGN??
-#it does not. in the paper, you say you do an anova with length as a covariate. Try this, see what happens
+#revisit 10/25/21
+#t.test(x=H2$depth, y=W2$depth, alternative= "two.sided")
 
-#######snout length using geomorph
-lmks <- data.frame(snoutL=c(2,14), snoutH=c(1,3))
-snoutlineardists <- interlmkdist(coho_lands, lmks)
-#snoutlineardists
-snout_df <- as.data.frame(snoutlineardists)
-#ah! so =easy!
-#NOW linear regression on that... how to do again?
-snout_df$Wild.or.hatch <- Wild.or.hatch.d #woohoo, right #'s, no doubles
-#need snout height and snout length as covariates, wild or hatch as a factor
-#or, just use snout lenght and wild or hatch, one sided t-test
+###########3
+#revisit 11/23/21 #what was the df for coho.all?
+W.depth.all.coho <- df.coho %>% filter (Wild.or.hatch=="W")
+H.depth.all.coho <- df.coho %>% filter (Wild.or.hatch=="H")
+#t.depth.c <- t.test(x=H.depth.all.coho$depth, y=W.depth.all.coho$depth, alternative= "less", var.equal = T)
+#t.depth.c
 
-#first separate wild and hatchery
-wild_S <-  snout_df %>% filter(Wild.or.hatch=="W")
-hatch_S <-  snout_df %>% filter(Wild.or.hatch=="H")
+#get sd values for my tables
+sd_d_hc <- sd(H.depth.all.coho$depth) #colo all depth sd
+sd_d_wc <- sd(W.depth.all.coho$depth) #coho all depth sd
+names(W.depth.all.coho)
 
 
-wild_SL <- wild_S$snoutL
-wild_SH <- wild_S$snoutH
-hatch_SL<- hatch_S$snoutL
-hatch_SH <- hatch_S$snoutH
-
-#find sample sizes:
-length(wild_SL)
-length(hatch_SL)
-
-#now t-test
-#we predict that
-t.SL.coho <- t.test(x=hatch_SL, y=wild_SL, alternative= "less", var.equal = T)
-#t.SH.coho <- t.test(x=hatch_eggs_pink, y=wild_eggs_pink, alternative= "less")
-t.SL.coho
-
-### what about length as covariate?
+#see line 1007 in Morpho_yr1_pinkcoho.Rmd code for possible alternative: depth^3
 
 
-#two sides t-test 10/25/21
-#t.test(x=hatch_SL, y=wild_SL, alternative= "two.sided")
+#revisit 05/04/22 : to make ANVOVAS where needed to incorporate length (and..other stuff too?)
+##lets do an ANCOVA test, one -way t test
 
-#################################################################################################################################
-
-
-
-#line 944 has promise for my depth code. Speicifcally line 1012, for my model. I think I'll need tp re-write this part of the analysis, for brievity and conciceness
-
-
-
+aov.depth.c <- lm(depth ~ Wild.or.hatch + length, df.coho)
+summary(aov.depth.c)
+plot(aov.depth.c) #looks fine ish
+################################
 #line 1020 goes into pink snouts
 
 
