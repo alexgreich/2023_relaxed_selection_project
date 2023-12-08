@@ -519,3 +519,98 @@ CVA.pink <- CVA(vari, groups=facto)
 ##################################################################################################################################
 #####################################################################################################################################
 
+
+###########################################
+#######snout length using geomorph
+#?interlmkdist
+#landmakrs of interest for the coho:
+#14 is the eye - #2 is end of snout
+#1 is bottom of snout -  #3 is above nare
+#interlmkdist(coho_lands) #using the un-tranformed data
+lmks <- data.frame(snoutL=c(2,14), snoutH=c(1,3))
+snoutlineardists <- interlmkdist(coho_lands, lmks)
+#snoutlineardists
+snout_df <- as.data.frame(snoutlineardists)
+df.coho$snoutL <- snout_df$snoutL
+df.coho$length <- length_ordered
+df.coho$ID <- the_order #cleaning up my dataframe
+
+#depth
+depth_coho_ord <- numeric(60)
+depth_c <- coho.dat$Body.Depth.mm.
+
+for (i in (1:length(the_order))){
+  depth_coho_ord[i] <- depth_c[the_order[i]]
+}
+
+df.coho$depth <- depth_coho_ord
+
+
+
+#NOW linear regression on that
+#snout_df$Wild.or.hatch <- Wild.or.hatch.long #woohoo, right #'s, no doubles
+#need snout height and snout length as covariates, wild or hatch as a factor
+#or, just use snout lenght and wild or hatch, one sided t-test
+
+
+
+#revisit 10/25/21
+#t.test(x=hatch_SL, y=wild_SL, alternative= "two.sided")
+
+#revisit 11/23/21
+##want to check error assumptions (especially constant variance)
+
+#05/04/22
+
+1-0.002575/2
+
+coho_all_snout_05 <- lm(snoutL ~ length + Wild.or.hatch, df.coho)
+summary(coho_all_snout_05)
+
+################################################
+
+
+
+##################################################################################################################################
+#line 827: coho all  #WHAT DID I SAY WAS THE ANALYSIS METHOD IN THE PAPER? DOES IT ALIGN??
+#it does not. in the paper, you say you do an anova with length as a covariate. Try this, see what happens
+
+#######snout length using geomorph
+lmks <- data.frame(snoutL=c(2,14), snoutH=c(1,3))
+snoutlineardists <- interlmkdist(coho_lands, lmks)
+#snoutlineardists
+snout_df <- as.data.frame(snoutlineardists)
+#ah! so =easy!
+#NOW linear regression on that... how to do again?
+snout_df$Wild.or.hatch <- Wild.or.hatch.d #woohoo, right #'s, no doubles
+#need snout height and snout length as covariates, wild or hatch as a factor
+#or, just use snout lenght and wild or hatch, one sided t-test
+
+#first separate wild and hatchery
+wild_S <-  snout_df %>% filter(Wild.or.hatch=="W")
+hatch_S <-  snout_df %>% filter(Wild.or.hatch=="H")
+
+
+wild_SL <- wild_S$snoutL
+wild_SH <- wild_S$snoutH
+hatch_SL<- hatch_S$snoutL
+hatch_SH <- hatch_S$snoutH
+
+#find sample sizes:
+length(wild_SL)
+length(hatch_SL)
+
+#now t-test
+#we predict that
+t.SL.coho <- t.test(x=hatch_SL, y=wild_SL, alternative= "less", var.equal = T)
+#t.SH.coho <- t.test(x=hatch_eggs_pink, y=wild_eggs_pink, alternative= "less")
+t.SL.coho
+
+### what about length as covariate?
+
+
+#two sides t-test 10/25/21
+#t.test(x=hatch_SL, y=wild_SL, alternative= "two.sided")
+
+#################################################################################################################################
+
