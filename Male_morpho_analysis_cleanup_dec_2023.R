@@ -614,3 +614,17 @@ t.SL.coho
 
 #################################################################################################################################
 
+
+
+#line 944 has promise for my depth code. Speicifcally line 1012, for my model. I think I'll need tp re-write this part of the analysis, for brievity and conciceness
+
+
+
+#line 1020 goes into pink snouts
+
+
+#line 1495- formal length tests, hatch vs wild, both for coho and pink 2020
+
+
+#problem: the snout analysis above looks incomplete. I also need the: depth analysis. Where is that? Is it on a different R file, that I didn't copy over
+##something is fishy here, and not in a good way...
