@@ -623,14 +623,134 @@ df_coho_depth_results <- data.frame(t=sum_c_depth$coefficients[3,3], df= sum_c_d
                                     length_t = sum_c_depth$coefficients[2,3], length_p_two_Sided = sum_c_depth$coefficients[2,4], 
                                     hatchery_mean= mean_d_hc, hatchery_sd = sd_d_hc,
                                     wild_mean=mean_d_wc, wild_sd=sd_d_wc)
+
+#some density plots
+ggplot(df.coho) + aes(x=snoutL) + geom_density()
 ################################
 
 
-
+#PINK 1 SNOUTS AND DEPTHS
 
 
 #line 1020 goes into pink snouts
 
+########################################
+#pink snouts and depth
+lmks.p <- data.frame(snoutL=c(1,12))
+snoutlineardists.p <- interlmkdist(pinkdat.landsno56, lmks.p)
+#snoutlineardists
+snout_df.no56 <- as.data.frame(snoutlineardists.p)
+#ah! so easy!
+#snout_df.no56 <- as.data.frame(snout_df.p[-56,]) #why dont delete this one?
+#NOW linear regression on that... how to do again?
+
+
+df.pink2$snout <- snout_df.no56$snoutL
+df.pink2
+
+
+#first separate wild and hatchery
+wild_S.p <-  df.pink2 %>% filter(Wild.or.hatch=="W")
+hatch_S.p <-  df.pink2 %>% filter(Wild.or.hatch=="H")
+
+#wild_SL.p <- wild_S.p$`snout_df.p[-56, ]`
+#hatch_SL.p<- hatch_S.p$`snout_df.p[-56, ]`
+
+
+#pink 2020 sd
+sd(hatch_S.p$snout)
+sd(wild_S.p$snout)
+
+names(wild_S.p)
+sd(hatch_S.p$depth)
+sd(wild_S.p$depth)
+
+#find sample size:
+length(hatch_S.p$depth)
+length(wild_S.p$depth)
+
+#LENGTHS PINK
+#get the lengths for pink
+#p.dat <- read.csv("/Users/alexandrareich/Desktop/THESIS TIME!/Compilation of GITHUB project code/Relaxed_selection_proj_reproducible_science/DATA/MASTERMalePinksQC.reorder.csv")
+p.dat <- read.csv("Data/MASTERMalePinksQC.reorder.csv")
+#names(p.dat)
+length_p <- p.dat$Length..mm.
+
+order_p <- c(33, 49, 7, 43, 5, 59, 41, 15, 44, 16, 
+             60, 37, 25, 32, 52, 38, 46, 19, 28, 23,
+             9, 48, 29, 55, 31, 14, 2, 42, 6,
+             13, 18, 39, 10, 1, 57, 22, 50, 30, 35,
+             51, 54, 21, 47, 26, 34, 11, 3, 58, 24,
+             53, 36, 20, 8, 27, 56, 4, 40, 17, 45, 12)
+anyDuplicated(order_p) #yay, no duplicates!
+
+
+length_p_ord <- numeric(60)
+
+i=1
+for (i in (1:length(order_p))){
+  length_p_ord[i] <- length_p[order_p[i]]
+}
+#YES!!!
+length_no_56 <- length_p_ord[-55]
+
+df.pink2$length <- length_no_56
+#and need to restructure PC data to fit in ggplot
+#Comp1_p <- as.data.frame(pca_coho$x[,1])
+#names(Comp1_c)
+
+#order depth
+depth_p <- p.dat$Body.Depth.mm.
+
+depth_p_ord <- numeric(60)
+
+i=1
+for (i in (1:length(order_p))){
+  depth_p_ord[i] <- depth_p[order_p[i]]
+}
+#YES!!!
+depth_no_56 <- depth_p_ord[-55]
+
+df.pink2$depth <- depth_no_56
+
+write.csv(df.pink2, "df.pink2.csv") #do I need this?
+
+#first separate wild and hatchery
+wild_D.p.int <-  df.pink2 %>% filter(Wild.or.hatch=="W")
+hatch_D.p.int <-  df.pink2 %>% filter(Wild.or.hatch=="H")
+
+wild_D.p <- wild_D.p.int$depth
+hatch_D.p<- hatch_D.p.int$depth
+
+
+
+#exploratory
+qqnorm(df.pink2$snout)
+qqline(df.pink2$snout)
+qqnorm(log(df.pink2$snout))
+qqline(log(df.pink2$snout))
+ggplot(df.pink2) + aes(x=log(snout)) + geom_density()
+ggplot(df.pink2) + aes(x=log(depth)) + geom_density()
+ggplot(df.pink2) + aes(x=depth) + geom_density()
+
+#actual analysis - no more logging
+p1_snout_mod <- lm(snout~ length + factor(Wild.or.hatch), data=df.pink2)
+plot(p1_snout_mod)
+
+p1_depth_mod <- lm(depth~ length + factor(Wild.or.hatch), data=df.pink2)
+plot(p2_depth_mod)
+
+#interaction effects?
+mod.p.d.l.int <- aov(depth ~ length + Wild.or.hatch + length*Wild.or.hatch, df.pink2)
+summary.lm(mod.p.d.l.int) #not sig
+
+mod.p.s.l.int <- aov(snout ~ Wild.or.hatch+length + length*Wild.or.hatch, df.pink2)
+summary.lm(mod.p.s.l.int) #no int effects
+
+#results
+
+
+###########################################
 
 #line 1495- formal length tests, hatch vs wild, both for coho and pink 2020
 
