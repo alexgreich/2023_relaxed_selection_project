@@ -769,5 +769,49 @@ df_pink_depth_results <- data.frame(t=sum_p_depth$coefficients[3,3], df= sum_p_d
 ###########################################
 
 #line 1495- formal length tests, hatch vs wild, both for coho and pink 2020
+#################################
+#05/19/22
+#coho
+names(df.coho) #my dataframe, all
+#df.coho$Wild.or.hatch
+df.coho.W <- df.coho %>% filter(Wild.or.hatch=="W")
+df.coho.H <- df.coho %>% filter(Wild.or.hatch=="H")
+t.test(df.coho.H$length, df.coho.W$length, alternative="two.sided", var.equal=T)
+sd(df.coho.H$length)
+sd(df.coho.W$length)
+#t.test(df.coho.H$length, df.coho.W$length, alternative="two.sided", var.equal=F)
 
 
+#plot coho length
+##likely do a violin wiht sina overlay
+##or can also do a boxplot
+library(patchwork)
+ggplot(df.coho) + aes(x=Wild.or.hatch, y=length) + geom_boxplot()+ geom_jitter()
+
+
+#even-year pinks length
+#df.pink2
+names(df.pink2)
+df.evenpink.W <- df.pink2 %>% filter(Wild.or.hatch=="W")
+df.evenpink.H <- df.pink2 %>% filter(Wild.or.hatch=="H")
+t.test(df.evenpink.H$length, df.evenpink.W$length, alternative="two.sided", var.equal=T)
+sd(df.evenpink.H$length)
+sd(df.evenpink.W$length)
+
+###################################
+
+
+###############################################################
+#write csv's for the simply graphing R script (obsolete?)
+#write.csv(df.coho.long2, "df.coho.long2.csv")
+write.csv(df.coho, "df.coho.csv")
+####################################################################
+
+
+
+
+################################################################################################################################
+##################################################################################################################################3
+###################################################Morpho yr 2 pinks aka. pink2 aka pink odd##########################################
+#####################################################################################################################################
+#######################################################################################################################################
