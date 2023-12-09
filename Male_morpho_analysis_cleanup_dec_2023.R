@@ -1021,3 +1021,97 @@ fit.p_05$aov.table
 ############################################p2 (pink odd, pink year 2, pink 2021) linear morpho analysis#########################
 ########################################## AND the creation of linear morpho results dataframes##################################3
 ###################################################################################################################################
+
+#######################################################################################################
+#pink 2021 linear morph data
+p2.males <- read.csv("Data/Male.p2.Rdata.2.csv")
+
+
+#exploratory graphs
+#use graphs you already made, dummy!
+#fuck, can't find them
+names(p2.males)
+hist(p2.males$Body.depth.mm.)
+hist(p2.males$Snout.length.mm.)
+hist(p2.males$Length.mm.)
+ggplot(p2.males) + aes(x=Length.mm., y=Body.depth.mm.) + geom_point() 
+ggplot(p2.males) + aes(x=Length.mm., y=Snout.length.mm.) + geom_point()
+
+#additions: 05/03/22 - more exploratory graphs
+library(ggpubr)
+ggqqplot(p2.males$Snout.length.mm.)
+ggqqplot(log(p2.males$Snout.length.mm.))
+
+ggqqplot(p2.males$Body.depth.mm.)
+ggqqplot(log(p2.males$Body.depth.mm.)) #log that!1
+
+ggqqplot(p2.males$Length.mm.)
+
+ggplot(p2.males) + aes(x=Snout.length.mm.) + geom_density()
+ggplot(p2.males) + aes(x=log(Snout.length.mm.)) + geom_density()
+
+ggplot(p2.males) + aes(x=Body.depth.mm.) + geom_density()
+ggplot(p2.males) + aes(x=log(Body.depth.mm.)) + geom_density() # I see no reason to log either of these
+
+
+#some graphs I'm skipping over for now, will revisit later if they contribute to the final figures - #line 572 of Morpho_yr2_pinks.Rmd
+
+#identyifying the strays, not sure if needed
+p2.males1 <- p2.males %>% filter(Otolith.reading!= "Overground")
+strays <- p2.males1 %>% filter(Location != "Armstrong")
+strays <- strays %>% filter(Otolith.reading == "PORT ARMSTRONG")
+
+
+#hypothesis tests
+mod.p2021.depth <- lm(Body.depth.mm. ~ Length.mm. + factor(Otolith.reading),data=p2.males1)
+sum_depth_p2 <- summary(mod.p2021.depth)
+mod.p2021.snout <- lm(Snout.length.mm. ~ Length.mm. + factor(Otolith.reading),data=p2.males1)
+sum_snout_p2 <- summary(mod.p2021.snout)
+
+
+ggplot(p2.males1) + aes(x=Date, y=Body.depth.mm.) + geom_boxplot() + geom_jitter(aes(color=Otolith.reading, shape=Location))
+ggplot(p2.males1) + aes(x=Date, y=Snout.length.mm.) + geom_boxplot() + geom_jitter(aes(color=Otolith.reading, shape=Location))
+#maybe change above so date is in order...
+
+#means and sd's, for data table
+
+w<-p2.males1 %>% filter(Otolith.reading=="No Mark") 
+mean_d_wp2 <- mean(w$Body.depth.mm.) #mean of w male depth for p2
+
+h<-p2.males1 %>% filter(Otolith.reading=="PORT ARMSTRONG") 
+mean_d_hp2 <- mean(h$Body.depth.mm.) #mean of h male depth for p2
+
+sd_d_wp2 <- sd(w$Body.depth.mm.) #sd's, for my table
+sd_d_hp2 <- sd(h$Body.depth.mm.)
+
+mean_s_wp2 <- mean(w$Snout.length.mm.) #mean of w snout for p2
+length(w$Snout.length.mm.) #sample size
+
+mean_s_hp2 <- mean(h$Snout.length.mm.)  #mean of hatch snout for p2
+length(h$Snout.length.mm.) #sample size
+
+sd_s_wp2 <- sd(w$Snout.length.mm.)#standard deviations, for my table, for snout lenght
+sd_s_hp2 <- sd(h$Snout.length.mm.)
+
+
+
+#results- QC please
+df_pink2_odd_snout_results <- data.frame(t=-1*sum_snout_p2$coefficients[3,3], df= sum_snout_p2$df[2], p_one_sided=sum_snout_p2$coefficients[3,4]/2, #not 1-pval/2 because hatch is larger than wild. And it is divided by 2 to make it a one-sided t-test
+                                         length_t = sum_snout_p2$coefficients[2,3], length_p_two_Sided = sum_snout_p2$coefficients[2,4], 
+                                         hatchery_mean= mean_s_hp2, hatchery_sd = sd_s_hp2,
+                                         wild_mean=mean_s_wp2, wild_sd=sd_s_wp2)
+
+df_pink2_odd_depth_results <- data.frame(t=-1*sum_depth_p2$coefficients[3,3], df= sum_depth_p2$df[2], p_one_sided=sum_depth_p2$coefficients[3,4]/2, #not 1-pval/2 because hatch is larger than wild. And it is divided by 2 to make it a one-sided t-test
+                                    length_t = sum_depth_p2$coefficients[2,3], length_p_two_Sided = sum_depth_p2$coefficients[2,4], 
+                                    hatchery_mean= mean_d_hp2, hatchery_sd = sd_d_hp2,
+                                    wild_mean=mean_d_wp2, wild_sd=sd_d_wp2)
+
+#RESULTS RESULTS
+
+
+#investigate date - line 275
+
+#now that I have data frames for p1, p2, and coho for both snout and depth, I can combine to make the (two separate) results dataframes for snout and depth.
+
+
+#snaky fish tests -turns out they don't make a difference
