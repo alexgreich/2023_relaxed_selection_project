@@ -1108,6 +1108,14 @@ df_pink2_odd_depth_results <- data.frame(t=-1*sum_depth_p2$coefficients[3,3], df
 
 #RESULTS RESULTS
 
+SNOUT_RESULTS <- rbind(df_pink_snout_results, df_pink2_odd_snout_results, df_coho_snout_results)
+SNOUT_RESULTS <-  data.frame(SNOUT_RESULTS, row.names=c("Pink 2020", "Pink 2021", "Coho"))
+
+DEPTH_RESULTS <- rbind(df_pink_depth_results, df_pink2_odd_depth_results, df_coho_depth_results )
+DEPTH_RESULTS <-  data.frame(DEPTH_RESULTS, row.names=c("Pink 2020", "Pink 2021", "Coho"))
+
+write.csv(SNOUT_RESULTS, "Results/morpho_snout_results.csv")
+write.csv(DEPTH_RESULTS, "Results/morpho_depth_results.csv")
 
 #investigate date - line 275
 
