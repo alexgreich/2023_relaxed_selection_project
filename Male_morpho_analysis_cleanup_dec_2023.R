@@ -1117,9 +1117,72 @@ DEPTH_RESULTS <-  data.frame(DEPTH_RESULTS, row.names=c("Pink 2020", "Pink 2021"
 write.csv(SNOUT_RESULTS, "Results/morpho_snout_results.csv")
 write.csv(DEPTH_RESULTS, "Results/morpho_depth_results.csv")
 
+#############################################################################################################
+##############################################################################################################
 #investigate date - line 275
 
-#now that I have data frames for p1, p2, and coho for both snout and depth, I can combine to make the (two separate) results dataframes for snout and depth.
+p2.males_dateadj <- read.csv("Data/p2.males2_dateadj.csv") #line 721
+
+#GRAPHS WITH DATE
+ggplot(p2.males_dateadj) + aes(x=Date_adj, y=Body.depth.mm.) + geom_boxplot() + geom_jitter(aes(color=Otolith.reading, shape=Location))
+ggplot(p2.males_dateadj) + aes(x=Date_adj, y=Snout.length.mm.) + geom_boxplot() + geom_jitter(aes(color=Otolith.reading, shape=Location))
+
+#MODELS WITH DATE
+Snout_gl#GRAPHS WITH DATE
+ggplot(p2.males_dateadj) + aes(x=Date_adj, y=Body.depth.mm.) + geom_boxplot() + geom_jitter(aes(color=Otolith.reading, shape=Location))
+ggplot(p2.males_dateadj) + aes(x=Date_adj, y=Snout.length.mm.) + geom_boxplot() + geom_jitter(aes(color=Otolith.reading, shape=Location))
+
+#MODELS WITH DATE
+Snout_global_pinkodd <- lm(Snout.length.mm. ~ Length.mm. + Otolith.reading +  Location + Date_adj, data=p2.males_dateadj)
+summary(Snout_global_pinkodd)
+
+
+Depth_global_pinkodd <- lm(Body.depth.mm. ~ Length.mm. + Otolith.reading +  Location + Date_adj, data=p2.males_dateadj)
+summary(Depth_global_pinkodd) #date not sig to this model, but lcoaiton is
+
+#lubridate
+library(lubridate)
+Julian_pinkodd <- julian(mdy(p2.males_dateadj$Date), origin=as.Date("2021-01-01") )
+Julian_pinkodd
+p2.males_dateadj$Julian <- Julian_pinkodd
+
+#nice. now test for Julian date:
+Snout_global_pinkodd_julian <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian, data=p2.males_dateadj)
+summary(Snout_global_pinkodd_julian) #ok well, that's important. DAte IS signficant here, barely
+
+Depth_global_pinkodd_julian <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading + Julian, data=p2.males_dateadj)
+summary(Depth_global_pinkodd_julian) 
+
+Depth_global_pinkodd_julian_check <- lm(log(Body.depth.mm.) ~ Length.mm. + Julian + Otolith.reading, data=p2.males_dateadj)
+summary(Depth_global_pinkodd_julian_check)
+
+Depth_global_pinkodd_julian_global <- lm(log(Body.depth.mm.) ~ Length.mm. * Julian * Otolith.reading, data=p2.males_dateadj)
+summary(Depth_global_pinkodd_julian_global)
+
+names(p2.males_dateadj)
+#View(p2.males_dateadj)
+
+#test date, early vs. late by location? Sashin, lovers, armstrong? 12/11/23
+##Graph thus
+#EXPLORATORY DATE PLOTS - these show not much diff from one to the next
+ggplot(p2.males_dateadj) + aes(x=Julian, y=Body.depth.mm.) +geom_point(aes(color=Location, shape=Otolith.reading)) +
+  geom_smooth()
+ggplot(p2.males_dateadj) + aes(x=Julian, y=Snout.length.mm.) +geom_point(aes(color=Location, shape=Otolith.reading)) +
+  geom_smooth()
+
+
+##################################################################################################################
+####################################################################################################################
 
 
 #snaky fish tests -turns out they don't make a difference
+
+#might be needed later: write.csv(p2.males1, "p2.males1.csv")
+
+
+################################################################################3
+################################################################################
+#########   Male fish graphs: morpho and linear   #########################################
+############    (and length too??)             ####################################
+#################################################################################
+#################################################################################
