@@ -1188,8 +1188,10 @@ ggplot(p2.males_dateadj) + aes(x=Julian, y=Snout.length.mm.) +geom_point(aes(col
 #################################################################################
 
 
-
+##########
 #pink 2020 - spending my dec 2023 time unlogging things
+##########
+
 #range(log(df.pink2$snout)) #1.18, 1.91
 #range(log(df.pink2$depth)) #4.6, 5.2
 range(df.pink2$snout) #3.26, 6.74
@@ -1214,10 +1216,71 @@ ggDepth_p1 <- ggplot(df.pink2) +geom_point(size=2, aes(y=depth, x=length, color=
   coord_cartesian(xlim = c(367, 520), ylim=c(95, 180))+
   scale_x_continuous(breaks=c(400, 440, 480, 520), expand=c(0,0)) +
   scale_y_continuous(breaks=c(120, 140, 160, 180), expand=c(0,0)) #ok?
+#looks good-AR 12/11/23
 
 
 
+##############
 #pink 2021
+###############
+range(p2.males1$Length.mm.) #345, 492
+#range(log(p2.males1$Body.depth.mm.)) #4.2, 5.0
+#range(log(p2.males1$Snout.length.mm.)) #3.6, 4.3
+range(p2.males1$Body.depth.mm.) #67, 143
+range(p2.males1$Snout.length.mm.) #37 76
+
+#p2 snout 
+ggsnout_pinkodd <- ggplot(p2.males1) + aes(x=Length.mm., y=Snout.length.mm., color=Otolith.reading) + geom_point(size=2) +
+  scale_color_manual(values=c("blue","orange")) + theme_cowplot()+
+  guides(color= "none") +
+  geom_smooth(method = "lm") +
+  labs(x= "Length (mm)", y= "Snout (mm)") +
+  coord_cartesian(xlim = c(340, 500), ylim=c(35, 80)) +
+  scale_x_continuous(breaks=c(350, 400, 450, 500), expand=c(0,0)) + 
+  scale_y_continuous(breaks=c(40, 60, 80), expand=c(0,0))
+
+#p2 depth
+ggdepth_pinkodd<- ggplot(p2.males1) + aes(x=Length.mm., y=Body.depth.mm., color=Otolith.reading) + geom_point(size=2) +  scale_color_manual(values=c("blue","orange")) + theme_cowplot()+
+  guides(color= "none")+
+  geom_smooth(method = "lm") +
+  labs(x= "Length (mm)", y= "Depth (mm)") + 
+  coord_cartesian(xlim = c(340, 500), ylim=c(65, 150)) +
+  scale_x_continuous(breaks=c(350, 400, 450, 500), expand=c(0,0)) + 
+  scale_y_continuous(breaks=c(75, 100, 125, 150), expand=c(0,0))
+
+###################3
+#coho 
+#################
+df.coho$snoutmm <- (df.coho$snoutL)*10
+
+range(df.coho$length) #416, 631 #updated length
+range(df.coho$snoutmm) #79, 194 #range stays same
+range(df.coho$depth) #104, 192 #updated depth
+mycolors.coho <- c("orange", "blue")
+
+#snout
+ggsnout_coho <- ggplot(data=df.coho) + aes(x=length, y=snoutmm, color=Wild.or.hatch) + 
+  geom_point(size=2) + geom_smooth(method="lm")+ 
+  scale_color_manual(values=mycolors.coho) + 
+  theme_cowplot() + labs(y="Snout (mm)", x= "Length (mm)") +
+  guides(color="none") + 
+  coord_cartesian(xlim=c(410, 650), ylim=c(75, 200)) + 
+  scale_x_continuous(expand=c(0,0), breaks = c(450, 550, 650)) +
+  scale_y_continuous(expand=c(0,0), breaks =c (100, 150, 200))
 
 
-#coho
+ggdepth_coho <-ggplot(df.coho)+aes(y=depth, x=length, color=Wild.or.hatch) +geom_point(size=2) + 
+  geom_smooth(method="lm", key_glyph= "blank") + scale_color_manual(values=mycolors.coho, labels=c("Hatchery", "Wild")) + 
+  theme_cowplot()+labs(y="Depth (mm)", x= "Length (mm)") +
+  #guides(color="none") + 
+  coord_cartesian(xlim=c(410, 650), ylim=c(100, 200)) + 
+  scale_x_continuous(expand=c(0,0), breaks = c(450, 550, 650)) +
+  scale_y_continuous(expand=c(0,0), breaks =c (100, 150, 200)) +
+  theme(legend.title=element_blank(), legend.position = c(0.55, 0.12))
+
+ggdepth_coho <- ggdepth_coho + theme(
+  legend.box.background = element_rect(),
+  legend.box.margin = margin(0, 3, 2, 2) #yes, finally I made a box.
+)
+
+
