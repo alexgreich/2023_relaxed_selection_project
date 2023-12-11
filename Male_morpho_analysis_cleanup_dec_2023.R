@@ -1186,3 +1186,38 @@ ggplot(p2.males_dateadj) + aes(x=Julian, y=Snout.length.mm.) +geom_point(aes(col
 ############    (and length too??)             ####################################
 #################################################################################
 #################################################################################
+
+
+
+#pink 2020 - spending my dec 2023 time unlogging things
+#range(log(df.pink2$snout)) #1.18, 1.91
+#range(log(df.pink2$depth)) #4.6, 5.2
+range(df.pink2$snout) #3.26, 6.74
+range(df.pink2$depth) #101, 175
+range(df.pink2$length) #371, 515
+
+#snout
+ggSnout_p1 <-ggplot(df.pink2) +geom_point(size=2, aes(y=snout, x=length, color=Wild.or.hatch) )+
+  geom_smooth(method="lm", aes(y=snout, x=length, color=Wild.or.hatch), color="black")+ #keep or get rid of this line?
+  scale_color_manual(breaks =c("W","H"), values=c("blue", "orange"), name=element_blank(), labels=c("Wild origin", "Hatchery origin")) + theme_cowplot() + labs(x="Length (mm)", y= "Snout (mm)")+
+  guides(color="none") + 
+  coord_cartesian(xlim=c(367, 520), ylim=c(3, 7))+ #changed ylim to account for non-logging
+  scale_x_continuous(breaks=c(400, 440, 480, 520), expand=c(0,0)) + 
+  scale_y_continuous(breaks= c(4, 5, 6, 7), expand=c(0,0)) #changed breaks to account for not logging . MAy want to change
+#looks good - AR 12/11/23
+
+#depth
+ggDepth_p1 <- ggplot(df.pink2) +geom_point(size=2, aes(y=depth, x=length, color=Wild.or.hatch) )+ 
+  geom_smooth(aes(y=depth, x=length), method="lm", color="black")+ 
+  scale_color_manual(breaks =c("W","H"), values=c("blue", "orange"), name=element_blank(), labels=c("Wild origin", "Hatchery origin")) + theme_cowplot() + labs(x="Length (mm)", y= "log(Depth (mm))")+
+  guides(color="none")+
+  coord_cartesian(xlim = c(367, 520), ylim=c(95, 180))+
+  scale_x_continuous(breaks=c(400, 440, 480, 520), expand=c(0,0)) +
+  scale_y_continuous(breaks=c(120, 140, 160, 180), expand=c(0,0)) #ok?
+
+
+
+#pink 2021
+
+
+#coho
