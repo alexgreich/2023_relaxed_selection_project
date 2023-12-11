@@ -21,6 +21,7 @@ library(ggforce)
 library(Morpho)
 library(RColorBrewer)
 library(cowplot)
+library(patchwork)
 ######################################################
 
 ##########################
@@ -1211,7 +1212,7 @@ ggSnout_p1 <-ggplot(df.pink2) +geom_point(size=2, aes(y=snout, x=length, color=W
 #depth
 ggDepth_p1 <- ggplot(df.pink2) +geom_point(size=2, aes(y=depth, x=length, color=Wild.or.hatch) )+ 
   geom_smooth(aes(y=depth, x=length), method="lm", color="black")+ 
-  scale_color_manual(breaks =c("W","H"), values=c("blue", "orange"), name=element_blank(), labels=c("Wild origin", "Hatchery origin")) + theme_cowplot() + labs(x="Length (mm)", y= "log(Depth (mm))")+
+  scale_color_manual(breaks =c("W","H"), values=c("blue", "orange"), name=element_blank(), labels=c("Wild origin", "Hatchery origin")) + theme_cowplot() + labs(x="Length (mm)", y= "Depth (mm)")+
   guides(color="none")+
   coord_cartesian(xlim = c(367, 520), ylim=c(95, 180))+
   scale_x_continuous(breaks=c(400, 440, 480, 520), expand=c(0,0)) +
@@ -1283,4 +1284,25 @@ ggdepth_coho <- ggdepth_coho + theme(
   legend.box.margin = margin(0, 3, 2, 2) #yes, finally I made a box.
 )
 
+###########################################
+#combine the linear morpho graphs
+###############################################
+male_base <- plot_grid(ggSnout_p1, ggsnout_pinkodd, ggsnout_coho, ggDepth_p1, ggdepth_pinkodd,ggdepth_coho, nrow=2, ncol=3, scale=0.95) #megan suggests 2 x 3
 
+male_base2 <- plot_grid(NULL, male_base, ncol = 1, rel_heights = c(0.6,9.4))
+
+dev.new (width = 10, height =6.56, unit = "in", noRStudioGD = T); last_plot()
+ggsave ("Plots/Male_linear.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+#nice!
+
+###########################################################
+##########################################################
+#male morpho graphs
+#############################################################
+############################################################
+
+#pink even
+
+#pink odd
+
+#coho
