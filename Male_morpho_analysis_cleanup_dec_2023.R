@@ -1363,5 +1363,4 @@ plot_morpho_male
 dev.new (width = 10, height =3.5, unit = "in", noRStudioGD = T); last_plot()
 ggsave ("Plots/Male_morpho.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 
-#I'll need to combine both graphs, right? #nope. Don't. It's chaos.
-##male_base2/plot_morpho_male
+#I'll need to combine this morpho graph with teh fish graph, which I did on ppt. Get the fish graph
