@@ -1302,7 +1302,53 @@ ggsave ("Plots/Male_linear.jpg", width = dev.size()[1], height = dev.size()[2]);
 ############################################################
 
 #pink even
+#even pink (p1)
+ggMorpho_pinkeven <- ggplot(data=df.pink2)+aes(x=Comp3, y=Comp1, color=Wild.or.hatch)+
+  geom_point(size=2)+scale_color_manual(values=wildhatch) + stat_ellipse() + 
+  theme_bw() + labs(x= "RW 3", y= "RW 1") +
+  guides(color="none") +
+  labs(x=NULL, y=NULL)
+#RW 3 is hump. RW 1 is hump and snout. RW 2 is bendyness(not having to do with fish morphometrics, just having to do with how the fish was placed for photo)
+
 
 #pink odd
+#odd pink (p2)
+ggMorpho_pinkodd<- ggplot(data=df.pink2021.orig)+
+  aes(x=Comp3, y=Comp1, color=origin)+
+  geom_point(size=2)+scale_color_manual(values=wildhatch) + 
+  stat_ellipse() + theme_bw() + 
+  labs(x= "RW 3", y= "RW 1")+
+  guides(color="none")+
+  labs(x=NULL, y=NULL)
 
-#coho
+#coho (all)
+ggMorpho_coho <- ggplot(df.coho) + aes(x=Comp3, y=Comp1, color=Wild.or.hatch) + #changed from df.coho.long  to df.coho
+  geom_point(size=2)+ scale_color_manual(values=mycolors.coho) + 
+  stat_ellipse() + 
+  labs(y= "RW 1", x= "RW 3") + 
+  theme_bw()+
+  guides(color="none")+
+  labs(x=NULL, y=NULL)
+#"RW 1 (snout, roughly)", "RW 3 (depth, roughly)"
+
+
+#combine all 3
+#ggMorpho_pinkeven + ggMorpho_pinkodd + ggMorpho_coho
+
+morpho_base <- plot_grid(ggMorpho_pinkeven, ggMorpho_pinkodd, ggMorpho_coho, nrow=1, ncol=3, scale=0.95)
+morpho_base2 <- plot_grid(NULL, morpho_base, ncol = 2, rel_widths= c(0.3,9.7))
+morpho_base3 <- plot_grid(NULL, morpho_base2, NULL, nrow=3, rel_heights = c(0.5, 9.0, 0.5))
+
+#now axes and labels... 
+plot_morpho_male <- ggdraw(morpho_base3) +
+  draw_label("Even-year pink", x = 0.21, y = 0.965, fontfamily = "Arial", fontface="bold", size = 15)+
+  draw_label("Odd-year pink", x=0.53, y=0.965, fontfamily = "Arial", fontface="bold", size = 15)+
+  draw_label("Coho", x=0.85, y=0.965, fontfamily = "Arial", fontface="bold", size = 15) +
+  draw_label ("RW3", x = 0.56, y = 0.05, size = 15) + 
+  draw_label (("RW1"), angle= 90, x = 0.03, y = 0.50, size = 15)
+plot_morpho_male 
+
+dev.new (width = 10, height =3.5, unit = "in", noRStudioGD = T); last_plot()
+ggsave ("Plots/Male_morpho.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+
+#I'll need to combine both graphs, right?
