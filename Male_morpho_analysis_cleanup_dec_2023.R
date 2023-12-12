@@ -428,7 +428,7 @@ summary(fit.c.int) #ooh, some interaction effects. That's expected though
 #12/07/23
 #ok, here's my main results
 sum_c <- summary(fit.c)
-write.csv(sum_c$table, "Results/morpho_c_table.csv")
+#write.csv(sum_c$table, "Results/morpho_c_table.csv")
 #note that this model can be swapped for the one with interaction effects
 
 #AIC(fit.c, fit.c.int) #takes forever
@@ -567,7 +567,7 @@ mean_s_h <- 10* mean(coho_h$snoutL) #that measurement is in cm I think, times 10
 mean_s_w <- 10*  mean(coho_w$snoutL)
 
 sd_s_h <- 10*sd(coho_h$snoutL)
-sd_s_w <- 10*sd #qc'ed, checks out.
+sd_s_w <- 10*sd(coho_w$snoutL) #qc'ed, checks out.
 
 df_coho_snout_results <- data.frame(t=sum_c_5$coefficients[3,3], df= sum_c_5$df[2], p_one_sided=1-sum_c_5$coefficients[3,4]/2,
                                     length_t = sum_c_5$coefficients[2,3], length_p_two_Sided = sum_c_5$coefficients[2,4], 
@@ -608,7 +608,7 @@ mean_d_wc <- mean(W.depth.all.coho$depth)
 
 aov.depth.c <- lm(depth ~ length + factor(Wild.or.hatch), df.coho)
 sum_c_depth <- summary(aov.depth.c)
-plot(aov.depth.c) #looks fine ish
+#plot(aov.depth.c) #looks fine ish
 
 
 #prepare the table
@@ -1129,7 +1129,7 @@ ggplot(p2.males_dateadj) + aes(x=Date_adj, y=Body.depth.mm.) + geom_boxplot() + 
 ggplot(p2.males_dateadj) + aes(x=Date_adj, y=Snout.length.mm.) + geom_boxplot() + geom_jitter(aes(color=Otolith.reading, shape=Location))
 
 #MODELS WITH DATE
-Snout_gl#GRAPHS WITH DATE
+#Snout_gl#GRAPHS WITH DATE
 ggplot(p2.males_dateadj) + aes(x=Date_adj, y=Body.depth.mm.) + geom_boxplot() + geom_jitter(aes(color=Otolith.reading, shape=Location))
 ggplot(p2.males_dateadj) + aes(x=Date_adj, y=Snout.length.mm.) + geom_boxplot() + geom_jitter(aes(color=Otolith.reading, shape=Location))
 
@@ -1361,6 +1361,13 @@ plot_morpho_male <- ggdraw(morpho_base3) +
 plot_morpho_male 
 
 dev.new (width = 10, height =3.5, unit = "in", noRStudioGD = T); last_plot()
-ggsave ("Plots/Male_morpho.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+ggsave ("Plots/Male_morpho_toppart.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 
 #I'll need to combine this morpho graph with teh fish graph, which I did on ppt. Get the fish graph
+
+par(mfrow = c(1, 3), mar=c(1,1,1,0), family  = "Arial")
+plotRefToTarget(ref.w.p, ref.h.p, method="vector", mag=5, mar=c(1,1,1,0))
+plotRefToTarget(ref.w.p2, ref.h.p2, method="vector", mag=5, mar=c(1,1,1,0)) #wild dot, hatchery arrows
+plotRefToTarget(ref.w.c, ref.h.c, method="vector", mag=5, mar=c(1,1,1,0))
+dev.new (width = 10, height =3.5, unit = "in", noRStudioGD = T); last_plot()
+ggsave ("Male_morpho_bottompart.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
