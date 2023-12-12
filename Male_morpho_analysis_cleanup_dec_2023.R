@@ -1193,30 +1193,32 @@ ggplot(p2.males_dateadj) + aes(x=Julian, y=Snout.length.mm.) +geom_point(aes(col
 #pink 2020 - spending my dec 2023 time unlogging things
 ##########
 
+df.pink2$snoutmm <- df.pink2$snout*10
+
 #range(log(df.pink2$snout)) #1.18, 1.91
 #range(log(df.pink2$depth)) #4.6, 5.2
-range(df.pink2$snout) #3.26, 6.74
+range(df.pink2$snoutmm) #32.6, 67.4
 range(df.pink2$depth) #101, 175
 range(df.pink2$length) #371, 515
 
 #snout
-ggSnout_p1 <-ggplot(df.pink2) +geom_point(size=2, aes(y=snout, x=length, color=Wild.or.hatch) )+
-  geom_smooth(method="lm", aes(y=snout, x=length, color=Wild.or.hatch), color="black")+ #keep or get rid of this line?
+ggSnout_p1 <-ggplot(df.pink2) +geom_point(size=2, aes(y=snoutmm, x=length, color=Wild.or.hatch) )+
+  geom_smooth(method="lm", aes(y=snoutmm, x=length, color=Wild.or.hatch), color="black")+ #keep or get rid of this line?
   scale_color_manual(breaks =c("W","H"), values=c("blue", "orange"), name=element_blank(), labels=c("Wild origin", "Hatchery origin")) + theme_cowplot() + labs(x="Length (mm)", y= "Snout (mm)")+
   guides(color="none") + 
-  coord_cartesian(xlim=c(367, 520), ylim=c(3, 7))+ #changed ylim to account for non-logging
+  coord_cartesian(xlim=c(367, 520), ylim=c(30, 70))+ #changed ylim to account for non-logging
   scale_x_continuous(breaks=c(400, 440, 480, 520), expand=c(0,0)) + 
-  scale_y_continuous(breaks= c(4, 5, 6, 7), expand=c(0,0)) #changed breaks to account for not logging . MAy want to change
+  scale_y_continuous(breaks= c(30, 50, 70), expand=c(0,0)) #changed breaks to account for not logging . MAy want to change
 #looks good - AR 12/11/23
 
 #depth
-ggDepth_p1 <- ggplot(df.pink2) +geom_point(size=2, aes(y=depth, x=length, color=Wild.or.hatch) )+ 
+ggDepth_p1 <- ggplot(df.pink2) + geom_point(size=2, aes(y=depth, x=length, color=Wild.or.hatch) ) +
   geom_smooth(aes(y=depth, x=length), method="lm", color="black")+ 
   scale_color_manual(breaks =c("W","H"), values=c("blue", "orange"), name=element_blank(), labels=c("Wild origin", "Hatchery origin")) + theme_cowplot() + labs(x="Length (mm)", y= "Depth (mm)")+
   guides(color="none")+
   coord_cartesian(xlim = c(367, 520), ylim=c(95, 180))+
   scale_x_continuous(breaks=c(400, 440, 480, 520), expand=c(0,0)) +
-  scale_y_continuous(breaks=c(120, 140, 160, 180), expand=c(0,0)) #ok?
+  scale_y_continuous(breaks=c(100, 140, 180), expand=c(0,0)) #ok?
 #looks good-AR 12/11/23
 
 
@@ -1231,19 +1233,21 @@ range(p2.males1$Body.depth.mm.) #67, 143
 range(p2.males1$Snout.length.mm.) #37 76
 
 #p2 snout 
-ggsnout_pinkodd <- ggplot(p2.males1) + aes(x=Length.mm., y=Snout.length.mm., color=Otolith.reading) + geom_point(size=2) +
+ggsnout_pinkodd <- ggplot(p2.males1) + aes(x=Length.mm., y=Snout.length.mm., color=Otolith.reading) + 
   scale_color_manual(values=c("blue","orange")) + theme_cowplot()+
   guides(color= "none") +
-  geom_smooth(method = "lm") +
+  geom_point(size=2) +
+  geom_smooth(method = "lm") + 
   labs(x= "Length (mm)", y= "Snout (mm)") +
   coord_cartesian(xlim = c(340, 500), ylim=c(35, 80)) +
   scale_x_continuous(breaks=c(350, 400, 450, 500), expand=c(0,0)) + 
   scale_y_continuous(breaks=c(40, 60, 80), expand=c(0,0))
 
 #p2 depth
-ggdepth_pinkodd<- ggplot(p2.males1) + aes(x=Length.mm., y=Body.depth.mm., color=Otolith.reading) + geom_point(size=2) +  scale_color_manual(values=c("blue","orange")) + theme_cowplot()+
+ggdepth_pinkodd<- ggplot(p2.males1) + aes(x=Length.mm., y=Body.depth.mm., color=Otolith.reading) +   scale_color_manual(values=c("blue","orange")) + theme_cowplot()+
   guides(color= "none")+
-  geom_smooth(method = "lm") +
+  geom_point(size=2) +
+  geom_smooth(method = "lm") + 
   labs(x= "Length (mm)", y= "Depth (mm)") + 
   coord_cartesian(xlim = c(340, 500), ylim=c(65, 150)) +
   scale_x_continuous(breaks=c(350, 400, 450, 500), expand=c(0,0)) + 
@@ -1260,8 +1264,8 @@ range(df.coho$depth) #104, 192 #updated depth
 mycolors.coho <- c("orange", "blue")
 
 #snout
-ggsnout_coho <- ggplot(data=df.coho) + aes(x=length, y=snoutmm, color=Wild.or.hatch) + 
-  geom_point(size=2) + geom_smooth(method="lm")+ 
+ggsnout_coho <- ggplot(data=df.coho) + aes(x=length, y=snoutmm, color=Wild.or.hatch) + geom_point(size=2) +
+  geom_smooth(method="lm")+  
   scale_color_manual(values=mycolors.coho) + 
   theme_cowplot() + labs(y="Snout (mm)", x= "Length (mm)") +
   guides(color="none") + 
@@ -1270,7 +1274,8 @@ ggsnout_coho <- ggplot(data=df.coho) + aes(x=length, y=snoutmm, color=Wild.or.ha
   scale_y_continuous(expand=c(0,0), breaks =c (100, 150, 200))
 
 
-ggdepth_coho <-ggplot(df.coho)+aes(y=depth, x=length, color=Wild.or.hatch) +geom_point(size=2) + 
+ggdepth_coho <-ggplot(df.coho)+aes(y=depth, x=length, color=Wild.or.hatch) + 
+  geom_point(size=2) +
   geom_smooth(method="lm", key_glyph= "blank") + scale_color_manual(values=mycolors.coho, labels=c("Hatchery", "Wild")) + 
   theme_cowplot()+labs(y="Depth (mm)", x= "Length (mm)") +
   #guides(color="none") + 
@@ -1287,13 +1292,20 @@ ggdepth_coho <- ggdepth_coho + theme(
 ###########################################
 #combine the linear morpho graphs
 ###############################################
-male_base <- plot_grid(ggSnout_p1, ggsnout_pinkodd, ggsnout_coho, ggDepth_p1, ggdepth_pinkodd,ggdepth_coho, nrow=2, ncol=3, scale=0.95) #megan suggests 2 x 3
+male_base <- plot_grid(ggSnout_p1, ggsnout_pinkodd, ggsnout_coho, ggDepth_p1, ggdepth_pinkodd, ggdepth_coho, nrow=2, ncol=3, scale=0.95) #megan suggests 2 x 3
 
 male_base2 <- plot_grid(NULL, male_base, ncol = 1, rel_heights = c(0.6,9.4))
 
 dev.new (width = 10, height =6.56, unit = "in", noRStudioGD = T); last_plot()
-ggsave ("Plots/Male_linear.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+#ggsave ("Plots/Male_linear.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 #nice!
+
+#argh. not quite right
+##try patchwork.
+(ggSnout_p1 + ggsnout_pinkodd + ggsnout_coho)/(ggDepth_p1 +  ggdepth_pinkodd + ggdepth_coho)
+dev.new (width = 10, height =6.56, unit = "in", noRStudioGD = T); last_plot()
+ggsave ("Plots/Male_linear.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off() #one of these
+##hastagged out because the output isnt consistent.
 
 ###########################################################
 ##########################################################
@@ -1351,4 +1363,5 @@ plot_morpho_male
 dev.new (width = 10, height =3.5, unit = "in", noRStudioGD = T); last_plot()
 ggsave ("Plots/Male_morpho.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 
-#I'll need to combine both graphs, right?
+#I'll need to combine both graphs, right? #nope. Don't. It's chaos.
+##male_base2/plot_morpho_male
