@@ -1297,6 +1297,7 @@ male_base <- plot_grid(ggSnout_p1, ggsnout_pinkodd, ggsnout_coho, ggDepth_p1, gg
 male_base2 <- plot_grid(NULL, male_base, ncol = 1, rel_heights = c(0.6,9.4))
 
 dev.new (width = 10, height =6.56, unit = "in", noRStudioGD = T); last_plot()
+dev.off()
 #ggsave ("Plots/Male_linear.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 #nice!
 
@@ -1304,7 +1305,8 @@ dev.new (width = 10, height =6.56, unit = "in", noRStudioGD = T); last_plot()
 ##try patchwork.
 (ggSnout_p1 + ggsnout_pinkodd + ggsnout_coho)/(ggDepth_p1 +  ggdepth_pinkodd + ggdepth_coho)
 dev.new (width = 10, height =6.56, unit = "in", noRStudioGD = T); last_plot()
-ggsave ("Plots/Male_linear.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off() #one of these
+dev.off()
+#ggsave ("Plots/Male_linear.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off() #one of these
 ##hastagged out because the output isnt consistent.
 
 ###########################################################
@@ -1361,7 +1363,8 @@ plot_morpho_male <- ggdraw(morpho_base3) +
 plot_morpho_male 
 
 dev.new (width = 10, height =3.5, unit = "in", noRStudioGD = T); last_plot()
-ggsave ("Plots/Male_morpho_toppart.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+#ggsave ("Plots/Male_morpho_toppart.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+dev.off()
 
 #I'll need to combine this morpho graph with teh fish graph, which I did on ppt. Get the fish graph
 
@@ -1370,4 +1373,5 @@ plotRefToTarget(ref.w.p, ref.h.p, method="vector", mag=5, mar=c(1,1,1,0))
 plotRefToTarget(ref.w.p2, ref.h.p2, method="vector", mag=5, mar=c(1,1,1,0)) #wild dot, hatchery arrows
 plotRefToTarget(ref.w.c, ref.h.c, method="vector", mag=5, mar=c(1,1,1,0))
 dev.new (width = 10, height =3.5, unit = "in", noRStudioGD = T); last_plot()
-ggsave ("Male_morpho_bottompart.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+#ggsave ("Plots/Male_morpho_bottompart.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+##hmm. Had to save last plot manually
