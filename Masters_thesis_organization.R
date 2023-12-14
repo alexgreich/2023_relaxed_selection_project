@@ -1003,3 +1003,7 @@ L44 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm.) +
 ##############################################################
 
 
+#####
+#create csv for graphing fig3 R script
+write.csv(c.GSI.clean, "Data/c.GSI.clean.csv")
+
