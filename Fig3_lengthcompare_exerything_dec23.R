@@ -46,49 +46,50 @@ coho_m_boxplot<-ggplot(coho.dat) + aes(y=Length..mm., x=Wild.or.Hatch, color=Wil
   labs(y="Length (mm)", x=element_blank()) +
   scale_x_discrete(labels=c("H", "W")) +
   scale_y_continuous(breaks=c(450, 550, 650), expand=c(0,0))+
-  coord_cartesian(ylim=c(400,650))+
-  xlab("Coho salmon")
+  coord_cartesian(ylim=c(400,650))#+
+  #ylab("Coho salmon") #hmm. I'll have to add the external titles in ppt or something. or just do it the coding long way
  
 
 
 #updated to here dec 2023
 
 #####
-even_male_pink <- p.dat <- read.csv("MASTERMalePinksQC.reorder.csv")
-even_female_pink <- read.csv("FemalePinkGSIotodataadd1_without_gaps copy.csv")
-odd_male_pink <-  read.csv("Male.p2.Rdata.2.csv")
-odd_female_pink <- read.csv("Female.p2.Rdata.3.csv")
+even_male_pink <- p.dat <- read.csv("Data/MASTERMalePinksQC.reorder.csv")
+even_female_pink <- read.csv("Data/FemalePinkGSIotodataadd1_without_gaps copy.csv")
+odd_male_pink <-  read.csv("Data/Male.p2.Rdata.2.csv")
+odd_female_pink <- read.csv("Data/Female.p2.Rdata.3.csv")
 ##eventually smooth this part out
 #even-year pinks
 ##Wait -> I think we need to ezclude the big hatchery fish.
 #males - use wild or hatch to differentiate, we don't have otos
-even_male_boxplot <-ggplot(even_male_pink) + aes(x=Length..mm., y=Wild.or.Hatch, color=Wild.or.Hatch) +
+even_male_boxplot <-ggplot(even_male_pink) + aes(y=Length..mm., x=Wild.or.Hatch, color=Wild.or.Hatch) +
   geom_boxplot(color="black", outlier.alpha = 0) +
   geom_jitter(size=2) +
   scale_color_manual(values =c("orange", "blue"))+
   theme_cowplot()+
   guides(color="none") +
-  labs(x=element_blank(), y=element_blank()) +
-  scale_y_discrete(labels=c("H", "W"))+
-  scale_x_continuous(breaks=c(400, 440, 480, 520), expand=c(0,0))+
-  coord_cartesian(xlim=c(366, 520))+
-  ylab("Even-year pink salmon")+
+  labs(y=element_blank(), x=element_blank()) +
+  scale_x_discrete(labels=c("H", "W"))+
+  scale_y_continuous(breaks=c(400, 440, 480, 520), expand=c(0,0))+
+  coord_cartesian(ylim=c(366, 520))+
+  #xlab("Even-year pink salmon")+
+  ylab("Length (mm)")+
   labs(title = "Male")+
   theme(plot.title = element_text(hjust = 0.5))
 #females
-library(forcats)
+library(forcats) 
 ?fct_rev
 even_female_pink_clean <- even_female_pink %>% filter(Weird == "n", Otolith.results != "unknown") 
-even_female_boxplot<-ggplot(even_female_pink_clean) + aes(x=Length..mm., y=fct_rev(Otolith.results), color=fct_rev(Otolith.results)) +
+even_female_boxplot<-ggplot(even_female_pink_clean) + aes(y=Length..mm., x=fct_rev(Otolith.results), color=fct_rev(Otolith.results)) +
   geom_boxplot(color="black", outlier.alpha = 0) +
   geom_jitter(size=2) +
   scale_color_manual(values =c("orange", "blue"))+
   theme_cowplot()+
   guides(color="none") +
-  labs(x=element_blank(), y=element_blank()) +
-  scale_y_discrete(labels=c("H", "W"))+
-  scale_x_continuous(breaks=c(400, 440, 480), expand=c(0,0))+
-  coord_cartesian(xlim=c(395,480))+
+  labs(y=element_blank(), x=element_blank()) +
+  scale_x_discrete(labels=c("H", "W"))+
+  scale_y_continuous(breaks=c(400, 440, 480), expand=c(0,0))+
+  coord_cartesian(ylim=c(395,480))+
   labs(title="Female")+
   theme(plot.title = element_text(hjust = 0.5))
 ##looks good there
@@ -97,29 +98,30 @@ even_female_boxplot<-ggplot(even_female_pink_clean) + aes(x=Length..mm., y=fct_r
 #pink odd
 #males
 odd_male_pink_clean <- odd_male_pink %>% filter(Otolith.reading != "Overground")
-odd_male_boxplot <- ggplot(odd_male_pink_clean) + aes(x=Length.mm., y=fct_rev(Otolith.reading), color=fct_rev(Otolith.reading)) +
+odd_male_boxplot <- ggplot(odd_male_pink_clean) + aes(y=Length.mm., x=fct_rev(Otolith.reading), color=fct_rev(Otolith.reading)) +
   geom_boxplot(color="black", outlier.alpha = 0) +
   geom_jitter(size=2) +
   scale_color_manual(values =c("orange", "blue"))+
   theme_cowplot()+
   guides(color="none") +
-  labs(x=element_blank(), y=element_blank()) +
-  scale_y_discrete(labels=c("H", "W"))+
-  scale_x_continuous(breaks=c(350, 400, 450, 500), expand=c(0,0))+
-  coord_cartesian(xlim=c(342,500))+ #looks good
-  ylab("Odd-year pink salmon")
+  labs(y=element_blank(), x=element_blank()) +
+  scale_x_discrete(labels=c("H", "W"))+
+  scale_y_continuous(breaks=c(350, 400, 450, 500), expand=c(0,0))+
+  coord_cartesian(ylim=c(342,500))+ #looks good
+  #xlab("Odd-year pink salmon")
+  ylab("Length (mm)")
 #females
 odd_female_pink_clean <- odd_female_pink %>% filter(Weird == "n", Oto.reading != "No Oto", Oto.reading != "Overground") 
-odd_female_boxplot <- ggplot(odd_female_pink_clean) + aes(x=Length.mm., y=fct_rev(Oto.reading), color=fct_rev(Oto.reading)) +
+odd_female_boxplot <- ggplot(odd_female_pink_clean) + aes(y=Length.mm., x=fct_rev(Oto.reading), color=fct_rev(Oto.reading)) +
   geom_boxplot(color="black", outlier.alpha = 0) +
   geom_jitter(size=2) +
   scale_color_manual(values =c("orange", "blue"))+
   theme_cowplot()+
   guides(color="none") +
-  labs(x=element_blank(), y=element_blank()) +
-  scale_y_discrete(labels=c("H", "W")) +
-  scale_x_continuous(breaks=c(375, 425, 475), expand=c(0,0))+
-  coord_cartesian(xlim=c(340,475))
+  labs(y=element_blank(), x=element_blank()) +
+  scale_x_discrete(labels=c("H", "W")) +
+  scale_y_continuous(breaks=c(375, 425, 475), expand=c(0,0))+
+  coord_cartesian(ylim=c(340,475))
   
 ##Qced positions, it's correct (min length is 344, which is a hatchery fish)
 
@@ -138,7 +140,7 @@ length_boxplot_base <-(even_male_boxplot+even_female_boxplot)/(odd_male_boxplot+
 # 7 BY 8 DIMENSIONS
 
 length_boxplot_base
-dev.new (width = 8, height = 8, unit = "in", noRStudioGD = T); last_plot() #perfect
+dev.new (width = 8, height = 10, unit = "in", noRStudioGD = T); last_plot() #perfect
 #ggsave ("FIG3_LENGTH_dotsize2.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 #dev.off()
 
