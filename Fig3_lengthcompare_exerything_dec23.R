@@ -18,7 +18,7 @@ coho_f_boxplot<-ggplot(c.GSI.clean) + aes(y=Length..mm., x=Wild.or.Hatch, color=
   scale_color_manual(values =c("orange", "blue"))+
   theme_cowplot()+
   guides(color="none") +
-  labs(y="Length (mm)", x=element_blank()) +
+  labs(y=element_blank(), x=element_blank()) +
   coord_cartesian(ylim=c(473,650))+
   scale_y_continuous(breaks=c(500,550,600,650), expand=c(0,0)) +
   theme(plot.margin = margin(t=7,r=12,l=5,b=5))+
@@ -110,6 +110,11 @@ odd_male_boxplot <- ggplot(odd_male_pink_clean) + aes(y=Length.mm., x=fct_rev(Ot
   coord_cartesian(ylim=c(342,500))+ #looks good
   #xlab("Odd-year pink salmon")
   ylab("Length (mm)")
+
+#odd_male_boxplot + 
+  #annotate("Odd-year male pink salmon", hjust=0, vjust =1, angle=90)+
+ # theme( plot.title=element_text(angle=90, hjust=0, vjust=0.5), plot.title.position = "plot")
+
 #females
 odd_female_pink_clean <- odd_female_pink %>% filter(Weird == "n", Oto.reading != "No Oto", Oto.reading != "Overground") 
 odd_female_boxplot <- ggplot(odd_female_pink_clean) + aes(y=Length.mm., x=fct_rev(Oto.reading), color=fct_rev(Oto.reading)) +
@@ -140,9 +145,15 @@ length_boxplot_base <-(even_male_boxplot+even_female_boxplot)/(odd_male_boxplot+
 # 7 BY 8 DIMENSIONS
 
 length_boxplot_base
+
+#ggdraw(length_boxplot_base) + draw_label("Even-year pink salmon", x = 0, y = 0.88, size = 15, angle=90) +  #giving up and doing this on ppt.
+ # draw_label ((ylab_GSI), angle= 90, x = 0.02, y = 0.6, size = 15) + #gi
+  #draw_label ("Even-year pink", x = 0.85, y = 0.98, fontfamily = "Arial", fontface="bold", size = 13) + draw_label ("Odd-year pink", x = 0.85, y = 0.67, fontfamily = "Arial", fontface="bold", size = 13) + draw_label ("Coho", fontfamily = "Arial", fontface="bold", size = 13, x = 0.85, y = 0.37) 
+
+
 dev.new (width = 8, height = 10, unit = "in", noRStudioGD = T); last_plot() #perfect
-#ggsave ("FIG3_LENGTH_dotsize2.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
-#dev.off()
+ggsave ("Plots/FIG3_LENGTH.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+dev.off()
 
 ###ALL BELOW IS NOT SO RELEVANT I THINK
 
