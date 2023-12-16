@@ -635,37 +635,18 @@ snoutlineardists.p <- interlmkdist(pinkdat.landsno56, lmks.p)
 snout_df.no56 <- as.data.frame(snoutlineardists.p)
 #ah! so easy!
 #snout_df.no56 <- as.data.frame(snout_df.p[-56,]) #why dont delete this one?
-#NOW linear regression on that... how to do again?
+#depth
+
 
 
 df.pink2$snout <- snout_df.no56$snoutL
 df.pink2
 
 
-#first separate wild and hatchery
-wild_S.p <-  df.pink2 %>% filter(Wild.or.hatch=="W")
-hatch_S.p <-  df.pink2 %>% filter(Wild.or.hatch=="H")
-
 #wild_SL.p <- wild_S.p$`snout_df.p[-56, ]`
 #hatch_SL.p<- hatch_S.p$`snout_df.p[-56, ]`
 
 
-#pink 2020 sd and mean
-sd_s_hp1 <- sd(hatch_S.p$snout)*10
-sd_s_wp1 <- sd(wild_S.p$snout)*10
-mean_s_hp1 <- mean(hatch_S.p$snout)*10
-mean_s_wp1 <- mean(wild_S.p$snout)*10
-
-names(wild_S.p)
-sd_d_hp1 <- sd(hatch_S.p$depth)
-sd_d_wp1 <-  sd(wild_S.p$depth)
-mean_d_hp1 <- mean(hatch_S.p$depth)
-mean_d_wp1 <-  mean(wild_S.p$depth)
-
-
-#find sample size:
-length(hatch_S.p$depth)
-length(wild_S.p$depth)
 
 #LENGTHS PINK
 #get the lengths for pink
@@ -713,12 +694,36 @@ df.pink2$depth <- depth_no_56
 
 write.csv(df.pink2, "df.pink2.csv") #do I need this?
 
+
+
 #first separate wild and hatchery
 wild_D.p.int <-  df.pink2 %>% filter(Wild.or.hatch=="W")
 hatch_D.p.int <-  df.pink2 %>% filter(Wild.or.hatch=="H")
 
 wild_D.p <- wild_D.p.int$depth
 hatch_D.p<- hatch_D.p.int$depth
+
+
+#first separate wild and hatchery
+wild_S.p <-  df.pink2 %>% filter(Wild.or.hatch=="W")
+hatch_S.p <-  df.pink2 %>% filter(Wild.or.hatch=="H")
+
+
+#pink 2020 sd and mean
+sd_s_hp1 <- sd(hatch_S.p$snout)*10
+sd_s_wp1 <- sd(wild_S.p$snout)*10
+mean_s_hp1 <- mean(hatch_S.p$snout)*10
+mean_s_wp1 <- mean(wild_S.p$snout)*10
+
+names(wild_S.p)
+sd_d_hp1 <- sd(hatch_S.p$depth)
+sd_d_wp1 <-  sd(wild_S.p$depth)
+mean_d_hp1 <- mean(hatch_S.p$depth)
+mean_d_wp1 <-  mean(wild_S.p$depth)
+
+#find sample size:
+length(hatch_S.p$depth)
+length(wild_S.p$depth)
 
 
 
@@ -734,11 +739,11 @@ ggplot(df.pink2) + aes(x=depth) + geom_density()
 #actual analysis - no more logging
 p1_snout_mod <- lm(snout~ length + factor(Wild.or.hatch), data=df.pink2)
 sum_p_snout <- summary(p1_snout_mod)
-plot(p1_snout_mod)
+#plot(p1_snout_mod)
 
 p1_depth_mod <- lm(depth~ length + factor(Wild.or.hatch), data=df.pink2)
 sum_p_depth <- summary(p1_depth_mod)
-plot(p1_depth_mod)
+#plot(p1_depth_mod)
 
 #interaction effects?
 mod.p.d.l.int <- aov(depth ~ length + Wild.or.hatch + length*Wild.or.hatch, df.pink2)
@@ -1375,3 +1380,4 @@ plotRefToTarget(ref.w.c, ref.h.c, method="vector", mag=5, mar=c(1,1,1,0))
 dev.new (width = 10, height =3.5, unit = "in", noRStudioGD = T); last_plot()
 #ggsave ("Plots/Male_morpho_bottompart.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 ##hmm. Had to save last plot manually
+
