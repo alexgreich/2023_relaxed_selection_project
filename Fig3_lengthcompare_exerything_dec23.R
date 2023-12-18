@@ -152,7 +152,7 @@ length_boxplot_base
 
 
 dev.new (width = 8, height = 10, unit = "in", noRStudioGD = T); last_plot() #perfect
-ggsave ("Plots/FIG3_LENGTH.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+#ggsave ("Plots/FIG3_LENGTH.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 dev.off()
 
 ###ALL BELOW IS NOT SO RELEVANT I THINK

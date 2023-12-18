@@ -75,6 +75,9 @@ ss_p1_w <- length(p1.wild.GSI.ttest$GSI)
 mod_p1_length <- lm(GSI~Otolith.results + Length..mm., p1.clean)
 summary(mod_p1_length) #not sig diff lengths.
 
+#length t test for even yr female pinks
+p1_f_L_ttest <- t.test(p1.hatch.GSI.ttest$Length..mm., p1.wild.GSI.ttest$Length..mm., var.equal=T)
+
 
 #################################################
 #pink 2021 -length might be sig here
@@ -159,7 +162,8 @@ GSI.for.ttest.hatch_no_o <- na.omit(test_no_outlier) %>% filter(Oto.reading == "
 (test_no_o_t <- t.test(GSI.for.ttest.hatch_no_o$GSI.1,GSI.for.ttest.wild_no_o$GSI.1, alternative="greater", var.equal=T))
 #no different test results if we remove outlier.
 
-
+#length t test:
+p2_f_L_ttest <- t.test(GSI.for.ttest.hatch$Length.mm., GSI.for.ttest.wild$Length.mm., var.equal = T)
 
 
 #################################################################################################################33
@@ -196,6 +200,8 @@ sd_h_c <- sd(c.GSI.hatch.t.test$GSI)
 #var.equal?
 c1.aov.GSI <- aov(GSI ~ Wild.or.Hatch, c.GSI.dat)
 plot(c1.aov.GSI) #looks good
+
+#length t test is down by coho egg
 
 
 #####################################################
@@ -432,6 +438,16 @@ names(c.df)
 
 coho.clean <- c.df %>% filter(Weird == "n")
 #write.csv(coho.clean, file="coho_clean_for_641_project")
+
+#aside: lenght t-test
+c_for_length <- c.all.other.stuff %>% filter(Weird=="n")
+length(c_for_length$Length..mm.)
+c_for_length_h <- c_for_length %>% filter(Wild.or.Hatch=="hatchery") %>%
+  dplyr::select(Length..mm.)
+c_for_length_w <- c_for_length %>% filter(Wild.or.Hatch=="wild") %>%
+  dplyr::select(Length..mm.)
+
+c_f_L_ttest <- t.test(c_for_length_h, c_for_length_w, var.equal=T)
 
 #conceptual model (mixed model with interaction effects too)
 fit.c.A.INT <- lm(Diameter..mm. ~ Length..mm. + Wild.or.Hatch + Length..mm.:Wild.or.Hatch, data=coho.clean)
@@ -1006,4 +1022,17 @@ L44 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm.) +
 #####
 #create csv for graphing fig3 R script
 write.csv(c.GSI.clean, "Data/c.GSI.clean.csv")
+
+
+
+
+################################################################
+#length comparison
+##################################################################
+##t test for 3 female groups
+p1_f_L_ttest
+p2_f_L_ttest
+c_f_L_ttest
+
+##t test for 3 male groups
 
