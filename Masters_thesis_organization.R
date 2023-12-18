@@ -78,6 +78,11 @@ summary(mod_p1_length) #not sig diff lengths.
 #length t test for even yr female pinks
 p1_f_L_ttest <- t.test(p1.hatch.GSI.ttest$Length..mm., p1.wild.GSI.ttest$Length..mm., var.equal=T)
 
+mean_length_p1_h <- mean(p1.hatch.GSI.ttest$Length..mm.)
+mean_length_p1_w <- mean(p1.wild.GSI.ttest$Length..mm.)
+sd_length_p1_h <- sd(p1.hatch.GSI.ttest$Length..mm.)
+sd_length_p1_w <- sd(p1.wild.GSI.ttest$Length..mm.)
+
 
 #################################################
 #pink 2021 -length might be sig here
@@ -164,6 +169,11 @@ GSI.for.ttest.hatch_no_o <- na.omit(test_no_outlier) %>% filter(Oto.reading == "
 
 #length t test:
 p2_f_L_ttest <- t.test(GSI.for.ttest.hatch$Length.mm., GSI.for.ttest.wild$Length.mm., var.equal = T)
+
+mean_length_p2_h <- mean(GSI.for.ttest.hatch$Length.mm.)
+mean_length_p2_w <- mean(GSI.for.ttest.wild$Length.mm.)
+sd_length_p2_h <- sd(GSI.for.ttest.hatch$Length.mm.)
+sd_length_p2_w <- sd(GSI.for.ttest.wild$Length.mm.)
 
 
 #################################################################################################################33
@@ -448,6 +458,11 @@ c_for_length_w <- c_for_length %>% filter(Wild.or.Hatch=="wild") %>%
   dplyr::select(Length..mm.)
 
 c_f_L_ttest <- t.test(c_for_length_h, c_for_length_w, var.equal=T)
+
+mean_length_c_h <- mean(c_for_length_h$Length..mm.)
+mean_length_c_w <- mean(c_for_length_w$Length..mm.)
+sd_length_c_h <- sd(c_for_length_h$Length..mm.)
+sd_length_c_w <- sd(c_for_length_w$Length..mm.)
 
 #conceptual model (mixed model with interaction effects too)
 fit.c.A.INT <- lm(Diameter..mm. ~ Length..mm. + Wild.or.Hatch + Length..mm.:Wild.or.Hatch, data=coho.clean)
@@ -1030,9 +1045,50 @@ write.csv(c.GSI.clean, "Data/c.GSI.clean.csv")
 #length comparison
 ##################################################################
 ##t test for 3 female groups
-p1_f_L_ttest
-p2_f_L_ttest
-c_f_L_ttest
+p1_f_L_ttest #not sig
+p2_f_L_ttest #not sig
+c_f_L_ttest #sig
+
+
+stat_cfl <- c_f_L_ttest$statistic
+p_cfl <- c_f_L_ttest$p.value
+df_cfl <- c_f_L_ttest$parameter
+mean_length_c_h
+mean_length_c_w
+sd_length_c_h
+sd_length_c_w
+
+
+stat_p1fl <- p1_f_L_ttest$statistic
+p_p1fl <- p1_f_L_ttest$p.value
+df_p1fl <- p1_f_L_ttest$parameter
+mean_length_p1_h 
+mean_length_p1_w 
+sd_length_p1_h 
+sd_length_p1_w 
+
+stat_p2fl <- p2_f_L_ttest$statistic
+p_p2fl <- p2_f_L_ttest$p.value
+df_p2fl <- p2_f_L_ttest$parameter
+mean_length_p2_h 
+mean_length_p2_w 
+sd_length_p2_h 
+sd_length_p2_w 
+
+female_length_results <- data.frame(
+  t= c(stat_p1fl, stat_p2fl, stat_cfl),
+  df = c(df_p1fl, df_p2fl, df_cfl),
+  p = c(p_p1fl, p_p2fl, p_cfl),
+  hatch_mean = c(mean_length_p1_h, mean_length_p2_h, mean_length_c_h),
+  hatch_sd = c(sd_length_p1_h, sd_length_p2_h, sd_length_c_h),
+  wild_mean = c(mean_length_p1_w, mean_length_p2_w, mean_length_c_w),
+  wild_sd = c(sd_length_p1_w, sd_length_p2_w, sd_length_c_w)
+)
+
+rownames(female_length_results) <- c("pink 2020", "pink 2021", "coho")
+
+write.csv(female_length_results, "Results/Female length results.csv")
 
 ##t test for 3 male groups
+###let's do this over in the male dataframe?
 
