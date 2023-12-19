@@ -1404,7 +1404,6 @@ library(pwr)
 #P1
 ##dataframe df.pink2
 #snout
-pwr.f2.test(u=1, v=57, f2=0.127469, sig.level=0.05, power=NULL)
 ##should u be one? u=1 in all of Charlie power analyses
 ##v: df based on sample size. sample size-2?
 ###what's the sample size here?? 59. So my df is... 57? v=57? Check results tables for df
@@ -1413,24 +1412,38 @@ length(df.pink2$snoutmm)
 ##f2 is the effect size. Where's my model?
 sum_p_snout #factor(Wild.or.hatch)W  0.127469
 
+#the test
+pwr.f2.test(u=1, v=57, f2=0.127469, sig.level=0.05, power=NULL) #power is 0.77. That means, it can detect a medium size?
+##an interpretation? This means that, under the specified conditions, the statistical power of your test to detect the given 
+##effect size is estimated to be around 76.91%. In other words, if the true effect size is 0.127469 (as specified by f2), and 
+##the test is conducted with the specified degrees of freedom and significance level, you have a 76.91% chance of correctly rejecting 
+##the null hypothesis (assuming it is false).
 
 
 #depth
-sum_p_depth
-
+sum_p_depth #effect size for wild or hatch: 1.80562
+pwr.f2.test(u=1, v=57, f2=1.80562, sig.level=0.05, power=NULL) #power is 1.
+##so fish origin (Wild or hatch) definitely has an impact on depth?
 
 #P2
 ##dataframe: p2.males1
+length(p2.males1$Length.mm.) #sample size is 98
 
 #snout
 
+sum_depth_p2 
+
 #depth
+
+sum_snout_p2
 
 
 #C
 ##dataframe: df.coho
 
 #snout
+sum_c_5 #?
 
 #depth
+sum_c_depth
 
