@@ -1380,7 +1380,57 @@ plotRefToTarget(ref.w.c, ref.h.c, method="vector", mag=5, mar=c(1,1,1,0))
 dev.new (width = 10, height =3.5, unit = "in", noRStudioGD = T); last_plot()
 #ggsave ("Plots/Male_morpho_bottompart.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 ##hmm. Had to save last plot manually
+dev.off()
 
 
-###############################
-#get that length results
+
+
+##########################################################################################
+##########################################################################################
+
+#post-hoc power analysis
+
+###############################################################################################
+#############################################################################################
+
+
+library(pwr)
+
+###########################################################################
+#MALE 
+##these were general linear models with R, so use: pwr.f2.test for all snout and depth for males
+?pwr.f2.test
+#############################################################################
+#P1
+##dataframe df.pink2
+#snout
+pwr.f2.test(u=1, v=57, f2=0.127469, sig.level=0.05, power=NULL)
+##should u be one? u=1 in all of Charlie power analyses
+##v: df based on sample size. sample size-2?
+###what's the sample size here?? 59. So my df is... 57? v=57? Check results tables for df
+##df for this model (sum_p_snout) os 2 and 56. Idk if to use 1 and 57 or two and 56.
+length(df.pink2$snoutmm)
+##f2 is the effect size. Where's my model?
+sum_p_snout #factor(Wild.or.hatch)W  0.127469
+
+
+
+#depth
+sum_p_depth
+
+
+#P2
+##dataframe: p2.males1
+
+#snout
+
+#depth
+
+
+#C
+##dataframe: df.coho
+
+#snout
+
+#depth
+
