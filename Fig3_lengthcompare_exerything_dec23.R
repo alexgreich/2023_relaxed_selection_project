@@ -55,6 +55,10 @@ coho_m_boxplot<-ggplot(coho.dat) + aes(y=Length..mm., x=Wild.or.Hatch, color=Wil
 
 #####
 even_male_pink <- p.dat <- read.csv("Data/MASTERMalePinksQC.reorder.csv")
+## dec 2023 edit: we remove an outlier from the male dataset?
+##yes, do it. and re-generate graph
+even_male_pink <- even_male_pink %>% filter(Body.Depth.mm. < 183) ### dec 2023 edit here
+
 even_female_pink <- read.csv("Data/FemalePinkGSIotodataadd1_without_gaps copy.csv")
 odd_male_pink <-  read.csv("Data/Male.p2.Rdata.2.csv")
 odd_female_pink <- read.csv("Data/Female.p2.Rdata.3.csv")
@@ -196,3 +200,27 @@ W <- c.GSI.clean %>% filter(Wild.or.Hatch=="wild")
 H <- c.GSI.clean %>% filter(Wild.or.Hatch=="hatchery")
 length(W$ID)
 length(H$ID)
+
+
+#################################3
+#extracting male length data restuls
+#p1
+##even_male_pink
+
+#p2
+h_p2_m<-odd_male_pink_clean %>% filter(Otolith.reading== "PORT ARMSTRONG")
+w_p2_m<-odd_male_pink_clean %>% filter(Otolith.reading== "No Mark")
+
+mean_length_p2_hm <- mean(h_p2_m$Length.mm.)
+mean_length_p2_wm <- mean(w_p2_m$Length.mm.)
+
+sd_length_p2_hm <- sd(h_p2_m$Length.mm.)
+sd_length_p2_wm <- sd(w_p2_m$Length.mm.)
+
+p2_m_L_ttest <- t.test(h_p2_m$Length.mm., w_p2_m$Length.mm.)
+
+t_p2ml <- p2_m_L_ttest$statistic
+p_p2ml <- p2_m_L_ttest$p.value
+df_p2ml <- p2_m_L_ttest$parameter
+
+#c
