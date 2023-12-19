@@ -240,3 +240,35 @@ df_p2ml <- p2_m_L_ttest$parameter
 
 #c
 ##coho.dat
+
+h_c_m<-coho.dat %>% filter(Wild.or.Hatch== "hatch")
+w_c_m<-coho.dat %>% filter(Wild.or.Hatch== "wild")
+
+mean_length_c_hm <- mean(h_c_m$Length..mm.)
+mean_length_c_wm <- mean(w_c_m$Length..mm.)
+
+sd_length_c_hm <- sd(h_c_m$Length..mm.)
+sd_length_c_wm <- sd(w_c_m$Length..mm.)
+
+c_m_L_ttest <- t.test(h_c_m$Length..mm., w_c_m$Length..mm.)
+
+t_cml <- c_m_L_ttest$statistic
+p_cml <- c_m_L_ttest$p.value
+df_cml <- c_m_L_ttest$parameter
+
+
+#combine and write csv for length restuls
+male_length_results <- data.frame(
+  t= c(t_p1ml, t_p2ml, t_cml),
+  df = c(df_p1ml, df_p2ml, df_cml),
+  p = c(p_p1ml, p_p2ml, p_cml),
+  hatch_mean = c(mean_length_p1_hm, mean_length_p2_hm, mean_length_c_hm),
+  hatch_sd = c(sd_length_p1_hm, sd_length_p2_hm, sd_length_c_hm),
+  wild_mean = c(mean_length_p1_wm, mean_length_p2_wm, mean_length_c_wm),
+  wild_sd = c(sd_length_p1_wm, sd_length_p2_wm, sd_length_c_wm)
+)
+
+rownames(male_length_results) <- c("pink 2020", "pink 2021", "coho")
+
+write.csv(male_length_results, "Results/Male length results.csv")
+
