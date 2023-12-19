@@ -1029,10 +1029,6 @@ L44 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm.) +
 (c+g)/(d+h) #egg sashin/lovers/armstrong comparison plot
 
 
-#################################################################
-#post-hoc power analysis for females
-##############################################################
-
 
 #####
 #create csv for graphing fig3 R script
@@ -1092,3 +1088,36 @@ write.csv(female_length_results, "Results/Female length results.csv")
 ##t test for 3 male groups
 ###let's do this over in the male dataframe?
 
+################################################################################
+#FEMALE
+##GSI - two sample, one tailed t-test, sometimes with same # of samples, sometimes with diff
+?pwr.t.test #one and two samples for equal sample sizes
+?pwr.t2n.test #two samples of differnt sizes
+################################################################################
+#GSI- power analysis for a t-test
+#Eggs - power analysis for a linear mixed effects model? is this more complex than a linear model?
+
+
+#P1############################
+
+#GSI
+##data frame:
+
+#eggs
+
+
+#P2###################################
+
+#GSI
+##data frame:
+
+
+#eggs
+
+
+#C###################################
+
+#GSI
+##data frame:
+
+#eggs
