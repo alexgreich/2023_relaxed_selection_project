@@ -215,7 +215,7 @@ mean_length_p1_wm <- mean(w_p1_m$Length..mm.)
 sd_length_p1_hm <- sd(h_p1_m$Length..mm.)
 sd_length_p1_wm <- sd(w_p1_m$Length..mm.)
 
-p1_m_L_ttest <- t.test(h_p1_m$Length..mm., w_p1_m$Length..mm.)
+p1_m_L_ttest <- t.test(h_p1_m$Length..mm., w_p1_m$Length..mm., var.equal=T)
 
 t_p1ml <- p1_m_L_ttest$statistic
 p_p1ml <- p1_m_L_ttest$p.value
@@ -232,7 +232,7 @@ mean_length_p2_wm <- mean(w_p2_m$Length.mm.)
 sd_length_p2_hm <- sd(h_p2_m$Length.mm.)
 sd_length_p2_wm <- sd(w_p2_m$Length.mm.)
 
-p2_m_L_ttest <- t.test(h_p2_m$Length.mm., w_p2_m$Length.mm.)
+p2_m_L_ttest <- t.test(h_p2_m$Length.mm., w_p2_m$Length.mm., var.equal=T)
 
 t_p2ml <- p2_m_L_ttest$statistic
 p_p2ml <- p2_m_L_ttest$p.value
@@ -250,7 +250,7 @@ mean_length_c_wm <- mean(w_c_m$Length..mm.)
 sd_length_c_hm <- sd(h_c_m$Length..mm.)
 sd_length_c_wm <- sd(w_c_m$Length..mm.)
 
-c_m_L_ttest <- t.test(h_c_m$Length..mm., w_c_m$Length..mm.)
+c_m_L_ttest <- t.test(h_c_m$Length..mm., w_c_m$Length..mm., var.equal=T)
 
 t_cml <- c_m_L_ttest$statistic
 p_cml <- c_m_L_ttest$p.value
