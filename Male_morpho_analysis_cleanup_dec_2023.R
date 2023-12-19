@@ -1453,7 +1453,9 @@ pwr_c_d <- pwr.f2.test(u=1, v=60, f2=5.61080, sig.level=0.05, power=NULL) #power
 
 ######
 #create csv
-power_males <- data.frame(snout_power=c(pwr_p1_s, pwr_p2_s ,pwr_c_s), depth_power=c(pwr_p1_d, pwr_p2_d, pwr_c_d))
+power_males <- data.frame(snout_power=c(pwr_p1_s$power, pwr_p2_s$power ,pwr_c_s$power), depth_power=c(pwr_p1_d$power, pwr_p2_d$power, pwr_c_d$power))
   
 rownames(power_males) = c("Pink even", "Pink odd", "Coho")
+
+write.csv(power_males, "Results/Male post-hoc power analysis.csv")
 
