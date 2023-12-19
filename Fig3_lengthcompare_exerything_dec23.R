@@ -206,6 +206,21 @@ length(H$ID)
 #extracting male length data restuls
 #p1
 ##even_male_pink
+h_p1_m<-even_male_pink %>% filter(Wild.or.Hatch== "hatchery")
+w_p1_m<-even_male_pink %>% filter(Wild.or.Hatch== "wild")
+
+mean_length_p1_hm <- mean(h_p1_m$Length..mm.)
+mean_length_p1_wm <- mean(w_p1_m$Length..mm.)
+
+sd_length_p1_hm <- sd(h_p1_m$Length..mm.)
+sd_length_p1_wm <- sd(w_p1_m$Length..mm.)
+
+p1_m_L_ttest <- t.test(h_p1_m$Length..mm., w_p1_m$Length..mm.)
+
+t_p1ml <- p1_m_L_ttest$statistic
+p_p1ml <- p1_m_L_ttest$p.value
+df_p1ml <- p1_m_L_ttest$parameter
+
 
 #p2
 h_p2_m<-odd_male_pink_clean %>% filter(Otolith.reading== "PORT ARMSTRONG")
@@ -224,3 +239,4 @@ p_p2ml <- p2_m_L_ttest$p.value
 df_p2ml <- p2_m_L_ttest$parameter
 
 #c
+##coho.dat
