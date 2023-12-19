@@ -1401,7 +1401,7 @@ library(pwr)
 ##these were general linear models with R, so use: pwr.f2.test for all snout and depth for males
 ?pwr.f2.test
 #############################################################################
-#P1
+#P1#############################################
 ##dataframe df.pink2
 #snout
 ##should u be one? u=1 in all of Charlie power analyses
@@ -1413,7 +1413,7 @@ length(df.pink2$snoutmm)
 sum_p_snout #factor(Wild.or.hatch)W  0.127469
 
 #the test
-pwr.f2.test(u=1, v=57, f2=0.127469, sig.level=0.05, power=NULL) #power is 0.77. That means, it can detect a medium size?
+pwr_p1_s <- pwr.f2.test(u=1, v=57, f2=0.127469, sig.level=0.05, power=NULL) #power is 0.77. That means, it can detect a medium size?
 ##an interpretation? This means that, under the specified conditions, the statistical power of your test to detect the given 
 ##effect size is estimated to be around 76.91%. In other words, if the true effect size is 0.127469 (as specified by f2), and 
 ##the test is conducted with the specified degrees of freedom and significance level, you have a 76.91% chance of correctly rejecting 
@@ -1422,28 +1422,38 @@ pwr.f2.test(u=1, v=57, f2=0.127469, sig.level=0.05, power=NULL) #power is 0.77. 
 
 #depth
 sum_p_depth #effect size for wild or hatch: 1.80562
-pwr.f2.test(u=1, v=57, f2=1.80562, sig.level=0.05, power=NULL) #power is 1.
+pwr_p1_d<-pwr.f2.test(u=1, v=57, f2=1.80562, sig.level=0.05, power=NULL) #power is 1.
 ##so fish origin (Wild or hatch) definitely has an impact on depth?
 
-#P2
+#P2#####################################
 ##dataframe: p2.males1
 length(p2.males1$Length.mm.) #sample size is 98
 
 #snout
 
-sum_depth_p2 
+sum_depth_p2 #factor(Otolith.reading)PORT ARMSTRONG -10.78867  #f2 must be postive so... just make it positive?
+pwr_p2_d <- pwr.f2.test(u=1, v=98, f2=10.78867, sig.level=0.05, power=NULL) #power is 1. 
 
 #depth
 
-sum_snout_p2
-
+sum_snout_p2 #factor(Otolith.reading)PORT ARMSTRONG  -2.59889
+pwr_p2_s <- pwr.f2.test(u=1, v=98, f2=2.59889, sig.level=0.05, power=NULL) #power is 1.
 
 #C
 ##dataframe: df.coho
+length(df.coho$snoutmm) #length is 60
 
 #snout
-sum_c_5 #?
+sum_c_5 #factor(Wild.or.hatch)W -1.325819
+pwr_c_s <- pwr.f2.test(u=1, v=60, f2=1.325819, sig.level=0.05, power=NULL) #power is 1
 
-#depth
-sum_c_depth
+#depth 
+sum_c_depth #factor(Wild.or.hatch)W  -5.61080
+pwr_c_d <- pwr.f2.test(u=1, v=60, f2=5.61080, sig.level=0.05, power=NULL) #power is 1
+
+######
+#create csv
+power_males <- data.frame(snout_power=c(pwr_p1_s, pwr_p2_s ,pwr_c_s), depth_power=c(pwr_p1_d, pwr_p2_d, pwr_c_d))
+  
+rownames(power_males) = c("Pink even", "Pink odd", "Coho")
 
