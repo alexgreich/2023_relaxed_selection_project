@@ -197,7 +197,8 @@ c.GSI.hatch.t.test <- c.GSI.clean %>% filter(Wild.or.Hatch=="hatchery")
 #test if length is sig for GSI
 coho_mod <- lm(GSI ~ Length..mm. + Wild.or.Hatch, c.GSI.clean)
 summary(coho_mod) #hmmm. length is barely non sig. Larger fish should have a larger GSI, but smaller fish have a larger GSI, for both wild and hatch
-
+coho_mod_test <- lm(GSI ~ Wild.or.Hatch, c.GSI.clean)
+AIC(coho_mod, coho_mod_test)
 
 hatchery_mean_value_GSI_fullcohodataset <- coho.GSI.t.test$estimate[1]
 wild_mean_value_GSI_fullcohodataset <- coho.GSI.t.test$estimate[2]
@@ -1091,6 +1092,9 @@ write.csv(female_length_results, "Results/Female length results.csv")
 ################################################################################
 #FEMALE
 ##GSI - two sample, one tailed t-test, sometimes with same # of samples, sometimes with diff
+library(pwr)
+#library(effsize)
+library(effectsize)
 ?pwr.t.test #one and two samples for equal sample sizes
 ?pwr.t2n.test #two samples of differnt sizes
 ################################################################################
@@ -1101,7 +1105,21 @@ write.csv(female_length_results, "Results/Female length results.csv")
 #P1############################
 
 #GSI
-##data frame:
+##data frame: p1.clean
+#(p1.GSI.t.test <- t.test(p1.hatch.GSI.ttest$GSI, p1.wild.GSI.ttest$GSI, alternative="greater", var.equal=T))
+#first sample will be hatch
+length(p1.hatch.GSI.ttest$GSI) #36
+#second sample will be wild
+length(p1.wild.GSI.ttest) #15
+
+#d is effect size. how do I choose effect size again? Ecalculate cohen's D?
+##is this the regression coefficient?
+#what is the effect size of a t-test?
+#is the effect size different for a one-sided test? Is the power different for a one-sided test?
+p1.GSI.t.test
+effectsize(p1.GSI.t.test) #cohens D is -0.41
+
+pwr.t2n.test(n1=36, n2=15, d= -0.41, sig.level=0.05, power = NULL) #power is 0.26. Damn , low power.
 
 #eggs
 
@@ -1109,8 +1127,15 @@ write.csv(female_length_results, "Results/Female length results.csv")
 #P2###################################
 
 #GSI
-##data frame:
+##data frame: p2.GSI.clean.relevant
+#(p2.GSI.t.test <- t.test(GSI.for.ttest.hatch$GSI.1,GSI.for.ttest.wild$GSI.1, alternative="greater", var.equal=T))
+p2.GSI.t.test
+effectsize(p2.GSI.t.test)
 
+length(GSI.for.ttest.hatch$GSI.1) #50 fish
+length(GSI.for.ttest.wild$GSI.1) #28 fish 
+
+pwr.t2n.test(n1=50, n2=28, d= -0.01, sig.level=0.05, power = NULL) # power = 0.05020049. That's really low.
 
 #eggs
 
@@ -1118,6 +1143,13 @@ write.csv(female_length_results, "Results/Female length results.csv")
 #C###################################
 
 #GSI
-##data frame:
+##data frame: c.GSI.clean
+#(coho.GSI.t.test <- t.test(c.GSI.hatch.t.test$GSI,c.GSI.wild.t.test$GSI, alternative="greater", var.equal=T))
+
+length(c.GSI.hatch.t.test$GSI) #27
+length(c.GSI.wild.t.test$GSI) #27 (for this sample). looks like I can use the regular pwr.t.test since sample size is equal
+effectsize(coho.GSI.t.test) #0.40
+
+pwr.t.test(n=27, d= 0.40, sig.level=0.05, power = NULL) #power = 0.3027827. such low power
 
 #eggs
