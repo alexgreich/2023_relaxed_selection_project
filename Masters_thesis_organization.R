@@ -1119,7 +1119,7 @@ length(p1.wild.GSI.ttest) #15
 p1.GSI.t.test
 effectsize(p1.GSI.t.test) #cohens D is -0.41
 
-pwr.t2n.test(n1=36, n2=15, d= -0.41, sig.level=0.05, power = NULL) #power is 0.26. Damn , low power.
+pwr_p1_GSI <- pwr.t2n.test(n1=36, n2=15, d= -0.41, sig.level=0.05, power = NULL) #power is 0.26. Damn , low power.
 
 #eggs
 
@@ -1135,7 +1135,7 @@ effectsize(p2.GSI.t.test)
 length(GSI.for.ttest.hatch$GSI.1) #50 fish
 length(GSI.for.ttest.wild$GSI.1) #28 fish 
 
-pwr.t2n.test(n1=50, n2=28, d= -0.01, sig.level=0.05, power = NULL) # power = 0.05020049. That's really low.
+pwr_p2_GSI <- pwr.t2n.test(n1=50, n2=28, d= -0.01, sig.level=0.05, power = NULL) # power = 0.05020049. That's really low.
 
 #eggs
 
@@ -1150,6 +1150,13 @@ length(c.GSI.hatch.t.test$GSI) #27
 length(c.GSI.wild.t.test$GSI) #27 (for this sample). looks like I can use the regular pwr.t.test since sample size is equal
 effectsize(coho.GSI.t.test) #0.40
 
-pwr.t.test(n=27, d= 0.40, sig.level=0.05, power = NULL) #power = 0.3027827. such low power
+pwr_c_GSI <- pwr.t.test(n=27, d= 0.40, sig.level=0.05, power = NULL) #power = 0.3027827. such low power
 
 #eggs
+
+## make csv########################################
+power_females <- data.frame(GSI_power = c(pwr_p1_GSI$power, pwr_p2_GSI$power, pwr_c_GSI$power), Egg_power=c()) #need to add in egg power still
+
+rownames(power_females) = c("Pink even", "Pink odd", "Coho")
+
+#write.csv(power_females, "Results/Female post-hoc power analysis.csv")
