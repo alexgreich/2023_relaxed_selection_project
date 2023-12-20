@@ -1160,3 +1160,14 @@ power_females <- data.frame(GSI_power = c(pwr_p1_GSI$power, pwr_p2_GSI$power, pw
 rownames(power_females) = c("Pink even", "Pink odd", "Coho")
 
 #write.csv(power_females, "Results/Female post-hoc power analysis.csv")
+
+############################################################################
+#power analysis for linear mixed effect models: figuring out
+
+?lme4
+?nlme
+?nlme::pooledSD
+?lmerTest
+?lmtest
+??simr
+#?Hmisc::simRegOrd
