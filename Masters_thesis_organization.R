@@ -1153,6 +1153,18 @@ effectsize(coho.GSI.t.test) #0.40
 pwr_c_GSI <- pwr.t.test(n=27, d= 0.40, sig.level=0.05, power = NULL) #power = 0.3027827. such low power
 
 #eggs
+##fit.c.C1.REML
+## fit.lme.no.int
+?simr::powerCurve #powersim over different sample sizes
+?simr::powerSim #estimat power by simulation
+
+simr::powerSim(fit.c.C1.REML, 
+               test = fixed(method="t") , #sekect which fixed effect to test
+               #seed =  ,
+               #nsim = , #default is 1000. Takes a bit but not crazy long
+                 )
+
+
 
 ## make csv########################################
 power_females <- data.frame(GSI_power = c(pwr_p1_GSI$power, pwr_p2_GSI$power, pwr_c_GSI$power), Egg_power=c()) #need to add in egg power still
@@ -1163,11 +1175,19 @@ rownames(power_females) = c("Pink even", "Pink odd", "Coho")
 
 ############################################################################
 #power analysis for linear mixed effect models: figuring out
+#https://www.r-bloggers.com/2009/09/power-analysis-for-mixed-effect-models-in-r/
+#"Data Analysis Using Regression and Multilevel/Hierarchical Models" by Andrew Gelman and Jennifer Hill
+#For the current analysis we needed to know three things: effect size, sample size, and estimates of population variance
+##effect size will be... the parameter estimate for wild/hatch??
+##we know sample size
+##we can find out population variance
+###something about hyperparameters. Can we use pooled variance from nlme? What are hyperparameterss? Oh, fake parameters. I have real ones
+
 
 ?lme4
 ?nlme
 ?nlme::pooledSD
 ?lmerTest
 ?lmtest
-??simr
+??simr #supposed to work with lme4
 #?Hmisc::simRegOrd
