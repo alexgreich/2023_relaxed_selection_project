@@ -1119,9 +1119,24 @@ length(p1.wild.GSI.ttest) #15
 p1.GSI.t.test
 effectsize(p1.GSI.t.test) #cohens D is -0.41
 
-pwr_p1_GSI <- pwr.t2n.test(n1=36, n2=15, d= -0.41, sig.level=0.05, power = NULL) #power is 0.26. Damn , low power.
+pwr_p1_GSI <- pwr.t2n.test(n1=36, n2=15, d= -0.41, sig.level=0.05, power = NULL, 
+                           alternative="greater" #alternative is greater because hypothesis is that hatch fish can invest more in their GSI
+                           ) #power is 0.26. Damn , low power. Even less for one-sided
+
 
 #eggs
+##model: fit.p1.C1.REM
+
+pwr_p1_egg <- simr::powerSim(fit.p1.C1.REML,  #likelihood ratio test for power
+                             test = simr::fcompare(Diameter..mm.~1) ,
+                             nsim = 1000
+) 
+
+pwr_sum_p1_egg <- summary(pwr_p1_egg)
+
+#experimenting with a power curve
+test_p1 <- simr::powerCurve(fit.p1.C1.REML) #trying out a power curve
+#plot(test_p1) #yeah that did not work
 
 
 #P2###################################
@@ -1139,6 +1154,13 @@ pwr_p2_GSI <- pwr.t2n.test(n1=50, n2=28, d= -0.01, sig.level=0.05, power = NULL)
 
 #eggs
 
+pwr_p2_egg <- simr::powerSim(fit.p2.B4.reml,  #likelihood ratio test for power
+                            test = simr::fcompare(Diameter~1) ,
+                            nsim = 1000
+) 
+
+pwr_sum_p2_egg <- summary(pwr_p2_egg)
+
 
 #C###################################
 
@@ -1152,26 +1174,37 @@ effectsize(coho.GSI.t.test) #0.40
 
 pwr_c_GSI <- pwr.t.test(n=27, d= 0.40, sig.level=0.05, power = NULL) #power = 0.3027827. such low power
 
-#eggs
+#eggs #data frame: coho.clean.relevant
 ##fit.c.C1.REML
 ## fit.lme.no.int
 ?simr::powerCurve #powersim over different sample sizes
 ?simr::powerSim #estimat power by simulation
 
-simr::powerSim(fit.c.C1.REML, 
-               test = fixed(method="t") , #sekect which fixed effect to test
+#simr::powerSim(fit.c.C1.REML, 
+ #              test = simr::fixed(xname= factor(coho.clean.relevant$Wild.or.Hatch), method="t") , #select fixed effect and test type. Seemed to work this time. runs inconsistently
+               #when I include test, the power is 0. I do not think the power is 0.
+               #test=fcompare(Diameter..mm.~1) #alternative attempt for test
                #seed =  ,
                #nsim = , #default is 1000. Takes a bit but not crazy long
-                 )
+               #  )
 
+simr::powerSim(fit.c.C1.REML, 
+              # test = simr::fixed(xname= Wild.or.Hatch, method="t") , 
+)
 
+pwr_c_egg <- simr::powerSim(fit.c.C1.REML,  #this also runs
+                test = simr::fcompare(Diameter..mm.~1) ,
+               nsim = 1000
+)  #so I trust this one over the unknown test, but the t-test should work and idk why it does not.
+
+pwr_sum_c_egg <- summary(pwr_c_egg)
 
 ## make csv########################################
-power_females <- data.frame(GSI_power = c(pwr_p1_GSI$power, pwr_p2_GSI$power, pwr_c_GSI$power), Egg_power=c()) #need to add in egg power still
+power_females <- data.frame(GSI_power = c(pwr_p1_GSI$power, pwr_p2_GSI$power, pwr_c_GSI$power), Egg_power=c( pwr_sum_p1_egg$mean,pwr_sum_p2_egg$mean,pwr_sum_c_egg$mean)) #need to add in egg power still
 
 rownames(power_females) = c("Pink even", "Pink odd", "Coho")
 
-#write.csv(power_females, "Results/Female post-hoc power analysis.csv")
+write.csv(power_females, "Results/Female post-hoc power analysis.csv")
 
 ############################################################################
 #power analysis for linear mixed effect models: figuring out
@@ -1182,7 +1215,7 @@ rownames(power_females) = c("Pink even", "Pink odd", "Coho")
 ##we know sample size
 ##we can find out population variance
 ###something about hyperparameters. Can we use pooled variance from nlme? What are hyperparameterss? Oh, fake parameters. I have real ones
-
+#https://humburg.github.io/Power-Analysis/simr_power_analysis.html <- really good resource.
 
 ?lme4
 ?nlme
