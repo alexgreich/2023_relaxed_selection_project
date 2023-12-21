@@ -1,5 +1,6 @@
 #####################
 #organizing GSI/egg results for publication
+#prupose: this turned into female code and results
 
 #12/04/23 (yes, this has been ongoing for far too long)
 ###################
@@ -1150,7 +1151,7 @@ effectsize(p2.GSI.t.test)
 length(GSI.for.ttest.hatch$GSI.1) #50 fish
 length(GSI.for.ttest.wild$GSI.1) #28 fish 
 
-pwr_p2_GSI <- pwr.t2n.test(n1=50, n2=28, d= -0.01, sig.level=0.05, power = NULL) # power = 0.05020049. That's really low.
+pwr_p2_GSI <- pwr.t2n.test(n1=50, n2=28, d= -0.01, sig.level=0.05, power = NULL, alternative="greater") # power = 0.05020049. That's really low.
 
 #eggs
 
@@ -1172,7 +1173,8 @@ length(c.GSI.hatch.t.test$GSI) #27
 length(c.GSI.wild.t.test$GSI) #27 (for this sample). looks like I can use the regular pwr.t.test since sample size is equal
 effectsize(coho.GSI.t.test) #0.40
 
-pwr_c_GSI <- pwr.t.test(n=27, d= 0.40, sig.level=0.05, power = NULL) #power = 0.3027827. such low power
+pwr_c_GSI <- pwr.t.test(n=27, d= 0.40, sig.level=0.05, power = NULL, alternative="greater"
+                        ) #power = 0.3027827. such low power. increases a bit with one-sided but still low
 
 #eggs #data frame: coho.clean.relevant
 ##fit.c.C1.REML
