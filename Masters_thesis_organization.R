@@ -1096,6 +1096,7 @@ write.csv(female_length_results, "Results/Female length results.csv")
 library(pwr)
 #library(effsize)
 library(effectsize)
+library(simr)
 ?pwr.t.test #one and two samples for equal sample sizes
 ?pwr.t2n.test #two samples of differnt sizes
 ################################################################################
