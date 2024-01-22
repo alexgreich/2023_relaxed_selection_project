@@ -84,7 +84,18 @@ mean_length_p1_w <- mean(p1.wild.GSI.ttest$Length..mm.)
 sd_length_p1_h <- sd(p1.hatch.GSI.ttest$Length..mm.)
 sd_length_p1_w <- sd(p1.wild.GSI.ttest$Length..mm.)
 
+#GSI but length is a covariate (added 1/22/24)
+p1_GSI_linearmod <- lm(GSI~factor(Otolith.results) + Length..mm. , p1.clean)
 
+p1_GSI_lin_sum <- summary(p1_GSI_linearmod) #will need to get the 1-tailed test for this later
+
+
+#gsi hypothesis: hatch > wild
+#so needs to be 1-p val to get the right tail, divided by 2 because one sided
+p1_p_GSI_linmod <- 1-(p1_GSI_lin_sum$coefficients[2,4]/2) #having a fuck, how do I make this a one-sided test moment. It makes sense that the p-value doesnt change if the order of the factors change. Only the side (pos/neg) of t changes. How do I make it one-sided
+p1_t_GSI_linmod <- p1_GSI_lin_sum$coefficients[2,3]
+
+#0.84147/0.78953
 #################################################
 #pink 2021 -length might be sig here
 p2.GSI <- read.csv("Data/Female.p2.Rdata.3.csv")
@@ -175,6 +186,20 @@ mean_length_p2_h <- mean(GSI.for.ttest.hatch$Length.mm.)
 mean_length_p2_w <- mean(GSI.for.ttest.wild$Length.mm.)
 sd_length_p2_h <- sd(GSI.for.ttest.hatch$Length.mm.)
 sd_length_p2_w <- sd(GSI.for.ttest.wild$Length.mm.)
+
+
+
+
+#GSI but length is a covariate (added 1/22/24)
+p2_GSI_linearmod <- lm(GSI.1~factor(Oto.reading) + Length.mm. , p2.GSI.clean.relevant)
+
+p2_GSI_lin_sum <- summary(p2_GSI_linearmod) #will need to get the 1-tailed test for this later
+
+
+#gsi hypothesis: hatch > wild
+#so needs to be 1-p val to get the right tail, divided by 2 because one sided
+p2_p_GSI_linmod <- 1-(p1_GSI_lin_sum$coefficients[2,4]/2) #having a fuck, how do I make this a one-sided test moment. It makes sense that the p-value doesnt change if the order of the factors change. Only the side (pos/neg) of t changes. How do I make it one-sided
+p2_t_GSI_linmod <- p1_GSI_lin_sum$coefficients[2,3]
 
 
 #################################################################################################################33
@@ -1121,7 +1146,7 @@ length(p1.wild.GSI.ttest) #15
 p1.GSI.t.test
 effectsize(p1.GSI.t.test) #cohens D is -0.41
 
-pwr_p1_GSI <- pwr.t2n.test(n1=36, n2=15, d= -0.41, sig.level=0.05, power = NULL, 
+pwr_p1_GSI <- pwr.t2n.test(n1=36, n2=10, d= -0.41, sig.level=0.05, power = NULL, 
                            alternative="greater" #alternative is greater because hypothesis is that hatch fish can invest more in their GSI
                            ) #power is 0.26. Damn , low power. Even less for one-sided
 
