@@ -94,6 +94,7 @@ p1_GSI_lin_sum <- summary(p1_GSI_linearmod) #will need to get the 1-tailed test 
 #so needs to be 1-p val to get the right tail, divided by 2 because one sided
 p1_p_GSI_linmod <- 1-(p1_GSI_lin_sum$coefficients[2,4]/2) #having a fuck, how do I make this a one-sided test moment. It makes sense that the p-value doesnt change if the order of the factors change. Only the side (pos/neg) of t changes. How do I make it one-sided
 p1_t_GSI_linmod <- p1_GSI_lin_sum$coefficients[2,3]
+p1_df_GSI_linmod <-p1_GSI_lin_sum$df[2]
 
 #0.84147/0.78953
 #################################################
@@ -200,6 +201,7 @@ p2_GSI_lin_sum <- summary(p2_GSI_linearmod) #will need to get the 1-tailed test 
 #so needs to be 1-p val to get the right tail, divided by 2 because one sided
 p2_p_GSI_linmod <- 1-(p2_GSI_lin_sum$coefficients[2,4]/2) 
 p2_t_GSI_linmod <- p2_GSI_lin_sum$coefficients[2,3]
+p2_df_GSI_linmod <-p2_GSI_lin_sum$df[2]
 
 
 #################################################################################################################33
@@ -253,7 +255,7 @@ c_GSI_lin_sum <- summary(c_GSI_linearmod) #will need to get the 1-tailed test fo
 #so needs to be 1-p val to get the right tail, divided by 2 because one sided
 c_p_GSI_linmod <- (c_GSI_lin_sum$coefficients[2,4]/2) 
 c_t_GSI_linmod <- c_GSI_lin_sum$coefficients[2,3]
-
+c_df_GSI_linmod <-c_GSI_lin_sum$df[2]
 
 
 #####################################################
@@ -275,8 +277,16 @@ GSI_results <- data.frame(#name = c("pink 2020", "pink 2021", "coho"), #code not
 
 rownames(GSI_results) = c("pink 2020", "pink 2021", "coho")
 
-p_lin_mod = c(p1_p_GSI_linmod,p2_p_GSI_linmod,c_p_GSI_linmod)
-write.csv(x=p_lin_mod, file="Results/If we do GSI with length in the linear model, one sided p values.csv")
+p_lin_mod <- c(p1_p_GSI_linmod,p2_p_GSI_linmod,c_p_GSI_linmod)
+t_lin_mod <- c(p1_t_GSI_linmod,p2_t_GSI_linmod,c_t_GSI_linmod)
+df_lin_mod <- c(p1_df_GSI_linmod, p2_df_GSI_linmod, c_df_GSI_linmod )
+
+datafram_lin_mod <- data.frame(p_lin_mod, t_lin_mod, df_lin_mod)
+rownames(datafram_lin_mod) =c("pink 2020","pink 2021","coho")
+colnames(datafram_lin_mod)=c("p", "t", "df")
+
+
+write.csv(x=datafram_lin_mod, file="Results/If we do GSI with length in the linear model.csv")
 
 
 
