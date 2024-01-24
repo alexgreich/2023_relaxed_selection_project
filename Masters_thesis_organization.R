@@ -1108,7 +1108,27 @@ dev.new (width = 10, height = 5, unit = "in", noRStudioGD = T); last_plot()
 ggsave(filename = "Plots/Justification for combining Lovers and Sashin.jpg", width=10, height=5)
 dev.off()
 
-##next, do
+##quick sashin vs lovers t.test, as charlie requested
+p1_s <- p1.clean %>% filter(Location=="Sashin Creek", Otolith.results=="no mark")
+p1_l <- p1.clean %>% filter(Location=="Lovers Cove", Otolith.results=="no mark")
+
+p1_ttest <-t.test(p1_s$Length..mm.,p1_l$Length..mm.) #p val = 0.839
+
+
+p2_s <- p2.GSI.clean %>% filter(Location=="Sashin", Oto.reading == "No Mark")
+p2_l <-p2.GSI.clean %>% filter(Location=="Lovers", Oto.reading == "No Mark")
+
+p2_ttest<-t.test(p2_s$Length.mm.,p2_l$Length.mm.)  #p val = 0.08907
+
+names(p1_ttest)
+
+sashin_lovers_length_comparison <- data.frame(p1=c(p1_ttest$statistic, p1_ttest$parameter, p1_ttest$p.value),
+                                               p2=c(p2_ttest$statistic, p2_ttest$parameter, p2_ttest$p.value))
+
+rownames(sashin_lovers_length_comparison)= c("t", "df", "pvalue")
+
+write.csv(x=sashin_lovers_length_comparison, file="Results/sashin_lovers_length_comparison.csv")
+
 
 
 
