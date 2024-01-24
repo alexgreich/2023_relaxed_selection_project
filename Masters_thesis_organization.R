@@ -1084,19 +1084,27 @@ L44 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm.) +
 ##01/23/24 Sam said use these graphs in supplement. So, clean it up. But first clear mem and activate
 ##p1.clean and p2.GSI.clean. Cleaning up plots L11+L33
 L111 <- ggplot(p1.clean) + aes(y=Length..mm., x=Location, color=Otolith.results) +
-  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter(position=position_dodge(width=0.75)) + scale_color_manual(values=c("blue", "orange"))+
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter(position=position_dodge(width=0.75)) + scale_color_manual(values=c("blue", "orange"), labels=c("Wild", "Hatchery"))+
   theme_cowplot()+
   ggtitle("Even-year pink")+
-  labs(y="Length (mm)", x=element_blank())
+  labs(y="Length (mm)", x=element_blank(), color=NULL)+
+  scale_x_discrete(breaks=c("Armstrong", "Lovers", "Sashin")) #argh. Does not work. Why . Why. Somethign with the names
 #?position_dodge()
 
 L333 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm., color=Oto.reading) +
-  geom_boxplot() + geom_jitter() + scale_color_manual(values=c("blue", "orange", "springgreen"))+
+  geom_boxplot() + geom_jitter(position=position_dodge(width=0.75)) + scale_color_manual(values=c("blue", "orange"), labels=c("Wild", "Hatchery"))+
   theme_cowplot()+
-  ggtitle("Odd-year pink")
+  ggtitle("Odd-year pink")+
+  labs(y=element_blank(), x=element_blank(), color=NULL)+
+  scale_x_discrete(breaks=c("Armstrong", "Lovers", "Sashin"))
 
 
-#ok re-do length but without unknown
+L111+L333 + plot_layout(guides="collect")
+
+##next, do
+
+
+
 
 
 #combine combine
