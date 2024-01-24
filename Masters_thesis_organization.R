@@ -1015,6 +1015,7 @@ L11 <- ggplot(p1.clean) + aes(y=Length..mm., x=Location, color=Otolith.results) 
   theme_cowplot()+
   ggtitle("Pink 2020, length separated by oto mark")
 
+
 L2 <- ggplot(p1) + aes(y=Length..mm., x=Location) +
   geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter() +
   theme_cowplot()+
@@ -1078,6 +1079,22 @@ L44 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm.) +
 ##NOTE: unknown and werid fish are incldued in these graphs, but not in analysis
 (L1+L3)/(L2+L4) #with unknowns and weirds
 (L11+L33)/(L22+L44) #without unknowns and werids. I think use this one
+
+
+##01/23/24 Sam said use these graphs in supplement. So, clean it up. But first clear mem and activate
+##p1.clean and p2.GSI.clean. Cleaning up plots L11+L33
+L111 <- ggplot(p1.clean) + aes(y=Length..mm., x=Location, color=Otolith.results) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter(position=position_dodge(width=0.75)) + scale_color_manual(values=c("blue", "orange"))+
+  theme_cowplot()+
+  ggtitle("Even-year pink")+
+  labs(y="Length (mm)", x=element_blank())
+#?position_dodge()
+
+L333 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm., color=Oto.reading) +
+  geom_boxplot() + geom_jitter() + scale_color_manual(values=c("blue", "orange", "springgreen"))+
+  theme_cowplot()+
+  ggtitle("Odd-year pink")
+
 
 #ok re-do length but without unknown
 
