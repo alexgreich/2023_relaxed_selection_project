@@ -1088,7 +1088,8 @@ L111 <- ggplot(p1.clean) + aes(y=Length..mm., x=Location, color=Otolith.results)
   theme_cowplot()+
   ggtitle("Even-year pink")+
   labs(y="Length (mm)", x=element_blank(), color=NULL)+
-  scale_x_discrete(breaks=c("Armstrong", "Lovers", "Sashin")) #argh. Does not work. Why . Why. Somethign with the names
+  scale_x_discrete(labels=c("Port Armstrong", "Lovers Cove", "Sashin Creek"))+
+  scale_y_continuous(limits=c(390, 480), breaks=c(400, 440, 480), expand=c(0,0))
 #?position_dodge()
 
 L333 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm., color=Oto.reading) +
@@ -1096,10 +1097,16 @@ L333 <- ggplot(p2.GSI.clean) + aes(x=Location, y=Length.mm., color=Oto.reading) 
   theme_cowplot()+
   ggtitle("Odd-year pink")+
   labs(y=element_blank(), x=element_blank(), color=NULL)+
-  scale_x_discrete(breaks=c("Armstrong", "Lovers", "Sashin"))
+  scale_x_discrete(labels=c("Port Armstrong", "Lovers Cove", "Sashin Creek"))+
+  scale_y_continuous(limits=c(340, 480), breaks=c(360, 400, 440, 480), expand=c(0,0))
 
 
-L111+L333 + plot_layout(guides="collect")
+L444 <- L111+L333 + plot_layout(guides="collect")
+L444
+
+dev.new (width = 10, height = 5, unit = "in", noRStudioGD = T); last_plot()
+ggsave(filename = "Plots/Justification for combining Lovers and Sashin.jpg", width=10, height=5)
+dev.off()
 
 ##next, do
 
