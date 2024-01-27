@@ -272,3 +272,47 @@ rownames(male_length_results) <- c("pink 2020", "pink 2021", "coho")
 
 write.csv(male_length_results, "Results/Male length results.csv")
 
+
+
+
+#01/26/24
+#the graph that sam requested: rationalizing combining sashin and lovers, male and female. Make it like your length graph
+
+##p1.clean and p2.GSI.clean. Cleaning up plots L11+L33
+L111 <- ggplot(even_female_pink_clean) + aes(y=Length..mm., x=Location, color=Otolith.results) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter(position=position_dodge(width=0.75)) + scale_color_manual(values=c("blue", "orange"), labels=c("Wild", "Hatchery"))+
+  theme_cowplot()+
+  ggtitle("Even-year pink females")+
+  labs(y=element_blank(),x=element_blank(), color=NULL)+
+  scale_x_discrete(labels=c("Port Armstrong", "Lovers Cove", "Sashin Creek"))+
+  scale_y_continuous(limits=c(390, 480), breaks=c(400, 440, 480), expand=c(0,0))
+#?position_dodge()
+
+L333 <- ggplot(odd_female_pink_clean) + aes(x=Location, y=Length.mm., color=Oto.reading) +
+  geom_boxplot() + geom_jitter(position=position_dodge(width=0.75)) + scale_color_manual(values=c("blue", "orange"), labels=c("Wild", "Hatchery"))+
+  theme_cowplot()+
+  ggtitle("Odd-year pink females")+
+  labs(y=element_blank(), x=element_blank(), color=NULL)+
+  scale_x_discrete(labels=c("Port Armstrong", "Lovers Cove", "Sashin Creek"))+
+  scale_y_continuous(limits=c(340, 480), breaks=c(360, 400, 440, 480), expand=c(0,0))
+
+#male even
+M111 <- ggplot(even_male_pink) + aes(y=Length..mm., x=Location, color=factor(Wild.or.Hatch, levels=c("wild", "hatchery"))) +
+  geom_boxplot(outlier.color="white", outlier.fill="white") +geom_jitter(position=position_dodge(width=0.75)) + scale_color_manual(values=c("blue", "orange"), labels=c("Wild", "Hatchery"))+
+  theme_cowplot()+
+  ggtitle("Even-year pink males")+
+  labs(y="Length (mm)", x=element_blank(), color=NULL)+
+  scale_x_discrete(labels=c("Port Armstrong", "Lovers Cove", "Sashin Creek"))+
+  scale_y_continuous(limits=c(368, 520), breaks=c(400, 440, 480, 520), expand=c(0,0))
+
+
+#male odd
+L444 <- ggplot(odd_male_pink_clean) + aes(x=Location, y=Length.mm., color=Otolith.reading) +
+  geom_boxplot() + geom_jitter(position=position_dodge(width=0.75)) + scale_color_manual(values=c("blue", "orange"), labels=c("Wild", "Hatchery"))+
+  theme_cowplot()+
+  ggtitle("Odd-year pink males")+
+  labs(y="Length (mm)", x=element_blank(), color=NULL)+
+  scale_x_discrete(labels=c("Port Armstrong", "Lovers Cove", "Sashin Creek"))+
+  scale_y_continuous(limits=c(340, 500), breaks=c(350, 400, 450, 500), expand=c(0,0))
+
+(M111 + L111)/(L444 + L333) + plot_layout(guides="collect")
