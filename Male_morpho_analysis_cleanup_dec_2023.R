@@ -1327,7 +1327,7 @@ ggsave ("Plots/Male_linear_labs_jan.jpg", width = dev.size()[1], height = dev.si
 #end 01/29/24
 
 #argh. not quite right
-##try patchwork.
+##try patchwork. Jan comment: I prefer the graph above, plot_male_labels
 (ggSnout_p1 + ggsnout_pinkodd + ggsnout_coho)/(ggDepth_p1 +  ggdepth_pinkodd + ggdepth_coho)
 dev.new (width = 10, height =6.56, unit = "in", noRStudioGD = T); last_plot()
 dev.off()
