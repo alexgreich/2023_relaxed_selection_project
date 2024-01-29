@@ -286,7 +286,7 @@ rownames(datafram_lin_mod) =c("pink 2020","pink 2021","coho")
 colnames(datafram_lin_mod)=c("p", "t", "df")
 
 
-write.csv(x=datafram_lin_mod, file="Results/If we do GSI with length in the linear model.csv")
+#write.csv(x=datafram_lin_mod, file="Results/If we do GSI with length in the linear model.csv")
 
 
 

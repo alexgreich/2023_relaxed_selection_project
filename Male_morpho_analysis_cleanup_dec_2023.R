@@ -94,6 +94,7 @@ plot(gpa_withoutlier)
 #Now run a PCA/RWA (principal component analysis aka Relative Warp Analysis)
 pca.no56 <- gm.prcomp(gpa.no56$coords)
 plot(pca.no56)
+plot(pca.no56, axis1=1, axis2=3)
 #how to add categorical variables though?
 #wait, I did that.
 
@@ -358,8 +359,12 @@ plot(gpa_coho)
 #run a PCA
 pca_coho <- gm.prcomp(gpa_coho$coords)
 plot(pca_coho)
+plot(pca_coho, axis1=1, axis2=3)
 #summary(pca_coho)
 #names(pca_coho)
+#pca 1 : 53.14% of variance explained
+#pca 2: 16.53
+#pca 3: 6.81% var explained
 
 
 #pca_coho_long <- gm.prcomp(gpa_coho_long$coords)
@@ -368,9 +373,9 @@ plot(pca_coho)
 #names(pca_coho_long)
 
 #can you also plot the ID of the important PCs???
-#pvar_cl <- (pca_coho_long$sdev^2)/(sum(pca_coho_long$sdev^2))
-#names(pvar_cl) <- seq(1:length(pvar_cl))
-#barplot(pvar_cl, xlab= "Principal Components", ylab = "% Variance")
+pvar_cl <- (pca_coho$sdev^2)/(sum(pca_coho$sdev^2))
+names(pvar_cl) <- seq(1:length(pvar_cl))
+barplot(pvar_cl, xlab= "Principal Components", ylab = "% Variance")
 
 ######################################################################################################################
 
@@ -838,6 +843,7 @@ plot(gpa.p2.orig)
 #run a PCA #line 144
 pca.p2.orig <- gm.prcomp(gpa.p2.orig$coords)
 plot(pca.p2.orig)
+plot(pca.p2.orig, axis1=1, axis2=3)
 
 #add the wild/hatchery factor
 wild.or.hatch <- read.csv("Data/pink2021.wildorhatch.andorder.csv")
@@ -1296,10 +1302,15 @@ ggdepth_coho <- ggdepth_coho + theme(
 
 ###########################################
 #combine the linear morpho graphs
+##01/29/24 - I'm adding labels here.
 ###############################################
 male_base <- plot_grid(ggSnout_p1, ggsnout_pinkodd, ggsnout_coho, ggDepth_p1, ggdepth_pinkodd, ggdepth_coho, nrow=2, ncol=3, scale=0.95) #megan suggests 2 x 3
 
 male_base2 <- plot_grid(NULL, male_base, ncol = 1, rel_heights = c(0.6,9.4))
+
+
+##01/29/24 insert below
+###lol I guess this is code from before I discovered patchwork
 
 dev.new (width = 10, height =6.56, unit = "in", noRStudioGD = T); last_plot()
 dev.off()
