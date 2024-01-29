@@ -1278,7 +1278,7 @@ mycolors.coho <- c("orange", "blue")
 ggsnout_coho <- ggplot(data=df.coho) + aes(x=length, y=snoutmm, color=Wild.or.hatch) + geom_point(size=2) +
   geom_smooth(method="lm")+  
   scale_color_manual(values=mycolors.coho) + 
-  theme_cowplot() + labs(y="Snout (mm)", x= "Length (mm)") +
+  theme_cowplot() + labs(y="Snout (mm)", x= "Length (mm)") + #changed snout to element blank
   guides(color="none") + 
   coord_cartesian(xlim=c(410, 650), ylim=c(75, 200)) + 
   scale_x_continuous(expand=c(0,0), breaks = c(450, 550, 650)) +
@@ -1311,11 +1311,20 @@ male_base2 <- plot_grid(NULL, male_base, ncol = 1, rel_heights = c(0.6,9.4))
 
 ##01/29/24 insert below
 ###lol I guess this is code from before I discovered patchwork
+#library(patchwork)
+##xlab_GSI <- ggSnout_p1$labels$x
+
+plot_male_lables <- ggdraw(male_base2) +
+  draw_label ("Even-year pink", x = 0.18, y = 0.95, fontfamily = "Arial", fontface="bold", size = 13) + draw_label ("Odd-year pink", x = 0.52, y = 0.95, fontfamily = "Arial", fontface="bold", size = 13) + draw_label ("Coho", fontfamily = "Arial", fontface="bold", size = 13, x = 0.86, y = 0.95) 
+plot_male_lables 
+
 
 dev.new (width = 10, height =6.56, unit = "in", noRStudioGD = T); last_plot()
-dev.off()
-#ggsave ("Plots/Male_linear.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+#dev.off()
+ggsave ("Plots/Male_linear_labs_jan.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
 #nice!
+
+#end 01/29/24
 
 #argh. not quite right
 ##try patchwork.
