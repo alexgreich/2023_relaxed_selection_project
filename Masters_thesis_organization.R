@@ -99,10 +99,13 @@ p1_df_GSI_linmod <-p1_GSI_lin_sum$df[2]
 #AIC- added 5/20/24
 ##my models are: 
 ###
-p1_GSI_linearmod
-p1_GSI_mod2 <- lm(GSI~factor(Otolith.results), p1.clean)
+p1.clean$Otolith.results <- factor(p1.clean$Otolith.results)
 
-AIC(p1_GSI_linearmod, p1_GSI_mod2) #mod 2 wins, no length
+p1_GSI_linearmod
+p1_GSI_mod2 <- lm(GSI~Otolith.results, p1.clean)
+p1_GSI_int <- lm(GSI~Otolith.results + Length..mm. +  Otolith.results:Length..mm., p1.clean)
+
+AIC(p1_GSI_linearmod, p1_GSI_mod2, p1_GSI_int) #mod 2 wins, no length
 
 #0.84147/0.78953
 #################################################
@@ -215,7 +218,21 @@ p2_df_GSI_linmod <-p2_GSI_lin_sum$df[2]
 p2_GSI_linearmod_jdate <- lm(GSI.1~factor(Oto.reading) + Length.mm.+ Julian , p2_GSI_clean_date_alt)
 p2_GSI_linearmod <- lm(GSI.1~factor(Oto.reading) + Length.mm., p2_GSI_clean_date_alt)
 p2_GSI_linearmod_2 <- lm(GSI.1~factor(Oto.reading), p2_GSI_clean_date_alt)
-AIC(p2_GSI_linearmod, p2_GSI_linearmod_jdate, p2_GSI_linearmod_2 ) #no length, no date wins!
+p2_int_1 <- lm(GSI.1~factor(Oto.reading) * Length.mm.* Julian , p2_GSI_clean_date_alt)
+p2_int_2 <- lm(GSI.1~factor(Oto.reading) + Length.mm.+ Julian + factor(Oto.reading):Length.mm.+ Length.mm.:Julian+ Julian:factor(Oto.reading) , p2_GSI_clean_date_alt)
+p2_int_3 <- lm(GSI.1~factor(Oto.reading) + Length.mm.+ Julian + Length.mm.:Julian+ Julian:factor(Oto.reading), p2_GSI_clean_date_alt)
+p2_int_3.5 <- lm(GSI.1~factor(Oto.reading) + Length.mm.+ Julian + Julian:factor(Oto.reading), p2_GSI_clean_date_alt)
+p2_int_4 <- lm(GSI.1~factor(Oto.reading) + Julian + Julian:factor(Oto.reading), p2_GSI_clean_date_alt)
+p2_int_5 <- lm(GSI.1~factor(Oto.reading) + Julian, p2_GSI_clean_date_alt)
+p2_int_6 <- lm(GSI.1~factor(Oto.reading), p2_GSI_clean_date_alt)
+
+
+summary(p2_int_2)
+AIC(p2_GSI_linearmod, p2_GSI_linearmod_jdate, p2_GSI_linearmod_2, p2_int_1 ) #no length, no date wins!
+
+AIC(p2_GSI_linearmod, p2_GSI_linearmod_jdate, p2_GSI_linearmod_2, p2_int_1,
+    p2_int_2, p2_int_3, p2_int_3.5, p2_int_4, p2_int_5, p2_int_6
+    ) 
 
 #p2_GSI_linearmod
 p2_GSI_linearmod_jdate <- lm(GSI.1~factor(Oto.reading) + Length.mm.+ Julian , p2.GSI.clean.relevant)
@@ -279,7 +296,8 @@ c_df_GSI_linmod <-c_GSI_lin_sum$df[2]
 #AIC for tables- added 5/20/24
 ##model: c_GSI_linearmod
 c_GSI_linearmod_2 <- lm(GSI~factor(Wild.or.Hatch, levels=c("wild", "hatchery") ) , c.GSI.clean)
-AIC(c_GSI_linearmod ,c_GSI_linearmod_2) #mod 4 wins but it is super borderline
+c_GSI_linearmod_int <- lm(GSI~factor(Wild.or.Hatch, levels=c("wild", "hatchery")) + Length..mm. + factor(Wild.or.Hatch, levels=c("wild", "hatchery")):Length..mm. , c.GSI.clean)
+AIC(c_GSI_linearmod ,c_GSI_linearmod_2, c_GSI_linearmod_int) #mod 4 wins but it is super borderline
 ##so need to get 
 
 
@@ -297,7 +315,7 @@ GSI_results <- data.frame(#name = c("pink 2020", "pink 2021", "coho"), #code not
                           hatchery_mean =c( p1.GSI.t.test$estimate[1], p2.GSI.t.test$estimate[1], hatchery_mean_value_GSI_fullcohodataset),
                           hatch_sd = c( sd_p1_h, sd_h_p2 ,sd_h_c),
                           wild_mean = c(p1.GSI.t.test$estimate[2], p2.GSI.t.test$estimate[2], wild_mean_value_GSI_fullcohodataset),
-                          wild_sd = c( sd_p1_w, sd_w_p2 ,sd_w_c),
+                          wild_sd = c( sd_p1_w, sd_w_p2 ,sd_w_c)
                           )
 
 rownames(GSI_results) = c("pink 2020", "pink 2021", "coho")
@@ -316,8 +334,7 @@ colnames(datafram_lin_mod)=c("p", "t", "df")
 
 #5/20/24
 ##comittee had me re-do things with AIC. resutls from p1, p2 mods without length and the results from coho with length. Sigh.
-
-
+##just took GSI_results p1 and p2 values and datafram_lin_mod c values
 
 
 ###########################################################3
