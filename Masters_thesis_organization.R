@@ -96,6 +96,14 @@ p1_p_GSI_linmod <- 1-(p1_GSI_lin_sum$coefficients[2,4]/2) #having a fuck, how do
 p1_t_GSI_linmod <- p1_GSI_lin_sum$coefficients[2,3]
 p1_df_GSI_linmod <-p1_GSI_lin_sum$df[2]
 
+#AIC- added 5/20/24
+##my models are: 
+###
+p1_GSI_linearmod
+p1_GSI_mod2 <- lm(GSI~factor(Otolith.results), p1.clean)
+
+AIC(p1_GSI_linearmod, p1_GSI_mod2) #mod 2 wins, no length
+
 #0.84147/0.78953
 #################################################
 #pink 2021 -length might be sig here
@@ -203,6 +211,17 @@ p2_p_GSI_linmod <- 1-(p2_GSI_lin_sum$coefficients[2,4]/2)
 p2_t_GSI_linmod <- p2_GSI_lin_sum$coefficients[2,3]
 p2_df_GSI_linmod <-p2_GSI_lin_sum$df[2]
 
+##added: 5/20/24: AIC tables
+p2_GSI_linearmod_jdate <- lm(GSI.1~factor(Oto.reading) + Length.mm.+ Julian , p2_GSI_clean_date_alt)
+p2_GSI_linearmod <- lm(GSI.1~factor(Oto.reading) + Length.mm., p2_GSI_clean_date_alt)
+p2_GSI_linearmod_2 <- lm(GSI.1~factor(Oto.reading), p2_GSI_clean_date_alt)
+AIC(p2_GSI_linearmod, p2_GSI_linearmod_jdate, p2_GSI_linearmod_2 ) #no length, no date wins!
+
+#p2_GSI_linearmod
+p2_GSI_linearmod_jdate <- lm(GSI.1~factor(Oto.reading) + Length.mm.+ Julian , p2.GSI.clean.relevant)
+p2_GSI_linearmod_2 <- lm(GSI.1~factor(Oto.reading), p2.GSI.clean.relevant)
+AIC(p2_GSI_linearmod, p2_GSI_linearmod_jdate, p2_GSI_linearmod_2)
+
 
 #################################################################################################################33
 #coho (full coho female GSI dataset)
@@ -257,6 +276,12 @@ c_p_GSI_linmod <- (c_GSI_lin_sum$coefficients[2,4]/2)
 c_t_GSI_linmod <- c_GSI_lin_sum$coefficients[2,3]
 c_df_GSI_linmod <-c_GSI_lin_sum$df[2]
 
+#AIC for tables- added 5/20/24
+##model: c_GSI_linearmod
+c_GSI_linearmod_2 <- lm(GSI~factor(Wild.or.Hatch, levels=c("wild", "hatchery") ) , c.GSI.clean)
+AIC(c_GSI_linearmod ,c_GSI_linearmod_2) #mod 4 wins but it is super borderline
+##so need to get 
+
 
 #####################################################
 #results summary
@@ -289,8 +314,10 @@ colnames(datafram_lin_mod)=c("p", "t", "df")
 #write.csv(x=datafram_lin_mod, file="Results/If we do GSI with length in the linear model.csv")
 
 
+#5/20/24
+##comittee had me re-do things with AIC. resutls from p1, p2 mods without length and the results from coho with length. Sigh.
 
-#length results summary
+
 
 
 ###########################################################3
