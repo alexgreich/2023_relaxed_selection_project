@@ -1213,7 +1213,16 @@ S_5 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian, data=p2
 S_6 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading, data=p2.males_dateadj)
 S_7 <- lm(log(Snout.length.mm.) ~ Otolith.reading, data=p2.males_dateadj)
 
-AIC(Snout_global_pinkodd_julian_glob,Snout_global_pinkodd_julian, S_2, S_3, S_4, S_5, S_6, S_7)
+B_glob <- lm(log(Body.depth.mm.) ~ Length.mm. * Otolith.reading * Julian, data=p2.males_dateadj)
+B_2 <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading + Julian + Length.mm.:Otolith.reading + Length.mm.:Julian + Otolith.reading:Julian, data=p2.males_dateadj)
+B_3 <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading + Julian + Length.mm.:Otolith.reading + Otolith.reading:Julian, data=p2.males_dateadj)
+B_4 <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading + Julian + Otolith.reading:Julian, data=p2.males_dateadj)
+B_5 <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading + Julian, data=p2.males_dateadj)
+B_6 <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading, data=p2.males_dateadj)
+B_7 <- lm(log(Body.depth.mm.) ~ Otolith.reading, data=p2.males_dateadj)
+
+
+AIC(B_glob, B_2, B_3, B_4, B_5, B_6, B_7)
 ################################################
 
 
