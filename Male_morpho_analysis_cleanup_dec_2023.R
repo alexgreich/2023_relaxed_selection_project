@@ -579,7 +579,6 @@ df_coho_snout_results <- data.frame(t=sum_c_5$coefficients[3,3], df= sum_c_5$df[
                                     hatchery_mean= mean_s_h, hatchery_sd = sd_s_h,
                                     wild_mean=mean_s_w, wild_sd=sd_s_w)
 
-
 ################################################
 
 
@@ -625,6 +624,21 @@ df_coho_depth_results <- data.frame(t=sum_c_depth$coefficients[3,3], df= sum_c_d
 #some density plots
 ggplot(df.coho) + aes(x=snoutL) + geom_density()
 ################################
+
+#05/23/24, I need AIC tables
+#snout
+coho_glob_snout <- lm(snoutL ~ length * factor(Wild.or.hatch), df.coho)
+coho_base_s <- lm(snoutL ~factor(Wild.or.hatch), df.coho)
+coho_base_d <- lm(depth ~factor(Wild.or.hatch), df.coho)
+aov.glob.c <- lm(depth ~ length * factor(Wild.or.hatch), df.coho)
+
+AIC(coho_glob_snout, coho_all_snout_05, coho_base_s)
+AIC(aov.glob.c, aov.depth.c, coho_base_d)
+
+#depth
+
+
+
 
 
 #PINK 1 SNOUTS AND DEPTHS
@@ -741,6 +755,10 @@ ggplot(df.pink2) + aes(x=log(snout)) + geom_density()
 ggplot(df.pink2) + aes(x=log(depth)) + geom_density()
 ggplot(df.pink2) + aes(x=depth) + geom_density()
 
+ggplot(df.pink2) + aes(x=depth, y=length) + geom_point()+ geom_smooth()#added
+ggplot(df.pink2) + aes(x=depth, y=log(length)) + geom_point()+ geom_smooth()
+ggplot(df.pink2) + aes(x=log(depth), y=log(length)) + geom_point()+ geom_smooth()
+
 #actual analysis - no more logging
 p1_snout_mod <- lm(snout~ length + factor(Wild.or.hatch), data=df.pink2)
 sum_p_snout <- summary(p1_snout_mod)
@@ -757,8 +775,14 @@ summary.lm(mod.p.d.l.int) #not sig
 mod.p.s.l.int <- aov(snout ~ Wild.or.hatch+length + length*Wild.or.hatch, df.pink2)
 summary.lm(mod.p.s.l.int) #no int effects
 
+#added 5/23/24
+base_s <- lm(snout~ factor(Wild.or.hatch), data=df.pink2)
+base_d <- lm(depth~ factor(Wild.or.hatch), data=df.pink2)
+
+AIC(mod.p.d.l.int, p1_depth_mod, base_d ) #depth
+AIC(mod.p.s.l.int,p1_snout_mod, base_s) #snout
+
 #results
-#df_coho_snout_results
 df_pink_snout_results <- data.frame(t=sum_p_snout$coefficients[3,3], df= sum_p_snout$df[2], p_one_sided=1-sum_p_snout$coefficients[3,4]/2,
                                     length_t = sum_p_snout$coefficients[2,3], length_p_two_Sided = sum_p_snout$coefficients[2,4], 
                                     hatchery_mean= mean_s_hp1, hatchery_sd = sd_s_hp1,
@@ -1085,6 +1109,9 @@ ggplot(p2.males1) + aes(x=Date, y=Body.depth.mm.) + geom_boxplot() + geom_jitter
 ggplot(p2.males1) + aes(x=Date, y=Snout.length.mm.) + geom_boxplot() + geom_jitter(aes(color=Otolith.reading, shape=Location))
 #maybe change above so date is in order...
 
+
+##############################################
+
 #means and sd's, for data table
 
 w<-p2.males1 %>% filter(Otolith.reading=="No Mark") 
@@ -1173,6 +1200,22 @@ summary(Depth_global_pinkodd_julian_global)
 
 names(p2.males_dateadj)
 #View(p2.males_dateadj)
+
+##################################3
+#05/23/24 
+##I need AIC tables 
+Snout_global_pinkodd_julian <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian, data=p2.males_dateadj)
+Snout_global_pinkodd_julian_glob <- lm(log(Snout.length.mm.) ~ Length.mm. * Otolith.reading * Julian, data=p2.males_dateadj)
+S_2 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian + Length.mm.:Otolith.reading + Length.mm.:Julian + Otolith.reading:Julian, data=p2.males_dateadj)
+S_3 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian + Length.mm.:Otolith.reading + Otolith.reading:Julian, data=p2.males_dateadj)
+S_4 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian + Otolith.reading:Julian, data=p2.males_dateadj)
+S_5 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian, data=p2.males_dateadj)
+S_6 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading, data=p2.males_dateadj)
+S_7 <- lm(log(Snout.length.mm.) ~ Otolith.reading, data=p2.males_dateadj)
+
+AIC(Snout_global_pinkodd_julian_glob,Snout_global_pinkodd_julian, S_2, S_3, S_4, S_5, S_6, S_7)
+################################################
+
 
 #test date, early vs. late by location? Sashin, lovers, armstrong? 12/11/23
 ##Graph thus

@@ -235,9 +235,9 @@ AIC(p2_GSI_linearmod, p2_GSI_linearmod_jdate, p2_GSI_linearmod_2, p2_int_1,
     ) 
 
 #p2_GSI_linearmod
-p2_GSI_linearmod_jdate <- lm(GSI.1~factor(Oto.reading) + Length.mm.+ Julian , p2.GSI.clean.relevant)
-p2_GSI_linearmod_2 <- lm(GSI.1~factor(Oto.reading), p2.GSI.clean.relevant)
-AIC(p2_GSI_linearmod, p2_GSI_linearmod_jdate, p2_GSI_linearmod_2)
+#p2_GSI_linearmod_jdate <- lm(GSI.1~factor(Oto.reading) + Length.mm.+ Julian , p2.GSI.clean.relevant)
+#p2_GSI_linearmod_2 <- lm(GSI.1~factor(Oto.reading), p2.GSI.clean.relevant)
+#AIC(p2_GSI_linearmod, p2_GSI_linearmod_jdate, p2_GSI_linearmod_2)
 
 
 #################################################################################################################33
@@ -410,7 +410,9 @@ p1.df.clean$fitted <- fitted(fit.p1.D)
 
 summary(fit.p1.D)
 
-
+#05/23/24
+##milo says add AIC tables
+glob_p1 <- 
 
 
 #####################################################################################
@@ -529,6 +531,7 @@ summary(fit.p2.lme.noint)
 1-(0.000252/2)
 #(1-0.000252)/2
 
+#
 
 
 ############################################################################################
