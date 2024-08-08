@@ -613,6 +613,8 @@ mean_d_wc <- mean(W.depth.all.coho$depth)
 aov.depth.c <- lm(depth ~ length + factor(Wild.or.hatch), df.coho)
 sum_c_depth <- summary(aov.depth.c)
 #plot(aov.depth.c) #looks fine ish
+#looking at again 08/07/24
+##summary()
 
 
 #prepare the table
@@ -637,7 +639,16 @@ AIC(aov.glob.c, aov.depth.c, coho_base_d)
 
 #depth
 
+#08/07/24- the BIG supplementary table from hell
+summary(coho_glob_snout)
+summary(coho_base_s)
+summary(coho_all_snout_05)
 
+
+
+summary(aov.glob.c)
+summary(coho_base_d)
+summary(aov.depth.c)
 
 
 
@@ -777,10 +788,40 @@ summary.lm(mod.p.s.l.int) #no int effects
 
 #added 5/23/24
 base_s <- lm(snout~ factor(Wild.or.hatch), data=df.pink2)
+null_s <- lm(snout~ 1, data=df.pink2)
 base_d <- lm(depth~ factor(Wild.or.hatch), data=df.pink2)
+null_d <- lm(depth~ 1, data=df.pink2)
 
 AIC(mod.p.d.l.int, p1_depth_mod, base_d ) #depth
 AIC(mod.p.s.l.int,p1_snout_mod, base_s) #snout
+summary(null_s) #for 6/6/24 table edits snout and depth p1
+summary(base_s)
+#get the one-sided p value from the t-value
+(1-0.429)/2
+0.429/2
+1-0.429/2 #this one
+pt(q=-0.797, lower.tail=F, df=58)
+summary(p1_snout_mod)
+pt(q=1.237, lower.tail=T, df=58) #this is teh answer
+summary.lm(mod.p.s.l.int) #0.890
+pt(q=-1.282, lower.tail=F, df=58)
+
+summary(null_d) #for 6/6/24 table edits depth p1
+summary(base_d)
+summary(p1_depth_mod)
+summary.lm(mod.p.d.l.int)
+#broom::tidy(mod.p.d.l.int)
+
+
+summary(null_s) #for 6/6/24 table edits snout p1
+summary(base_s)
+summary(p1_snout_mod)
+summary.lm(mod.p.s.l.int)
+
+#results for table
+full_mods_male <- tibble(summary.lm(mod.p.s.l.int), summary.lm(mod.p.d.l.int) )
+selected_mods_male <- tibble() 
+
 
 #results
 df_pink_snout_results <- data.frame(t=sum_p_snout$coefficients[3,3], df= sum_p_snout$df[2], p_one_sided=1-sum_p_snout$coefficients[3,4]/2,
@@ -1110,6 +1151,8 @@ ggplot(p2.males1) + aes(x=Date, y=Snout.length.mm.) + geom_boxplot() + geom_jitt
 #maybe change above so date is in order...
 
 
+
+
 ##############################################
 
 #means and sd's, for data table
@@ -1210,7 +1253,7 @@ S_2 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian + Length
 S_3 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian + Length.mm.:Otolith.reading + Otolith.reading:Julian, data=p2.males_dateadj)
 S_4 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian + Otolith.reading:Julian, data=p2.males_dateadj)
 S_5 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading + Julian, data=p2.males_dateadj)
-S_6 <- lm(log(Snout.length.mm.) ~ Length.mm. + Otolith.reading, data=p2.males_dateadj)
+S_6 <- lm(log(Snout.length.mm.) ~ Length.mm. * Otolith.reading, data=p2.males_dateadj)
 S_7 <- lm(log(Snout.length.mm.) ~ Otolith.reading, data=p2.males_dateadj)
 
 B_glob <- lm(log(Body.depth.mm.) ~ Length.mm. * Otolith.reading * Julian, data=p2.males_dateadj)
@@ -1218,11 +1261,19 @@ B_2 <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading + Julian + Length.m
 B_3 <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading + Julian + Length.mm.:Otolith.reading + Otolith.reading:Julian, data=p2.males_dateadj)
 B_4 <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading + Julian + Otolith.reading:Julian, data=p2.males_dateadj)
 B_5 <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading + Julian, data=p2.males_dateadj)
-B_6 <- lm(log(Body.depth.mm.) ~ Length.mm. + Otolith.reading, data=p2.males_dateadj)
+B_6 <- lm(log(Body.depth.mm.) ~ Length.mm. * Otolith.reading, data=p2.males_dateadj)
 B_7 <- lm(log(Body.depth.mm.) ~ Otolith.reading, data=p2.males_dateadj)
 
 
 AIC(B_glob, B_2, B_3, B_4, B_5, B_6, B_7)
+
+#08/07/24
+#summary for my tables
+summary(B_6) #global mod #right direction for signs and things??
+sum_depth_p2 #fuck is the sign in the right direction??
+
+summary(S_6)
+sum_snout_p2
 ################################################
 
 

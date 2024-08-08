@@ -96,7 +96,7 @@ p1_p_GSI_linmod <- 1-(p1_GSI_lin_sum$coefficients[2,4]/2) #having a fuck, how do
 p1_t_GSI_linmod <- p1_GSI_lin_sum$coefficients[2,3]
 p1_df_GSI_linmod <-p1_GSI_lin_sum$df[2]
 
-#AIC- added 5/20/24
+#AIC- added 5/20/24 - adj on 6/6/24 for the LRT values
 ##my models are: 
 ###
 p1.clean$Otolith.results <- factor(p1.clean$Otolith.results)
@@ -104,8 +104,20 @@ p1.clean$Otolith.results <- factor(p1.clean$Otolith.results)
 p1_GSI_linearmod
 p1_GSI_mod2 <- lm(GSI~Otolith.results, p1.clean)
 p1_GSI_int <- lm(GSI~Otolith.results + Length..mm. +  Otolith.results:Length..mm., p1.clean)
+p1_GSI_null <- lm(GSI~1, p1.clean) #NEW 6/6/24
 
-AIC(p1_GSI_linearmod, p1_GSI_mod2, p1_GSI_int) #mod 2 wins, no length
+AIC(p1_GSI_linearmod, p1_GSI_mod2, p1_GSI_int,p1_GSI_null ) #null mod wins. Nothing explains anything
+summary(p1_GSI_mod2)
+summary(p1_GSI_null)
+library(lmtest)
+?lrtest
+lrtest(p1_GSI_null, p1_GSI_mod2) #small (null) mod wins, is what this is telling me
+lrtest(p1_GSI_mod2, p1_GSI_linearmod) #new mod... is not better?
+lrtest(p1_GSI_linearmod, p1_GSI_int ) #fuck, what does this mean?
+
+anova(p1_GSI_linearmod, p1_GSI_int)
+
+
 
 #0.84147/0.78953
 #################################################
@@ -336,6 +348,37 @@ colnames(datafram_lin_mod)=c("p", "t", "df")
 ##comittee had me re-do things with AIC. resutls from p1, p2 mods without length and the results from coho with length. Sigh.
 ##just took GSI_results p1 and p2 values and datafram_lin_mod c values
 
+##
+#08/08/24 - GSI part for the supplemental table from hell- p1 summary GSI
+##so resukts from p1 and p2 are without length and coho is with length? Ok then
+
+#p1
+#GSI
+#summary(p1_GSI_linearmod)
+summary(p1_GSI_int) #full model p1 GSI
+summary(p1_GSI_mod2) #selected model p1 GSI
+#summary(p1_GSI_null)
+#one way test t test:
+p1.GSI.t.test 
+
+
+#p2
+p2_glob <- lm(GSI.1~factor(Oto.reading) * Length.mm. , p2.GSI.clean.relevant)
+p2_sel <- lm(GSI.1~factor(Oto.reading) , p2.GSI.clean.relevant)
+
+summary(p2_glob) #global p2 mod
+summary(p2_sel) #selected p2 mod
+
+p2.GSI.t.test #the one-way test for the p2 mod, (the hypothesis test)
+
+#c
+#summary(c_GSI_linearmod_2)
+summary(c_GSI_linearmod_int) #global model
+summary(c_GSI_linearmod) #selected model
+
+c_p_GSI_linmod
+
+##
 
 ###########################################################3
 ############################################################
