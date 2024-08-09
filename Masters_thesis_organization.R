@@ -789,19 +789,25 @@ library(MuMIn)
 summary(fit.p1.B) #glob model
 r.squaredGLMM(fit.p1.B)
 fit.p1.B
+summary(fit.p1.C1.REML) #selected model
 sum_reml_p1  # selected model
+r.squaredGLMM(fit.p1.C1.REML) #fuck needs to me an lmer object
 p_egg_p1 # one-sided t test
 
 
  #p2
 fit_p2_glob <- lmer(Diameter ~ Oto.reading.4 + Length.mm. + Oto.reading.4:Length.mm. + (1|ID), data=p2.df.clean, REML=T)#global mod
 summary(fit_p2_glob)
+r.squaredGLMM(fit_p2_glob)
 sum_reml_p2 #selected mod
+r.squaredGLMM(fit.p2.B4.reml)
 p_egg_p2     #one-sided t-test from selected mod
 
  #c
 summary(fit.c.GLOBAL) #global mod
+r.squaredGLMM(fit.c.GLOBAL)
 summary(fit.c.C1.REML) #selected mod
+r.squaredGLMM(fit.c.C1.REML)
 p_egg_c              # one-sided t-test from selected mod
 
 #######################################################################
