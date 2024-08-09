@@ -455,7 +455,7 @@ summary(fit.p1.D)
 
 #05/23/24
 ##milo says add AIC tables
-glob_p1 <- 
+#glob_p1 <- 
 
 
 #####################################################################################
@@ -778,9 +778,27 @@ GSI_results
 Egg_results
 
 #spit out my final results in a csv
-write.csv(GSI_results, "Results/GSI_results.csv")
-write.csv(Egg_results, "Results/Egg_results.csv")
+##write.csv(GSI_results, "Results/GSI_results.csv")
+##write.csv(Egg_results, "Results/Egg_results.csv")
 
+#08/09/24 supp table from hell
+##summaries for eggs:
+
+ #p1
+fit.p1.B #glob model
+sum_reml_p1  # selected model
+p_egg_p1 # one-sided t test
+
+ #p2
+fit_p2_glob <- lmer(Diameter ~ Oto.reading.4 + Length.mm. + Oto.reading.4:Length.mm. + (1|ID), data=p2.df.clean, REML=T)#global mod
+summary(fit_p2_glob)
+sum_reml_p2 #selected mod
+p_egg_p2     #one-sided t-test from selected mod
+
+ #c
+summary(fit.c.GLOBAL) #global mod
+summary(fit.c.C1.REML) #selected mod
+p_egg_c              # one-sided t-test from selected mod
 
 #######################################################################
 #########################################################################
