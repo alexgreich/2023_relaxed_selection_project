@@ -783,11 +783,15 @@ Egg_results
 
 #08/09/24 supp table from hell
 ##summaries for eggs:
+library(MuMIn)
 
  #p1
-fit.p1.B #glob model
+summary(fit.p1.B) #glob model
+r.squaredGLMM(fit.p1.B)
+fit.p1.B
 sum_reml_p1  # selected model
 p_egg_p1 # one-sided t test
+
 
  #p2
 fit_p2_glob <- lmer(Diameter ~ Oto.reading.4 + Length.mm. + Oto.reading.4:Length.mm. + (1|ID), data=p2.df.clean, REML=T)#global mod
