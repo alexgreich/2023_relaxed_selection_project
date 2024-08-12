@@ -296,6 +296,20 @@ write.csv(Bomb_results_to_export, "Results/Bomb_results_coho_auto.csv")
 ```
 
 
+8/9/24: creating the supplemental table from hell
+```{r}
+#bomb
+  #glob mod
+  # sel mod
+  #one-sided t test p value
+
+#lipid
+  #glob mod
+  # sel mod
+  #one-sided t test p value
+
+
+```
 
 
 

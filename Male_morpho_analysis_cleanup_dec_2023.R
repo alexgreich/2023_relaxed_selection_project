@@ -641,14 +641,14 @@ AIC(aov.glob.c, aov.depth.c, coho_base_d)
 
 #08/07/24- the BIG supplementary table from hell
 summary(coho_glob_snout)
-summary(coho_base_s)
+#summary(coho_base_s)
 summary(coho_all_snout_05)
-
-
+df_coho_snout_results
 
 summary(aov.glob.c)
-summary(coho_base_d)
+#summary(coho_base_d)
 summary(aov.depth.c)
+df_coho_depth_results
 
 
 
@@ -808,19 +808,19 @@ pt(q=-1.282, lower.tail=F, df=58)
 
 summary(null_d) #for 6/6/24 table edits depth p1
 summary(base_d)
-summary(p1_depth_mod)
-summary.lm(mod.p.d.l.int)
+summary(p1_depth_mod) #selected mod for supp table from hell 08/2024
+summary.lm(mod.p.d.l.int) #global mod for supp table from hell
 #broom::tidy(mod.p.d.l.int)
 
 
 summary(null_s) #for 6/6/24 table edits snout p1
 summary(base_s)
-summary(p1_snout_mod)
-summary.lm(mod.p.s.l.int)
+summary(p1_snout_mod) #selected mod for supp table from hell 08/2024
+summary.lm(mod.p.s.l.int) #global mod for supp table from hell
 
 #results for table
 full_mods_male <- tibble(summary.lm(mod.p.s.l.int), summary.lm(mod.p.d.l.int) )
-selected_mods_male <- tibble() 
+#selected_mods_male <- tibble() 
 
 
 #results
@@ -872,7 +872,7 @@ sd(df.evenpink.W$length)
 ###############################################################
 #write csv's for the simply graphing R script (obsolete?)
 #write.csv(df.coho.long2, "df.coho.long2.csv")
-write.csv(df.coho, "df.coho.csv")
+#write.csv(df.coho, "df.coho.csv")
 ####################################################################
 
 
@@ -1014,7 +1014,7 @@ sum_p2 <- summary(fit.p)
 names(sum_p2)
 sum_p2$table
 
-write.csv(sum_p2$table, "Results/morpho_p2_table.csv")
+#write.csv(sum_p2$table, "Results/morpho_p2_table.csv")
 
 
 #####################################################################################################################################
@@ -1196,8 +1196,8 @@ SNOUT_RESULTS <-  data.frame(SNOUT_RESULTS, row.names=c("Pink 2020", "Pink 2021"
 DEPTH_RESULTS <- rbind(df_pink_depth_results, df_pink2_odd_depth_results, df_coho_depth_results )
 DEPTH_RESULTS <-  data.frame(DEPTH_RESULTS, row.names=c("Pink 2020", "Pink 2021", "Coho"))
 
-write.csv(SNOUT_RESULTS, "Results/morpho_snout_results.csv")
-write.csv(DEPTH_RESULTS, "Results/morpho_depth_results.csv")
+#write.csv(SNOUT_RESULTS, "Results/morpho_snout_results.csv")
+#write.csv(DEPTH_RESULTS, "Results/morpho_depth_results.csv")
 
 #############################################################################################################
 ##############################################################################################################
@@ -1268,12 +1268,14 @@ B_7 <- lm(log(Body.depth.mm.) ~ Otolith.reading, data=p2.males_dateadj)
 AIC(B_glob, B_2, B_3, B_4, B_5, B_6, B_7)
 
 #08/07/24
-#summary for my tables
+#summary for my tables supp from hell
 summary(B_6) #global mod #right direction for signs and things??
 sum_depth_p2 #fuck is the sign in the right direction??
+DEPTH_RESULTS
 
 summary(S_6)
 sum_snout_p2
+SNOUT_RESULTS
 ################################################
 
 
