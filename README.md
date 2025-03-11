@@ -1,6 +1,6 @@
 REVISION IN PROGRESS
 # 2023_relaxed_selection_project
-##Background details
+## Background details
 This is the master code for PHENOTYPIC DIVEREGE BETWEEN HATCHERY PINK AND COHO SALMON AND THEIR WILD COUNTERPARTS (in press). It is the culmination of Alex Reich's grad school project work.
 
 ## Description of the data and file strucutre
@@ -8,7 +8,7 @@ This is the master code for PHENOTYPIC DIVEREGE BETWEEN HATCHERY PINK AND COHO S
 ## Sharing/Access information
 The data can be accessed via this Dryad link: [ADD LINK HERE] (pending Dryad publication)
 
-# #Code/ Sfotware
+# #Code/ Software
 
 _________________________________________
 OLD NOTES:
