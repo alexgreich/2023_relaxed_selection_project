@@ -1,4 +1,17 @@
+REVISION IN PROGRESS
 # 2023_relaxed_selection_project
+##Background details
+This is the master code for PHENOTYPIC DIVEREGE BETWEEN HATCHERY PINK AND COHO SALMON AND THEIR WILD COUNTERPARTS (in press). It is the culmination of Alex Reich's grad school project work.
+
+## Description of the data and file strucutre
+
+## Sharing/Access information
+The data can be accessed via this Dryad link: [ADD LINK HERE] (pending Dryad publication)
+
+# #Code/ Sfotware
+
+_________________________________________
+OLD NOTES:
 Revisiting code to my masters project. My old project/code are acting up on my new work computer, so creating a new project to clean up and circumnavigate the issue.
 I also cleaned up the code quite a bit, but not entirely. It's CLEAN-ER. Also it uses the full coho dataset, not the subsetted coho dataset.
 This is a revision of the Relaxed_selection_proj_reproducible_science R project that was my best attempt to make it reproducible when I was in grad school
