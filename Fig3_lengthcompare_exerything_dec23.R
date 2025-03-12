@@ -320,3 +320,7 @@ L444 <- ggplot(odd_male_pink_clean) + aes(x=Location, y=Length.mm., color=Otolit
 dev.new (width = 10, height = 6, unit = "in", noRStudioGD = T); last_plot() #perfect
 
 ggsave("Plots/Length_compared_loverssashin.jpg", width = dev.size()[1], height = dev.size()[2]); dev.off()
+
+
+##################
+#add 

@@ -22,7 +22,6 @@ library(lattice)
 library(GGally)
 library(mgcv)
 library(lmtest)
-library(nlme)
 library(visreg)
 
 library(lmerTest)
@@ -92,7 +91,7 @@ p1_GSI_lin_sum <- summary(p1_GSI_linearmod) #will need to get the 1-tailed test 
 
 #gsi hypothesis: hatch > wild
 #so needs to be 1-p val to get the right tail, divided by 2 because one sided
-p1_p_GSI_linmod <- 1-(p1_GSI_lin_sum$coefficients[2,4]/2) #having a fuck, how do I make this a one-sided test moment. It makes sense that the p-value doesnt change if the order of the factors change. Only the side (pos/neg) of t changes. How do I make it one-sided
+p1_p_GSI_linmod <- 1-(p1_GSI_lin_sum$coefficients[2,4]/2) #having a f, how do I make this a one-sided test moment. It makes sense that the p-value doesnt change if the order of the factors change. Only the side (pos/neg) of t changes. How do I make it one-sided
 p1_t_GSI_linmod <- p1_GSI_lin_sum$coefficients[2,3]
 p1_df_GSI_linmod <-p1_GSI_lin_sum$df[2]
 
@@ -113,7 +112,7 @@ library(lmtest)
 ?lrtest
 lrtest(p1_GSI_null, p1_GSI_mod2) #small (null) mod wins, is what this is telling me
 lrtest(p1_GSI_mod2, p1_GSI_linearmod) #new mod... is not better?
-lrtest(p1_GSI_linearmod, p1_GSI_int ) #fuck, what does this mean?
+lrtest(p1_GSI_linearmod, p1_GSI_int ) #f, what does this mean?
 
 anova(p1_GSI_linearmod, p1_GSI_int)
 
@@ -543,13 +542,13 @@ fit.p2.B4.ml <-lmer(Diameter ~ Oto.reading.4 + (1|ID), data=p2.df.clean, REML=F)
 fit.p2.B5.ml <-lmer(Diameter ~ 1 + (1|ID), data=p2.df.clean, REML=F) 
 
 AIC(fit.p2.B.ml, fit.p2.B3.ml, fit.p2.B4.ml, fit.p2.alpha, fit.p2.B5.ml, fit.p2.Julian, fit.p2.Julian2) #fit.p2.B4.ml wins
-#update 05/24/22. Fuck, Julian2 date is my best mod. Wait... nno it's not. B4 is better, actually, because it's simpler and within 1 AIC point. So no Julian date needed in this analysis. #NO JULIAN DATE NEEDED. JULIAN DATE DISPROVED. Seemed to have a small effect, but not below the signficance threshhold AND AIC didnt identify it as importatn. WOOO.
+#update 05/24/22. TK, Julian2 date is my best mod. Wait... nno it's not. B4 is better, actually, because it's simpler and within 1 AIC point. So no Julian date needed in this analysis. #NO JULIAN DATE NEEDED. JULIAN DATE DISPROVED. Seemed to have a small effect, but not below the signficance threshhold AND AIC didnt identify it as importatn. WOOO.
 BIC(fit.p2.B.ml, fit.p2.B3.ml, fit.p2.B4.ml, fit.p2.alpha, fit.p2.B5.ml, fit.p2.Julian)
 
 
 ##TANGENT - DISPROVED ABOVE!
 #summary(fit.p2.alpha)
-#anova(fit.p2.alpha, fit.p2.B3.ml) #fuck, the date model is sig. vua the loglik but NOT via AIC... #for simplicity, I'll stick with NO DATE for now...
+#anova(fit.p2.alpha, fit.p2.B3.ml) #TK, the date model is sig. vua the loglik but NOT via AIC... #for simplicity, I'll stick with NO DATE for now...
 ##TANGENT
 
 #use the REML verstion of the best model to get param estimates
@@ -791,7 +790,7 @@ r.squaredGLMM(fit.p1.B)
 fit.p1.B
 summary(fit.p1.C1.REML) #selected model
 sum_reml_p1  # selected model
-r.squaredGLMM(fit.p1.C1.REML) #fuck needs to me an lmer object
+r.squaredGLMM(fit.p1.C1.REML) #TK needs to me an lmer object
 p_egg_p1 # one-sided t test
 
 

@@ -403,7 +403,7 @@ ggplot(df.coho) + aes(x=Comp1, y=Comp2, color=Wild.or.hatch) + geom_point()+
 #  stat_ellipse()
 
 ######################################################################
-#need to do a RW1 vs RW 3 graph 10/12/21 for coho and coho long #SHIT #delete??
+#need to do a RW1 vs RW 3 graph 10/12/21 for coho and coho long #TK #delete??
 mycolors.coho=c("orange", "blue")
 #coho long
 #ggplot(df.coho.long) + aes(x=Comp3, y=Comp1, color=Wild.or.hatch) + geom_point(size=2)+ scale_color_manual(values=mycolors.coho) + stat_ellipse() + labs(y= "RW 1 (snout, roughly)", x= "RW 3 (depth, roughly)") + theme_bw()  #RW1 is roughtly hump.RW3depth is 
@@ -1106,7 +1106,7 @@ p2.males <- read.csv("Data/Male.p2.Rdata.2.csv")
 
 #exploratory graphs
 #use graphs you already made, dummy!
-#fuck, can't find them
+#,TK can't find them
 names(p2.males)
 hist(p2.males$Body.depth.mm.)
 hist(p2.males$Snout.length.mm.)
@@ -1270,7 +1270,7 @@ AIC(B_glob, B_2, B_3, B_4, B_5, B_6, B_7)
 #08/07/24
 #summary for my tables supp from hell
 summary(B_6) #global mod #right direction for signs and things??
-sum_depth_p2 #fuck is the sign in the right direction??
+sum_depth_p2 #TK is the sign in the right direction??
 DEPTH_RESULTS
 
 summary(S_6)

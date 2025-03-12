@@ -115,7 +115,7 @@ GSI_c_clean <- read.csv("Data/c_GSI_clean_for_bomb copy.csv")
 Eggs_c <- read.csv("Data/c_all_eggs_bomb copy.csv")
 
 #C_other_data <- read.csv("/Users/alexandrareich/Desktop/THESIS TIME!/Compilation of GITHUB project code/Relaxed_selection_proj_reproducible_science/DATA/c_all_other_stuff copy.csv")
-C_other_data <- read.csv("Data/c_all_other_stuff copy.csv")
+#C_other_data <- read.csv("Data/c_all_other_stuff copy.csv")
   
   
 #eggs clean
