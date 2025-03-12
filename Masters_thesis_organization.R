@@ -1,8 +1,8 @@
 #####################
 #organizing GSI/egg results for publication
-#prupose: this turned into female code and results
+#purpose: GSI and egg code and results
 
-#12/04/23 (yes, this has been ongoing for far too long)
+#12/04/23 
 ###################
 
 #NOTES to revisit
