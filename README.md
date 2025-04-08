@@ -1,17 +1,25 @@
-REVISION IN PROGRESS
 # 2023_relaxed_selection_project
 ## Background details
 This is the master code for PHENOTYPIC DIVEREGE BETWEEN HATCHERY PINK AND COHO SALMON AND THEIR WILD COUNTERPARTS (in press). It is the culmination of Alex Reich's grad school project work.
 
 ## Description of the data and file strucutre
+The code is in the main project folder and the data is in the Data folder.
 
 ## Sharing/Access information
 The data can be accessed via this Dryad link: [ADD LINK HERE] (pending Dryad publication)
 
 # #Code/ Software
+The code files described below are the critical files to running the assessment,
+Masters_thesis_organization.R
+- this R file analyzes GSI and egg diameter for the pink 2020, pink 2021, and full coho datasets. It spits out two csv's into the results folder, one for GSI and the other for egg. It also spits out the GSI/EGG graph into the Plots folder and results into the results folder.
 
+Bomb_final_simple_dec2023.Rmd
+- this rmd analyzes the bomb data. There's some excess exploratory stuff in there, but essentially the file spits out one combined egg energy and lipid csv into the Results folder and a two plots into the Plots folder: a boxplot (for the supplement) and a violin plot (we chose not to use this one, but it exists).
+
+Male_morpho_analysis_basics_nogeomorph.R
+- This code runs the analysis for the male linear morphometrics. This is a simplified version of Male_morpho_analysis_cleanup_dec_2023.R, with the geometric morphometric analysis removed. I plan to publish the geometric morphometric results in a later paper. 
 _________________________________________
-OLD NOTES:
+# OLD README NOTES, for reference:
 Revisiting code to my masters project. My old project/code are acting up on my new work computer, so creating a new project to clean up and circumnavigate the issue.
 I also cleaned up the code quite a bit, but not entirely. It's CLEAN-ER. Also it uses the full coho dataset, not the subsetted coho dataset.
 This is a revision of the Relaxed_selection_proj_reproducible_science R project that was my best attempt to make it reproducible when I was in grad school
