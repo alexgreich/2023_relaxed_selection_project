@@ -9,7 +9,8 @@ The code is in the main project folder and the data is in the Data folder.
 The data can be accessed via this Dryad link: [ADD LINK HERE] (pending Dryad publication)
 
 # #Code/ Software
-The code files described below are the critical files to running the assessment,
+The code files described below are the critical files to running the assessment.
+
 Masters_thesis_organization.R
 - this R file analyzes GSI and egg diameter for the pink 2020, pink 2021, and full coho datasets. It spits out two csv's into the results folder, one for GSI and the other for egg. It also spits out the GSI/EGG graph into the Plots folder and results into the results folder.
 
